@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Católica — Tablero de Resultados | ADCOM</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --black: #111111;
+    --yellow: #FFC000;
+    --yellow-light: #FFF3CC;
+    --white: #FFFFFF;
+    --gray-50: #F8F8F6;
+    --gray-100: #F0EFEA;
+    --gray-200: #E0DFDA;
+    --gray-400: #9A9892;
+    --gray-600: #5F5E5A;
+    --gray-800: #2C2C2A;
+    --success: #3B6D11;
+    --success-bg: #EAF3DE;
+    --danger: #A32D2D;
+    --danger-bg: #FCEBEB;
+    --warning: #854F0B;
+    --warning-bg: #FAEEDA;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--black);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .header-client { color: #fff; font-size: 14px; font-weight: 500; }
+  .header-sep { color: #444; font-size: 16px; }
+  .header-sub { color: #888; font-size: 12px; font-weight: 300; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .update-badge {
+    background: #222;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .refresh-btn {
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .refresh-btn:hover { opacity: .85; }
+
+  /* ── MAIN ── */
+  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    position: fixed; inset: 0; background: rgba(17,17,17,.85);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    z-index: 999; transition: opacity .4s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 36px; height: 36px; border: 3px solid #333;
+    border-top-color: var(--yellow); border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: #888; font-size: 13px; font-family: 'Poppins', sans-serif; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--gray-400); margin-bottom: 8px;
+  }
+
+  /* ── PERIOD BAR ── */
+  .period-bar {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .period-group { display: flex; align-items: center; gap: 8px; }
+  .period-group label { font-size: 11px; color: var(--gray-400); font-weight: 500; white-space: nowrap; }
+  .date-input {
+    border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
+    padding: 6px 10px; font-size: 12px; font-family: 'Poppins', sans-serif;
+    color: var(--gray-800); background: var(--gray-50); outline: none;
+  }
+  .date-input:focus { border-color: var(--yellow); }
+  .vdivider { width: 1px; height: 28px; background: var(--gray-200); }
+  .quick-btns { display: flex; gap: 4px; }
+  .qbtn {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 20px; padding: 5px 12px; font-size: 11px;
+    font-family: 'Poppins', sans-serif; color: var(--gray-600); cursor: pointer;
+    transition: all .15s; font-weight: 500;
+  }
+  .qbtn:hover { border-color: var(--gray-400); }
+  .qbtn.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
+  .compare-wrap { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .compare-label { font-size: 11px; color: var(--gray-600); font-weight: 500; }
+  .toggle {
+    width: 36px; height: 20px; background: var(--gray-200);
+    border-radius: 10px; position: relative; cursor: pointer; transition: background .2s;
+  }
+  .toggle.on { background: var(--yellow); }
+  .toggle-knob {
+    width: 16px; height: 16px; background: var(--white);
+    border-radius: 50%; position: absolute; top: 2px; left: 2px;
+    transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .toggle.on .toggle-knob { left: 18px; }
+  .compare-period-wrap { display: flex; align-items: center; gap: 8px; }
+
+  /* ── KPI GRID ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+  .kpi-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md); padding: 16px;
+    border-bottom: 3px solid var(--gray-200); transition: border-color .2s;
+  }
+  .kpi-card:hover { border-bottom-color: var(--yellow); }
+  .kpi-card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-400); margin-bottom: 8px; }
+  .kpi-card-val { font-size: 22px; font-weight: 600; color: var(--gray-800); line-height: 1; }
+  .kpi-card-delta { font-size: 11px; margin-top: 6px; font-weight: 500; }
+  .delta-up { color: var(--success); }
+  .delta-down { color: var(--danger); }
+  .delta-neutral { color: var(--gray-400); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg); padding: 20px;
+  }
+  .card-title { font-size: 12px; font-weight: 600; color: var(--gray-800); margin-bottom: 16px; }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ── TABLES ── */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--gray-400); padding: 8px 10px; text-align: left;
+    border-bottom: 1px solid var(--gray-200); cursor: pointer; user-select: none;
+    white-space: nowrap;
+  }
+  .data-table th:hover { color: var(--gray-800); }
+  .data-table th.sorted { color: var(--black); }
+  .data-table th .sort-arrow { margin-left: 4px; opacity: .5; }
+  .data-table th.sorted .sort-arrow { opacity: 1; }
+  .data-table td {
+    padding: 9px 10px; border-bottom: 1px solid var(--gray-100);
+    font-size: 12px; color: var(--gray-800);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--gray-50); }
+  .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .data-table th.num { text-align: right; }
+
+  /* medio dot */
+  .medio-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 7px; vertical-align: middle;
+  }
+  .bar-cell { display: flex; align-items: center; gap: 8px; }
+  .bar-track { flex: 1; height: 4px; background: var(--gray-100); border-radius: 2px; min-width: 40px; }
+  .bar-fill { height: 4px; background: var(--yellow); border-radius: 2px; }
+
+  /* conv badge */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 600;
+  }
+  .badge-success { background: var(--success-bg); color: var(--success); }
+  .badge-warning { background: var(--warning-bg); color: var(--warning); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+
+  /* ── FILTERS ── */
+  .filter-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .fbtn {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 20px; padding: 5px 14px; font-size: 11px;
+    font-family: 'Poppins', sans-serif; color: var(--gray-600);
+    cursor: pointer; font-weight: 500; transition: all .15s;
+  }
+  .fbtn:hover { border-color: var(--gray-400); }
+  .fbtn.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
+
+  /* ── CHART ── */
+  .chart-container { position: relative; height: 220px; }
+
+  /* ── INVERSION TABLE ── */
+  .inv-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .inv-table th {
+    background: var(--black); color: var(--yellow);
+    font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+    padding: 8px 10px; text-align: right; white-space: nowrap;
+  }
+  .inv-table th:first-child { text-align: left; }
+  .inv-table td {
+    padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--gray-100);
+    font-variant-numeric: tabular-nums; color: var(--gray-800);
+  }
+  .inv-table td:first-child { text-align: left; font-weight: 500; }
+  .inv-table tr:hover td { background: var(--gray-50); }
+  .inv-table tr.subtotal td {
+    background: var(--gray-100); font-weight: 600; font-size: 11px; color: var(--gray-800);
+  }
+  .inv-table tr.subtotal td:first-child { padding-left: 20px; color: var(--gray-600); font-weight: 400; }
+  .inv-table tr.month-header td {
+    background: var(--gray-800); color: var(--white); font-weight: 600;
+    font-size: 11px; padding: 8px 10px;
+  }
+  .inv-table tr.total-row td {
+    background: var(--yellow); color: var(--black); font-weight: 700; font-size: 12px;
+  }
+  .inv-table-wrap { max-height: 420px; overflow-y: auto; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--gray-200); }
+
+  /* ── ERROR ── */
+  .error-msg {
+    background: var(--danger-bg); border: 1px solid #F09595;
+    border-radius: var(--radius-md); padding: 12px 16px;
+    color: var(--danger); font-size: 12px; display: none;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--gray-100); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Cargando datos desde Google Sheets…</div>
+</div>
+
+<header class="header">
+  <div class="header-left">
+    <span class="logo">ADCOM</span>
+    <span class="header-client">Católica</span>
+    <span class="header-sep">·</span>
+    <span class="header-sub">Tablero de Resultados Digitales</span>
+  </div>
+  <div class="header-right">
+    <span class="update-badge" id="updateBadge">— Cargando…</span>
+    <button class="refresh-btn" onclick="loadAll()">↻ Actualizar</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- PERIOD BAR -->
+  <div>
+    <div class="section-label">Control de período</div>
+    <div class="period-bar">
+      <div class="period-group">
+        <label>Desde</label>
+        <input type="date" class="date-input" id="dateFrom">
+      </div>
+      <div class="period-group">
+        <label>Hasta</label>
+        <input type="date" class="date-input" id="dateTo">
+      </div>
+      <div class="vdivider"></div>
+      <div class="quick-btns">
+        <button class="qbtn" onclick="setQuick('month')">Este mes</button>
+        <button class="qbtn" onclick="setQuick('30d')">Últ. 30d</button>
+        <button class="qbtn" onclick="setQuick('quarter')">Trimestre</button>
+        <button class="qbtn" onclick="setQuick('year')">Este año</button>
+        <button class="qbtn" onclick="setQuick('all')">Todo</button>
+      </div>
+      <div class="vdivider"></div>
+      <div class="compare-wrap">
+        <span class="compare-label">Comparar</span>
+        <div class="toggle" id="compareToggle" onclick="toggleCompare()"><div class="toggle-knob"></div></div>
+        <div class="compare-period-wrap" id="comparePeriodWrap" style="display:none">
+          <div class="period-group">
+            <label>Desde</label>
+            <input type="date" class="date-input" id="dateFromB">
+          </div>
+          <div class="period-group">
+            <label>Hasta</label>
+            <input type="date" class="date-input" id="dateToB">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div>
+    <div class="section-label">Resumen del período</div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-card-label">Inversión total</div>
+        <div class="kpi-card-val" id="kpiInversion">—</div>
+        <div class="kpi-card-delta" id="kpiInversionDelta"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">Leads plataforma</div>
+        <div class="kpi-card-val" id="kpiLeads">—</div>
+        <div class="kpi-card-delta" id="kpiLeadsDelta"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">Leads CRM</div>
+        <div class="kpi-card-val" id="kpiCRM">—</div>
+        <div class="kpi-card-delta" id="kpiCRMDelta"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">Matrículas</div>
+        <div class="kpi-card-val" id="kpiMatriculas">—</div>
+        <div class="kpi-card-delta" id="kpiMatriculasDelta"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">CPL</div>
+        <div class="kpi-card-val" id="kpiCPL">—</div>
+        <div class="kpi-card-delta" id="kpiCPLDelta"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">% Conversión</div>
+        <div class="kpi-card-val" id="kpiConv">—</div>
+        <div class="kpi-card-delta" id="kpiConvDelta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDIO + TREND -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Desglose por medio</div>
+      <table class="data-table" id="medioTable">
+        <thead>
+          <tr>
+            <th onclick="sortMedio(0)">Medio <span class="sort-arrow">↕</span></th>
+            <th class="num" onclick="sortMedio(1)">Inversión <span class="sort-arrow">↕</span></th>
+            <th class="num" onclick="sortMedio(2)">Leads <span class="sort-arrow">↕</span></th>
+            <th class="num" onclick="sortMedio(3)">CPL <span class="sort-arrow">↕</span></th>
+            <th class="num">% total inv.</th>
+          </tr>
+        </thead>
+        <tbody id="medioBody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Tendencia mensual — Inversión y Leads</div>
+      <div class="chart-container">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVERSION POR MES × MEDIO × MODALIDAD -->
+  <div class="card">
+    <div class="card-title">Inversión por mes, medio y modalidad</div>
+    <div class="inv-table-wrap">
+      <table class="inv-table" id="invTable">
+        <thead id="invTableHead"></thead>
+        <tbody id="invTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PROGRAMAS -->
+  <div class="card">
+    <div class="card-title">Resultados por programa</div>
+    <div class="filter-row" id="modalidadFilters"></div>
+    <table class="data-table" id="progTable">
+      <thead>
+        <tr>
+          <th onclick="sortProg(0)">Programa <span class="sort-arrow">↕</span></th>
+          <th onclick="sortProg(1)">Modalidad <span class="sort-arrow">↕</span></th>
+          <th class="num" onclick="sortProg(2)">Inversión <span class="sort-arrow">↕</span></th>
+          <th class="num" onclick="sortProg(3)">Leads <span class="sort-arrow">↕</span></th>
+          <th class="num" onclick="sortProg(4)">Matrículas <span class="sort-arrow">↕</span></th>
+          <th class="num" onclick="sortProg(5)">% Conv. <span class="sort-arrow">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="progBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const SHEET_ID = '2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk';
+const TABS = {
+  resumen: '1551290449',
+  matriculas: '955481695',
+  crm: '17439818'
+};
+const csvUrl = (gid) => `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=${gid}&single=true&output=csv`;
+
+const MEDIO_COLORS = {
+  facebook: '#1877F2',
+  google: '#4285F4',
+  tiktok: '#000000',
+  programatica: '#7F77DD',
+  youtube: '#FF0000',
+  thinking_lab: '#888888',
+  front: '#555555'
+};
+const MEDIO_LABELS = {
+  facebook: 'Facebook',
+  google: 'Google',
+  tiktok: 'TikTok',
+  programatica: 'Programática',
+  youtube: 'YouTube',
+  thinking_lab: 'Thinking Lab',
+  front: 'Front'
+};
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let rawResumen = [], rawMatriculas = [], rawCRM = [];
+let compareOn = false;
+let progSortCol = 2, progSortAsc = false;
+let medioSortCol = 1, medioSortAsc = false;
+let activeModalidad = 'Todos';
+let trendChartInst = null;
+
+// ── HELPERS ──────────────────────────────────────────────────────────────
+function parseDate(str) {
+  if (!str) return null;
+  const s = str.trim();
+  // DD/MM/YYYY HH:MM or DD/MM/YYYY
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  // YYYY-MM-DD
+  const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m2) return new Date(+m2[1], +m2[2]-1, +m2[3]);
+  return null;
+}
+
+function toDateInput(d) {
+  return d.toISOString().slice(0,10);
+}
+
+function parseMoney(str) {
+  if (!str) return 0;
+  return parseFloat(str.toString().replace(/[^0-9.\-]/g, '').replace(',','.')) || 0;
+}
+
+function fmtCOP(n) {
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n/1e3) + 'K';
+  return '$' + Math.round(n).toLocaleString('es-CO');
+}
+
+function fmtNum(n) {
+  return Math.round(n).toLocaleString('es-CO');
+}
+
+function fmtPct(n) {
+  return (n*100).toFixed(1) + '%';
+}
+
+function deltaHtml(curr, prev, isInverse=false, isPct=false) {
+  if (!compareOn || prev === null || prev === 0) return '<span class="delta-neutral">— sin comparativo</span>';
+  const pct = ((curr - prev) / Math.abs(prev)) * 100;
+  const isUp = pct >= 0;
+  const cls = (isUp !== isInverse) ? 'delta-up' : 'delta-down';
+  const arrow = isUp ? '↑' : '↓';
+  const label = isPct
+    ? `${arrow} ${Math.abs(pct).toFixed(1)}pp vs período ant.`
+    : `${arrow} ${Math.abs(pct).toFixed(1)}% vs período ant.`;
+  return `<span class="${cls}">${label}</span>`;
+}
+
+function getDateRange() {
+  const from = document.getElementById('dateFrom').value;
+  const to = document.getElementById('dateTo').value;
+  return {
+    from: from ? new Date(from) : null,
+    to: to ? new Date(to + 'T23:59:59') : null
+  };
+}
+
+function getCompareDateRange() {
+  const from = document.getElementById('dateFromB').value;
+  const to = document.getElementById('dateToB').value;
+  return {
+    from: from ? new Date(from) : null,
+    to: to ? new Date(to + 'T23:59:59') : null
+  };
+}
+
+function inRange(date, range) {
+  if (!date) return false;
+  if (range.from && date < range.from) return false;
+  if (range.to && date > range.to) return false;
+  return true;
+}
+
+// ── FETCH CSV ─────────────────────────────────────────────────────────────
+async function fetchCSV(gid) {
+  const res = await fetch(csvUrl(gid));
+  const text = await res.text();
+  const lines = text.split('\n');
+  const rows = lines.map(l => {
+    const cols = []; let cur = ''; let inQ = false;
+    for (let i = 0; i < l.length; i++) {
+      if (l[i] === '"') { inQ = !inQ; }
+      else if (l[i] === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += l[i]; }
+    }
+    cols.push(cur.trim());
+    return cols;
+  });
+  return rows;
+}
+
+function parseResumen(rows) {
+  // Find header row
+  let headerIdx = -1;
+  for (let i = 0; i < Math.min(5, rows.length); i++) {
+    if (rows[i][0] && rows[i][0].toLowerCase().includes('campa')) { headerIdx = i; break; }
+  }
+  if (headerIdx < 0) headerIdx = 0;
+  const header = rows[headerIdx].map(h => h.toLowerCase().trim());
+
+  const colIdx = (name) => header.findIndex(h => h.includes(name));
+  const iDate = 0;
+  const iMedio = colIdx('medio');
+  const iModalidad = colIdx('modalidad');
+  const iTipoProg = colIdx('tipo');
+  const iPrograma = colIdx('programa');
+
+  // Find inversion and leads columns - look for numeric columns after Programa
+  // Usually: CampaignID, CampaignName, AdSetName, AdName, Medio, Modalidad, TipoProg, Programa, Inversion, Leads...
+  let iInversion = header.findIndex(h => h.includes('inversion') || h.includes('inversión') || h === 'spend' || h.includes('costo'));
+  let iLeads = header.findIndex(h => h.includes('leads') || h.includes('lead'));
+
+  const data = [];
+  for (let i = headerIdx + 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[iDate] || !r[iDate].trim()) continue;
+    const d = parseDate(r[iDate]);
+    if (!d) continue;
+
+    let inv = 0, leads = 0;
+    // Try to find money and numeric values from columns after Programa
+    // Scan all columns for $ values
+    for (let j = 8; j < r.length; j++) {
+      const v = r[j] ? r[j].trim() : '';
+      if (v.startsWith('$') || (v.includes('.') && !isNaN(parseMoney(v)) && parseMoney(v) > 0)) {
+        if (inv === 0 && parseMoney(v) > 0) { inv = parseMoney(v); continue; }
+      }
+      if (!isNaN(parseFloat(v)) && parseFloat(v) >= 0 && !v.includes('$') && leads === 0 && parseFloat(v) !== inv) {
+        leads = parseFloat(v);
+      }
+    }
+
+    // More reliable: use fixed columns based on what we see in the sheet
+    // Col A=CampaignID(fecha), B=CampaignName, C=AdSetName, D=AdName, E=Medio, F=Modalidad, G=TipoProg, H=Programa
+    // Then investment/leads follow
+    const medioRaw = iMedio >= 0 ? (r[iMedio]||'').trim().toLowerCase() : '';
+    const modalidad = iModalidad >= 0 ? (r[iModalidad]||'').trim() : '';
+    const tipoProg = iTipoProg >= 0 ? (r[iTipoProg]||'').trim() : '';
+    const programa = iPrograma >= 0 ? (r[iPrograma]||'').trim() : '';
+
+    // Scan for investment ($ values)
+    let foundInv = 0, foundLeads = 0;
+    for (let j = Math.max(iPrograma+1, 8); j < Math.min(r.length, 20); j++) {
+      const v = (r[j]||'').trim();
+      const num = parseMoney(v);
+      if (num > 0 && (v.includes('$') || v.includes('.'))) {
+        if (foundInv === 0) { foundInv = num; continue; }
+      }
+      const plain = parseFloat(v.replace(',','.'));
+      if (!isNaN(plain) && plain >= 0 && !v.includes('$') && foundLeads === 0 && plain < 1000000) {
+        foundLeads = plain;
+      }
+    }
+
+    data.push({
+      date: d,
+      medio: medioRaw || 'otros',
+      modalidad: modalidad || 'General',
+      tipoProg,
+      programa,
+      inversion: foundInv,
+      leads: foundLeads
+    });
+  }
+  return data;
+}
+
+function parseCRM(rows) {
+  // Col A = Fecha, C = Fuente, D = Campaña, E = Programa, F = TipoProg, I = ASPIRANTES, M = MATRICULAS
+  const data = [];
+  let start = 1;
+  for (let i = 0; i < Math.min(3, rows.length); i++) {
+    if (rows[i][0] && rows[i][0].toLowerCase().includes('fecha')) { start = i+1; break; }
+  }
+  for (let i = start; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[0] || !r[0].trim()) continue;
+    const d = parseDate(r[0]);
+    if (!d) continue;
+    data.push({
+      date: d,
+      fuente: (r[2]||'').trim(),
+      campana: (r[3]||'').trim(),
+      programa: (r[4]||'').trim(),
+      tipoProg: (r[5]||'').trim(),
+      aspirantes: parseFloat((r[8]||'0').replace(',','.')) || 0
+    });
+  }
+  return data;
+}
+
+function parseMatriculas(rows) {
+  const data = [];
+  let start = 1;
+  for (let i = 0; i < Math.min(3, rows.length); i++) {
+    if (rows[i][0] && rows[i][0].toLowerCase().includes('fecha')) { start = i+1; break; }
+  }
+  for (let i = start; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[0] || !r[0].trim()) continue;
+    const d = parseDate(r[0]);
+    if (!d) continue;
+    data.push({
+      date: d,
+      fuente: (r[1]||'').trim(),
+      campana: (r[2]||'').trim(),
+      programa: (r[3]||'').trim(),
+      tipoProg: (r[4]||'').trim(),
+      matriculas: parseFloat((r[6]||'0').replace(',','.')) || 0
+    });
+  }
+  return data;
+}
+
+// ── FILTER DATA ───────────────────────────────────────────────────────────
+function filterData(data, range) {
+  return data.filter(r => inRange(r.date, range));
+}
+
+// ── RENDER KPIs ───────────────────────────────────────────────────────────
+function computeKPIs(resumen, crm, mats) {
+  const inv = resumen.reduce((s,r) => s + r.inversion, 0);
+  const leads = resumen.reduce((s,r) => s + r.leads, 0);
+  const crmLeads = crm.reduce((s,r) => s + r.aspirantes, 0);
+  const mCount = mats.reduce((s,r) => s + r.matriculas, 0);
+  const cpl = leads > 0 ? inv / leads : 0;
+  const conv = leads > 0 ? mCount / leads : 0;
+  return { inv, leads, crmLeads, mCount, cpl, conv };
+}
+
+function renderKPIs(curr, prev) {
+  const set = (id, val, deltaId, currV, prevV, isInverse=false, isPct=false) => {
+    document.getElementById(id).textContent = val;
+    document.getElementById(deltaId).innerHTML = deltaHtml(currV, prevV, isInverse, isPct);
+  };
+  set('kpiInversion', fmtCOP(curr.inv), 'kpiInversionDelta', curr.inv, prev?.inv);
+  set('kpiLeads', fmtNum(curr.leads), 'kpiLeadsDelta', curr.leads, prev?.leads);
+  set('kpiCRM', fmtNum(curr.crmLeads), 'kpiCRMDelta', curr.crmLeads, prev?.crmLeads);
+  set('kpiMatriculas', fmtNum(curr.mCount), 'kpiMatriculasDelta', curr.mCount, prev?.mCount);
+  set('kpiCPL', fmtCOP(curr.cpl), 'kpiCPLDelta', curr.cpl, prev?.cpl, true);
+  document.getElementById('kpiConv').textContent = fmtPct(curr.conv);
+  document.getElementById('kpiConvDelta').innerHTML = deltaHtml(curr.conv*100, prev ? prev.conv*100 : null, false, true);
+}
+
+// ── RENDER MEDIO TABLE ────────────────────────────────────────────────────
+function renderMedioTable(resumen) {
+  const map = {};
+  resumen.forEach(r => {
+    const m = r.medio || 'otros';
+    if (!map[m]) map[m] = { inv: 0, leads: 0 };
+    map[m].inv += r.inversion;
+    map[m].leads += r.leads;
+  });
+  const totalInv = Object.values(map).reduce((s,v) => s+v.inv, 0);
+  let rows = Object.entries(map).map(([m, v]) => ({
+    medio: m,
+    inv: v.inv,
+    leads: v.leads,
+    cpl: v.leads > 0 ? v.inv / v.leads : 0,
+    pct: totalInv > 0 ? v.inv / totalInv : 0
+  }));
+
+  if (medioSortCol === 0) rows.sort((a,b) => medioSortAsc ? a.medio.localeCompare(b.medio) : b.medio.localeCompare(a.medio));
+  else if (medioSortCol === 1) rows.sort((a,b) => medioSortAsc ? a.inv-b.inv : b.inv-a.inv);
+  else if (medioSortCol === 2) rows.sort((a,b) => medioSortAsc ? a.leads-b.leads : b.leads-a.leads);
+  else if (medioSortCol === 3) rows.sort((a,b) => medioSortAsc ? a.cpl-b.cpl : b.cpl-a.cpl);
+
+  const maxInv = Math.max(...rows.map(r=>r.inv));
+  const tbody = document.getElementById('medioBody');
+  tbody.innerHTML = rows.map(r => {
+    const color = MEDIO_COLORS[r.medio] || '#888';
+    const label = MEDIO_LABELS[r.medio] || r.medio.charAt(0).toUpperCase() + r.medio.slice(1);
+    const barW = maxInv > 0 ? Math.round(r.inv/maxInv*100) : 0;
+    return `<tr>
+      <td><span class="medio-dot" style="background:${color}"></span>${label}</td>
+      <td class="num">
+        <div class="bar-cell">
+          <span>${fmtCOP(r.inv)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${barW}%"></div></div>
+        </div>
+      </td>
+      <td class="num">${fmtNum(r.leads)}</td>
+      <td class="num">${r.cpl > 0 ? fmtCOP(r.cpl) : '—'}</td>
+      <td class="num">${(r.pct*100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortMedio(col) {
+  if (medioSortCol === col) medioSortAsc = !medioSortAsc;
+  else { medioSortCol = col; medioSortAsc = false; }
+  renderAll();
+}
+
+// ── RENDER TREND CHART ────────────────────────────────────────────────────
+function renderTrendChart(resumenA, resumenB) {
+  const byMonth = (data) => {
+    const map = {};
+    data.forEach(r => {
+      const key = `${r.date.getFullYear()}-${String(r.date.getMonth()+1).padStart(2,'0')}`;
+      if (!map[key]) map[key] = { inv: 0, leads: 0 };
+      map[key].inv += r.inversion;
+      map[key].leads += r.leads;
+    });
+    return map;
+  };
+
+  const mapA = byMonth(resumenA);
+  const labelsA = Object.keys(mapA).sort();
+  const invA = labelsA.map(k => mapA[k].inv);
+  const leadsA = labelsA.map(k => mapA[k].leads);
+
+  const fmtLabel = (k) => {
+    const [y,m] = k.split('-');
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return months[parseInt(m)-1] + ' ' + y.slice(2);
+  };
+
+  const datasets = [
+    {
+      label: 'Inversión',
+      data: invA,
+      borderColor: '#FFC000',
+      backgroundColor: 'rgba(255,192,0,0.1)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true,
+      yAxisID: 'y'
+    },
+    {
+      label: 'Leads',
+      data: leadsA,
+      borderColor: '#111111',
+      backgroundColor: 'rgba(17,17,17,0.05)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: false,
+      yAxisID: 'y2'
+    }
+  ];
+
+  if (compareOn && resumenB && resumenB.length > 0) {
+    const mapB = byMonth(resumenB);
+    const labelsB = Object.keys(mapB).sort();
+    datasets.push({
+      label: 'Inversión (comp.)',
+      data: labelsA.map(k => mapB[k]?.inv || 0),
+      borderColor: '#FFC000',
+      borderDash: [4,4],
+      borderWidth: 1.5,
+      tension: 0.4,
+      fill: false,
+      yAxisID: 'y',
+      pointRadius: 2
+    });
+    datasets.push({
+      label: 'Leads (comp.)',
+      data: labelsA.map(k => mapB[k]?.leads || 0),
+      borderColor: '#111111',
+      borderDash: [4,4],
+      borderWidth: 1.5,
+      tension: 0.4,
+      fill: false,
+      yAxisID: 'y2',
+      pointRadius: 2
+    });
+  }
+
+  if (trendChartInst) trendChartInst.destroy();
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  trendChartInst = new Chart(ctx, {
+    type: 'line',
+    data: { labels: labelsA.map(fmtLabel), datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 10 }, boxWidth: 10, padding: 12 } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const v = ctx.parsed.y;
+              if (ctx.dataset.yAxisID === 'y') return ' ' + ctx.dataset.label + ': ' + fmtCOP(v);
+              return ' ' + ctx.dataset.label + ': ' + fmtNum(v);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#F0EFEA' }, ticks: { font: { family: 'Poppins', size: 10 } } },
+        y: {
+          position: 'left', grid: { color: '#F0EFEA' },
+          ticks: { font: { family: 'Poppins', size: 10 }, callback: v => fmtCOP(v) }
+        },
+        y2: {
+          position: 'right', grid: { drawOnChartArea: false },
+          ticks: { font: { family: 'Poppins', size: 10 }, callback: v => fmtNum(v) }
+        }
+      }
+    }
+  });
+}
+
+// ── RENDER INVERSION TABLE ────────────────────────────────────────────────
+function renderInversionTable(resumen) {
+  // Group by Month → Modalidad → Medio
+  const months = {};
+  const medios = new Set();
+  resumen.forEach(r => {
+    const key = `${r.date.getFullYear()}-${String(r.date.getMonth()+1).padStart(2,'0')}`;
+    const modalidad = r.modalidad || 'General';
+    const medio = r.medio || 'otros';
+    medios.add(medio);
+    if (!months[key]) months[key] = {};
+    if (!months[key][modalidad]) months[key][modalidad] = {};
+    if (!months[key][modalidad][medio]) months[key][modalidad][medio] = 0;
+    months[key][modalidad][medio] += r.inversion;
+  });
+
+  const sortedMonths = Object.keys(months).sort();
+  const mediosList = Array.from(medios).sort();
+  const fmtMonthLabel = (k) => {
+    const [y,m] = k.split('-');
+    const names = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return names[parseInt(m)-1] + ' ' + y;
+  };
+
+  // Build header
+  const headRow = `<tr>
+    <th style="text-align:left">Mes / Modalidad</th>
+    ${mediosList.map(m => `<th>${MEDIO_LABELS[m] || m}</th>`).join('')}
+    <th>Total</th>
+  </tr>`;
+  document.getElementById('invTableHead').innerHTML = headRow;
+
+  let bodyHtml = '';
+  let grandTotal = {};
+  mediosList.forEach(m => grandTotal[m] = 0);
+  let grandTotalAll = 0;
+
+  sortedMonths.forEach(month => {
+    const modalidades = months[month];
+    const monthTotals = {};
+    mediosList.forEach(m => monthTotals[m] = 0);
+    let monthTotal = 0;
+
+    // Month header row
+    bodyHtml += `<tr class="month-header"><td colspan="${mediosList.length + 2}">${fmtMonthLabel(month)}</td></tr>`;
+
+    Object.keys(modalidades).sort().forEach(modalidad => {
+      const medioData = modalidades[modalidad];
+      let rowTotal = 0;
+      mediosList.forEach(m => { rowTotal += medioData[m] || 0; });
+      if (rowTotal === 0) return;
+
+      bodyHtml += `<tr class="subtotal">
+        <td>${modalidad}</td>
+        ${mediosList.map(m => {
+          const v = medioData[m] || 0;
+          monthTotals[m] += v;
+          return `<td>${v > 0 ? fmtCOP(v) : '—'}</td>`;
+        }).join('')}
+        <td>${fmtCOP(rowTotal)}</td>
+      </tr>`;
+      monthTotal += rowTotal;
+    });
+
+    // Month total
+    mediosList.forEach(m => { grandTotal[m] += monthTotals[m]; });
+    grandTotalAll += monthTotal;
+    bodyHtml += `<tr style="background:var(--gray-200)">
+      <td style="font-weight:600;padding-left:10px">Total ${fmtMonthLabel(month)}</td>
+      ${mediosList.map(m => `<td style="font-weight:600;text-align:right">${monthTotals[m] > 0 ? fmtCOP(monthTotals[m]) : '—'}</td>`).join('')}
+      <td style="font-weight:700;text-align:right">${fmtCOP(monthTotal)}</td>
+    </tr>`;
+  });
+
+  // Grand total
+  bodyHtml += `<tr class="total-row">
+    <td>Total general</td>
+    ${mediosList.map(m => `<td>${grandTotal[m] > 0 ? fmtCOP(grandTotal[m]) : '—'}</td>`).join('')}
+    <td>${fmtCOP(grandTotalAll)}</td>
+  </tr>`;
+
+  document.getElementById('invTableBody').innerHTML = bodyHtml;
+}
+
+// ── RENDER PROGRAMAS ──────────────────────────────────────────────────────
+function renderProgTable(resumen, mats) {
+  // Aggregate by programa
+  const map = {};
+  resumen.forEach(r => {
+    const k = r.programa || '(Sin programa)';
+    if (!map[k]) map[k] = { modalidad: r.modalidad, inv: 0, leads: 0, mats: 0 };
+    map[k].inv += r.inversion;
+    map[k].leads += r.leads;
+  });
+  mats.forEach(r => {
+    const k = r.programa || '(Sin programa)';
+    if (!map[k]) map[k] = { modalidad: r.tipoProg || '', inv: 0, leads: 0, mats: 0 };
+    map[k].mats += r.matriculas;
+  });
+
+  // Modalidad filters
+  const modalidades = ['Todos', ...new Set(Object.values(map).map(v => v.modalidad).filter(Boolean)).values()];
+  const filterDiv = document.getElementById('modalidadFilters');
+  if (filterDiv.children.length === 0) {
+    filterDiv.innerHTML = modalidades.map(m =>
+      `<button class="fbtn ${m === activeModalidad ? 'active' : ''}" onclick="setModalidad('${m}')">${m}</button>`
+    ).join('');
+  }
+
+  let rows = Object.entries(map).map(([prog, v]) => ({
+    prog, modalidad: v.modalidad, inv: v.inv, leads: v.leads, mats: v.mats,
+    conv: v.leads > 0 ? v.mats / v.leads : 0
+  }));
+
+  if (activeModalidad !== 'Todos') rows = rows.filter(r => r.modalidad === activeModalidad);
+
+  const sortFns = [
+    (a,b) => progSortAsc ? a.prog.localeCompare(b.prog) : b.prog.localeCompare(a.prog),
+    (a,b) => progSortAsc ? a.modalidad.localeCompare(b.modalidad) : b.modalidad.localeCompare(a.modalidad),
+    (a,b) => progSortAsc ? a.inv-b.inv : b.inv-a.inv,
+    (a,b) => progSortAsc ? a.leads-b.leads : b.leads-a.leads,
+    (a,b) => progSortAsc ? a.mats-b.mats : b.mats-a.mats,
+    (a,b) => progSortAsc ? a.conv-b.conv : b.conv-a.conv
+  ];
+  rows.sort(sortFns[progSortCol]);
+
+  document.getElementById('progBody').innerHTML = rows.map(r => {
+    const pct = r.conv * 100;
+    let badgeCls = 'badge-warning';
+    if (pct >= 8) badgeCls = 'badge-success';
+    else if (pct < 3 && r.leads > 0) badgeCls = 'badge-danger';
+    return `<tr>
+      <td>${r.prog}</td>
+      <td>${r.modalidad || '—'}</td>
+      <td class="num">${r.inv > 0 ? fmtCOP(r.inv) : '—'}</td>
+      <td class="num">${fmtNum(r.leads)}</td>
+      <td class="num">${fmtNum(r.mats)}</td>
+      <td class="num">${r.leads > 0 ? `<span class="badge ${badgeCls}">${pct.toFixed(1)}%</span>` : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function setModalidad(m) {
+  activeModalidad = m;
+  document.querySelectorAll('#modalidadFilters .fbtn').forEach(b => {
+    b.classList.toggle('active', b.textContent === m);
+  });
+  const range = getDateRange();
+  const resumenF = filterData(rawResumen, range);
+  const matsF = filterData(rawMatriculas, range);
+  renderProgTable(resumenF, matsF);
+}
+
+function sortProg(col) {
+  if (progSortCol === col) progSortAsc = !progSortAsc;
+  else { progSortCol = col; progSortAsc = false; }
+  renderAll();
+}
+
+// ── RENDER ALL ────────────────────────────────────────────────────────────
+function renderAll() {
+  const range = getDateRange();
+  const resumenF = filterData(rawResumen, range);
+  const crmF = filterData(rawCRM, range);
+  const matsF = filterData(rawMatriculas, range);
+
+  let prevKPIs = null;
+  let resumenB = [];
+  if (compareOn) {
+    const rangeB = getCompareDateRange();
+    resumenB = filterData(rawResumen, rangeB);
+    const crmB = filterData(rawCRM, rangeB);
+    const matsB = filterData(rawMatriculas, rangeB);
+    prevKPIs = computeKPIs(resumenB, crmB, matsB);
+  }
+
+  const currKPIs = computeKPIs(resumenF, crmF, matsF);
+  renderKPIs(currKPIs, prevKPIs);
+  renderMedioTable(resumenF);
+  renderTrendChart(resumenF, resumenB);
+  renderInversionTable(resumenF);
+  renderProgTable(resumenF, matsF);
+}
+
+// ── QUICK DATES ───────────────────────────────────────────────────────────
+function setQuick(type) {
+  const today = new Date();
+  let from, to = today;
+  if (type === 'month') {
+    from = new Date(today.getFullYear(), today.getMonth(), 1);
+  } else if (type === '30d') {
+    from = new Date(today - 30*86400000);
+  } else if (type === 'quarter') {
+    const q = Math.floor(today.getMonth()/3);
+    from = new Date(today.getFullYear(), q*3, 1);
+  } else if (type === 'year') {
+    from = new Date(today.getFullYear(), 0, 1);
+  } else {
+    // all — use min/max from data
+    if (rawResumen.length > 0) {
+      const dates = rawResumen.map(r => r.date);
+      from = new Date(Math.min(...dates));
+      to = new Date(Math.max(...dates));
+    } else {
+      from = new Date(2025, 0, 1);
+    }
+  }
+  document.getElementById('dateFrom').value = toDateInput(from);
+  document.getElementById('dateTo').value = toDateInput(to);
+  document.querySelectorAll('.qbtn').forEach((b,i) => b.classList.toggle('active', ['month','30d','quarter','year','all'][i]===type));
+  renderAll();
+}
+
+// ── COMPARE TOGGLE ────────────────────────────────────────────────────────
+function toggleCompare() {
+  compareOn = !compareOn;
+  document.getElementById('compareToggle').classList.toggle('on', compareOn);
+  document.getElementById('comparePeriodWrap').style.display = compareOn ? 'flex' : 'none';
+  if (compareOn) {
+    // Auto-set compare period to previous equivalent
+    const from = new Date(document.getElementById('dateFrom').value);
+    const to = new Date(document.getElementById('dateTo').value);
+    const diff = to - from;
+    const prevTo = new Date(from - 86400000);
+    const prevFrom = new Date(prevTo - diff);
+    document.getElementById('dateFromB').value = toDateInput(prevFrom);
+    document.getElementById('dateToB').value = toDateInput(prevTo);
+  }
+  renderAll();
+}
+
+// ── LOAD ALL ──────────────────────────────────────────────────────────────
+async function loadAll() {
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+  document.getElementById('errorMsg').style.display = 'none';
+  try {
+    document.getElementById('loadingText').textContent = 'Cargando Resumen General…';
+    const [rRows, mRows, cRows] = await Promise.all([
+      fetchCSV(TABS.resumen),
+      fetchCSV(TABS.matriculas),
+      fetchCSV(TABS.crm)
+    ]);
+    document.getElementById('loadingText').textContent = 'Procesando datos…';
+    rawResumen = parseResumen(rRows);
+    rawMatriculas = parseMatriculas(mRows);
+    rawCRM = parseCRM(cRows);
+
+    const now = new Date();
+    document.getElementById('updateBadge').textContent =
+      `Actualizado: ${now.toLocaleDateString('es-CO')} ${now.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit'})}`;
+
+    // Default: current year
+    setQuick('year');
+  } catch(e) {
+    console.error(e);
+    const err = document.getElementById('errorMsg');
+    err.style.display = 'block';
+    err.textContent = 'Error cargando datos: ' + e.message + '. Verifica que el Sheets sea público.';
+  } finally {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.getElementById('dateFrom').addEventListener('change', renderAll);
+document.getElementById('dateTo').addEventListener('change', renderAll);
+document.getElementById('dateFromB').addEventListener('change', renderAll);
+document.getElementById('dateToB').addEventListener('change', renderAll);
+
+loadAll();
+</script>
+</body>
+</html>
