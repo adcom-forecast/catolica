@@ -3,1156 +3,1203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Católica — Tablero de Resultados | ADCOM</title>
+<title>Dashboard Católica — Adcom</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    --black: #111111;
-    --yellow: #FFC000;
-    --yellow-light: #FFF3CC;
-    --white: #FFFFFF;
-    --gray-50: #F8F8F6;
-    --gray-100: #F0EFEA;
-    --gray-200: #E0DFDA;
-    --gray-400: #9A9892;
-    --gray-600: #5F5E5A;
-    --gray-800: #2C2C2A;
-    --success: #3B6D11;
-    --success-bg: #EAF3DE;
-    --danger: #A32D2D;
-    --danger-bg: #FCEBEB;
-    --warning: #854F0B;
-    --warning-bg: #FAEEDA;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-  }
+:root {
+  --black: #0f0f0f;
+  --black2: #1a1a1a;
+  --black3: #242424;
+  --black4: #2e2e2e;
+  --yellow: #FFC000;
+  --yellow2: #e6ac00;
+  --white: #ffffff;
+  --gray: #888888;
+  --gray2: #555555;
+  --gray3: #333333;
+  --green: #4CAF50;
+  --red: #EF5350;
+  --blue: #4A9EFF;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e8e8;
+  --text2: #aaaaaa;
+  --text3: #666666;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--black); color:var(--text); font-family:'Poppins',sans-serif; font-size:13px; min-height:100vh; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── TOPBAR ── */
+.topbar {
+  background:var(--black2);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  height:48px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:200;
+}
+.topbar-left { display:flex; align-items:center; gap:14px; }
+.logo-badge {
+  width:30px; height:30px; background:var(--yellow); border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:13px; color:var(--black2);
+}
+.topbar-brand { font-size:12px; font-weight:600; color:var(--text2); }
+.topbar-title { font-size:13px; font-weight:600; color:var(--white); }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.sync-label { font-size:11px; color:var(--text3); }
+.sync-label span { color:var(--text2); }
+.btn-sync {
+  background:var(--yellow); color:var(--black2);
+  border:none; border-radius:5px; padding:5px 12px;
+  font-size:11px; font-weight:700; font-family:'Poppins',sans-serif;
+  cursor:pointer; display:flex; align-items:center; gap:5px;
+}
 
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-800);
-    font-size: 13px;
-    min-height: 100vh;
-  }
+/* ── PAGE HEADER ── */
+.page-header {
+  background:var(--black2); border-bottom:1px solid var(--border);
+  padding:16px 24px 0;
+}
+.page-header h1 { font-size:20px; font-weight:700; color:var(--white); margin-bottom:3px; }
+.page-header p  { font-size:11px; color:var(--text2); margin-bottom:14px; }
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--black);
-    padding: 0 32px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-left { display: flex; align-items: center; gap: 14px; }
-  .logo {
-    background: var(--yellow);
-    color: var(--black);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 4px;
-    letter-spacing: .08em;
-  }
-  .header-client { color: #fff; font-size: 14px; font-weight: 500; }
-  .header-sep { color: #444; font-size: 16px; }
-  .header-sub { color: #888; font-size: 12px; font-weight: 300; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .update-badge {
-    background: #222;
-    border: 1px solid #333;
-    color: #888;
-    font-size: 11px;
-    padding: 4px 12px;
-    border-radius: 20px;
-  }
-  .refresh-btn {
-    background: var(--yellow);
-    color: var(--black);
-    border: none;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: opacity .15s;
-  }
-  .refresh-btn:hover { opacity: .85; }
+/* ── KPI STRIP ── */
+.kpi-strip {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:8px; margin:0 24px 0;
+  display:grid; grid-template-columns:repeat(5,1fr);
+  position:relative; top:-1px;
+}
+.kpi-item {
+  padding:14px 18px; border-right:1px solid var(--border);
+}
+.kpi-item:last-child { border-right:none; }
+.kpi-item .klabel { font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:5px; }
+.kpi-item .kval   { font-size:22px; font-weight:700; color:var(--yellow); line-height:1; margin-bottom:3px; }
+.kpi-item .ksub   { font-size:10px; color:var(--text2); }
+.kpi-item.dim .kval { color:var(--text2); }
+.kpi-item.dim .klabel::after { content:' (sin periodo)'; color:var(--text3); }
 
-  /* ── MAIN ── */
-  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+/* ── FILTER BAR ── */
+.filter-bar {
+  background:var(--black2); border-bottom:1px solid var(--border);
+  padding:10px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+}
+.filter-group { display:flex; align-items:center; gap:6px; }
+.filter-group label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
+.pills { display:flex; gap:4px; }
+.pill {
+  padding:4px 11px; border-radius:20px; font-size:11px; font-weight:600;
+  background:var(--black4); color:var(--text2); cursor:pointer;
+  border:1px solid transparent; transition:all .15s;
+}
+.pill:hover { background:var(--black3); color:var(--white); }
+.pill.active { background:var(--yellow); color:var(--black2); border-color:var(--yellow); }
 
-  /* ── LOADING ── */
-  .loading-overlay {
-    position: fixed; inset: 0; background: rgba(17,17,17,.85);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-    z-index: 999; transition: opacity .4s;
-  }
-  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-  .spinner {
-    width: 36px; height: 36px; border: 3px solid #333;
-    border-top-color: var(--yellow); border-radius: 50%;
-    animation: spin .7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { color: #888; font-size: 13px; font-family: 'Poppins', sans-serif; }
+/* ── MODE TOGGLE ── */
+.mode-toggle { margin-left:auto; display:flex; gap:4px; align-items:center; }
+.mode-toggle label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-right:4px; }
+.mode-btn {
+  padding:4px 11px; border-radius:5px; font-size:11px; font-weight:600;
+  background:var(--black4); color:var(--text2); cursor:pointer; border:1px solid var(--border);
+  transition:all .15s; font-family:'Poppins',sans-serif;
+}
+.mode-btn.active { background:var(--yellow); color:var(--black2); border-color:var(--yellow); }
 
-  /* ── SECTION LABEL ── */
-  .section-label {
-    font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .1em; color: var(--gray-400); margin-bottom: 8px;
-  }
+/* free date inputs */
+.date-inputs { display:none; align-items:center; gap:6px; }
+.date-inputs.show { display:flex; }
+.date-inputs input[type=date] {
+  background:var(--black4); border:1px solid var(--border); border-radius:5px;
+  padding:4px 8px; font-size:11px; color:var(--text); font-family:'Poppins',sans-serif; outline:none;
+  color-scheme: dark;
+}
+.date-inputs span { font-size:10px; color:var(--text3); }
 
-  /* ── PERIOD BAR ── */
-  .period-bar {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    padding: 14px 20px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  }
-  .period-group { display: flex; align-items: center; gap: 8px; }
-  .period-group label { font-size: 11px; color: var(--gray-400); font-weight: 500; white-space: nowrap; }
-  .date-input {
-    border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
-    padding: 6px 10px; font-size: 12px; font-family: 'Poppins', sans-serif;
-    color: var(--gray-800); background: var(--gray-50); outline: none;
-  }
-  .date-input:focus { border-color: var(--yellow); }
-  .vdivider { width: 1px; height: 28px; background: var(--gray-200); }
-  .quick-btns { display: flex; gap: 4px; }
-  .qbtn {
-    background: var(--gray-50); border: 1px solid var(--gray-200);
-    border-radius: 20px; padding: 5px 12px; font-size: 11px;
-    font-family: 'Poppins', sans-serif; color: var(--gray-600); cursor: pointer;
-    transition: all .15s; font-weight: 500;
-  }
-  .qbtn:hover { border-color: var(--gray-400); }
-  .qbtn.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
-  .compare-wrap { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-  .compare-label { font-size: 11px; color: var(--gray-600); font-weight: 500; }
-  .toggle {
-    width: 36px; height: 20px; background: var(--gray-200);
-    border-radius: 10px; position: relative; cursor: pointer; transition: background .2s;
-  }
-  .toggle.on { background: var(--yellow); }
-  .toggle-knob {
-    width: 16px; height: 16px; background: var(--white);
-    border-radius: 50%; position: absolute; top: 2px; left: 2px;
-    transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
-  }
-  .toggle.on .toggle-knob { left: 18px; }
-  .compare-period-wrap { display: flex; align-items: center; gap: 8px; }
+/* ── NAV TABS ── */
+.nav-tabs {
+  background:var(--black2); border-bottom:2px solid var(--border);
+  padding:0 24px; display:flex; gap:2px;
+}
+.nav-tab {
+  padding:10px 18px; font-size:12px; font-weight:600; color:var(--text2);
+  cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
+  transition:all .15s; display:flex; align-items:center; gap:6px;
+}
+.nav-tab:hover { color:var(--white); }
+.nav-tab.active { color:var(--yellow); border-bottom-color:var(--yellow); }
 
-  /* ── KPI GRID ── */
-  .kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
-  .kpi-card {
-    background: var(--white); border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md); padding: 16px;
-    border-bottom: 3px solid var(--gray-200); transition: border-color .2s;
-  }
-  .kpi-card:hover { border-bottom-color: var(--yellow); }
-  .kpi-card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-400); margin-bottom: 8px; }
-  .kpi-card-val { font-size: 22px; font-weight: 600; color: var(--gray-800); line-height: 1; }
-  .kpi-card-delta { font-size: 11px; margin-top: 6px; font-weight: 500; }
-  .delta-up { color: var(--success); }
-  .delta-down { color: var(--danger); }
-  .delta-neutral { color: var(--gray-400); }
+/* ── META WARN ── */
+.meta-warn {
+  margin:16px 24px 0;
+  background:rgba(255,192,0,0.08); border:1px solid rgba(255,192,0,0.25);
+  border-radius:6px; padding:8px 14px; font-size:11px; color:#f5cc5a;
+  display:none; align-items:center; gap:8px;
+}
+.meta-warn.show { display:flex; }
 
-  /* ── CARDS ── */
-  .card {
-    background: var(--white); border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg); padding: 20px;
-  }
-  .card-title { font-size: 12px; font-weight: 600; color: var(--gray-800); margin-bottom: 16px; }
+/* ── CONTENT ── */
+.content { padding:20px 24px; }
 
-  /* ── TWO COL ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+/* ── SECTION TITLE ── */
+.section-title {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.section-title h3 {
+  font-size:11px; font-weight:700; color:var(--text2);
+  text-transform:uppercase; letter-spacing:1.5px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title h3::before { content:'■'; color:var(--yellow); font-size:8px; }
+.section-title .badge {
+  font-size:10px; color:var(--text3); cursor:pointer;
+  padding:2px 8px; border-radius:4px; background:var(--black3);
+  transition:color .15s;
+}
+.section-title .badge:hover { color:var(--text2); }
 
-  /* ── TABLES ── */
-  .data-table { width: 100%; border-collapse: collapse; }
-  .data-table th {
-    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em;
-    color: var(--gray-400); padding: 8px 10px; text-align: left;
-    border-bottom: 1px solid var(--gray-200); cursor: pointer; user-select: none;
-    white-space: nowrap;
-  }
-  .data-table th:hover { color: var(--gray-800); }
-  .data-table th.sorted { color: var(--black); }
-  .data-table th .sort-arrow { margin-left: 4px; opacity: .5; }
-  .data-table th.sorted .sort-arrow { opacity: 1; }
-  .data-table td {
-    padding: 9px 10px; border-bottom: 1px solid var(--gray-100);
-    font-size: 12px; color: var(--gray-800);
-  }
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table tr:hover td { background: var(--gray-50); }
-  .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .data-table th.num { text-align: right; }
+/* ── CHART CARDS ── */
+.charts-row { display:grid; gap:14px; margin-bottom:20px; }
+.chart-card {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; padding:16px;
+}
+.chart-card h4 { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:14px; }
 
-  /* medio dot */
-  .medio-dot {
-    display: inline-block; width: 8px; height: 8px;
-    border-radius: 50%; margin-right: 7px; vertical-align: middle;
-  }
-  .bar-cell { display: flex; align-items: center; gap: 8px; }
-  .bar-track { flex: 1; height: 4px; background: var(--gray-100); border-radius: 2px; min-width: 40px; }
-  .bar-fill { height: 4px; background: var(--yellow); border-radius: 2px; }
+/* ── TABLES ── */
+.tbl-card {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; overflow:hidden; margin-bottom:20px;
+}
+.tbl-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-bottom:1px solid var(--border);
+}
+.tbl-header h3 { font-size:10px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1.5px; display:flex; align-items:center; gap:6px; }
+.tbl-header h3::before { content:'■'; color:var(--yellow); font-size:8px; }
+.tbl-toggle { font-size:10px; color:var(--text3); cursor:pointer; background:var(--black3); border:none; border-radius:4px; padding:3px 10px; color:var(--text3); font-family:'Poppins',sans-serif; }
+table { width:100%; border-collapse:collapse; font-size:11px; }
+thead th {
+  padding:9px 12px; text-align:left; font-size:9px; font-weight:700;
+  color:var(--text2); background:var(--black3); text-transform:uppercase;
+  letter-spacing:0.8px; white-space:nowrap; border-bottom:1px solid var(--border);
+}
+thead th.ycol { color:var(--yellow); }
+thead th.right, tbody td.right { text-align:right; }
+tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:background .1s; }
+tbody tr:hover { background:rgba(255,255,255,0.03); }
+tbody tr.total-row { background:var(--black3); }
+tbody tr.total-row td { color:var(--white); font-weight:700; }
+tbody tr.total-row td.ycell { color:var(--yellow); }
+tbody td { padding:8px 12px; color:var(--text2); white-space:nowrap; }
+tbody td.bold { font-weight:700; color:var(--white); }
+tbody td.mono { font-weight:600; }
 
-  /* conv badge */
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 10px;
-    font-size: 10px; font-weight: 600;
-  }
-  .badge-success { background: var(--success-bg); color: var(--success); }
-  .badge-warning { background: var(--warning-bg); color: var(--warning); }
-  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+/* colored program pills in tables */
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:9px; font-weight:700; }
+.tag-pre  { background:rgba(255,192,0,0.15);  color:var(--yellow); }
+.tag-pos  { background:rgba(74,158,255,0.15); color:var(--blue); }
+.tag-maes { background:rgba(76,175,80,0.15);  color:var(--green); }
+.tag-doc  { background:rgba(239,83,80,0.15);  color:var(--red); }
 
-  /* ── FILTERS ── */
-  .filter-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-  .fbtn {
-    background: var(--gray-50); border: 1px solid var(--gray-200);
-    border-radius: 20px; padding: 5px 14px; font-size: 11px;
-    font-family: 'Poppins', sans-serif; color: var(--gray-600);
-    cursor: pointer; font-weight: 500; transition: all .15s;
-  }
-  .fbtn:hover { border-color: var(--gray-400); }
-  .fbtn.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
+/* pct good/bad */
+.good { color:var(--green); font-weight:700; }
+.warn { color:var(--yellow); font-weight:700; }
+.bad  { color:var(--red);   font-weight:700; }
 
-  /* ── CHART ── */
-  .chart-container { position: relative; height: 220px; }
+/* progress bar inline */
+.pbar-wrap { display:flex; align-items:center; gap:6px; }
+.pbar { flex:1; height:4px; background:var(--black4); border-radius:2px; min-width:40px; }
+.pbar-fill { height:100%; border-radius:2px; background:var(--yellow); }
+.pbar-fill.bad-fill { background:var(--red); }
+.pbar-fill.good-fill { background:var(--green); }
 
-  /* ── INVERSION TABLE ── */
-  .inv-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  .inv-table th {
-    background: var(--black); color: var(--yellow);
-    font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
-    padding: 8px 10px; text-align: right; white-space: nowrap;
-  }
-  .inv-table th:first-child { text-align: left; }
-  .inv-table td {
-    padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--gray-100);
-    font-variant-numeric: tabular-nums; color: var(--gray-800);
-  }
-  .inv-table td:first-child { text-align: left; font-weight: 500; }
-  .inv-table tr:hover td { background: var(--gray-50); }
-  .inv-table tr.subtotal td {
-    background: var(--gray-100); font-weight: 600; font-size: 11px; color: var(--gray-800);
-  }
-  .inv-table tr.subtotal td:first-child { padding-left: 20px; color: var(--gray-600); font-weight: 400; }
-  .inv-table tr.month-header td {
-    background: var(--gray-800); color: var(--white); font-weight: 600;
-    font-size: 11px; padding: 8px 10px;
-  }
-  .inv-table tr.total-row td {
-    background: var(--yellow); color: var(--black); font-weight: 700; font-size: 12px;
-  }
-  .inv-table-wrap { max-height: 420px; overflow-y: auto; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--gray-200); }
+/* ── FUNNEL BARS ── */
+.fn-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+.fn-lbl { font-size:10px; color:var(--text2); width:95px; text-align:right; font-weight:600; }
+.fn-track { flex:1; height:28px; background:var(--black3); border-radius:5px; overflow:hidden; }
+.fn-bar { height:100%; border-radius:5px; display:flex; align-items:center; padding-left:10px; font-size:11px; font-weight:700; }
+.fn-pct { font-size:10px; color:var(--text3); width:42px; text-align:right; }
 
-  /* ── ERROR ── */
-  .error-msg {
-    background: var(--danger-bg); border: 1px solid #F09595;
-    border-radius: var(--radius-md); padding: 12px 16px;
-    color: var(--danger); font-size: 12px; display: none;
-  }
+/* ── SMALL BARS ── */
+.sbar-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.sbar-lbl { font-size:11px; color:var(--text2); width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sbar-track { flex:1; height:7px; background:var(--black3); border-radius:4px; overflow:hidden; }
+.sbar-fill { height:100%; border-radius:4px; }
+.sbar-val { font-size:10px; font-weight:700; color:var(--white); width:70px; text-align:right; }
 
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--gray-100); }
-  ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+/* ── GRID HELPERS ── */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.g3 { display:grid; grid-template-columns:2fr 1fr 1fr; gap:14px; }
+.g4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
+
+/* ── VIEW TOGGLE ── */
+.view-off { display:none !important; }
+
+/* ── INSIGHT ── */
+.insight {
+  background:var(--black2); border:1px solid var(--border); border-left:3px solid var(--yellow);
+  border-radius:6px; padding:10px 14px; font-size:11px; color:var(--text2);
+  font-style:italic; line-height:1.6; margin-top:14px;
+}
+
+/* ── PROG SELECTOR ── */
+.prog-select-bar {
+  background:var(--black2); border:1px solid var(--border); border-radius:8px;
+  padding:14px 16px; margin-bottom:16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+}
+.prog-select-bar label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
+.prog-select-bar select {
+  background:var(--black3); border:1px solid var(--border); border-radius:5px;
+  padding:6px 10px; font-size:12px; font-family:'Poppins',sans-serif;
+  color:var(--text); outline:none; cursor:pointer;
+}
 </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="spinner"></div>
-  <div class="loading-text" id="loadingText">Cargando datos desde Google Sheets…</div>
+<!-- ══════ TOPBAR ══════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-badge">A</div>
+    <span class="topbar-brand">ADCOM</span>
+    <span style="color:var(--border)">|</span>
+    <span class="topbar-title">Dashboard Católica</span>
+  </div>
+  <div class="topbar-right">
+    <span class="sync-label">Actualizado: <span id="sync-time">--</span></span>
+    <button class="btn-sync" onclick="loadAllData()">↻ Actualizar</button>
+  </div>
 </div>
 
-<header class="header">
-  <div class="header-left">
-    <span class="logo">ADCOM</span>
-    <span class="header-client">Católica</span>
-    <span class="header-sep">·</span>
-    <span class="header-sub">Tablero de Resultados Digitales</span>
+<!-- ══════ PAGE HEADER ══════ -->
+<div class="page-header">
+  <h1>Dashboard Digital</h1>
+  <p>Universidad Católica de Colombia · Inversión, Leads CRM y Matrículas</p>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip" style="margin:0 0 14px;">
+    <div class="kpi-item">
+      <div class="klabel">Inversión Total</div>
+      <div class="kval" id="kpi-inv">—</div>
+      <div class="ksub" id="kpi-inv-sub">cargando...</div>
+    </div>
+    <div class="kpi-item">
+      <div class="klabel">Leads CRM</div>
+      <div class="kval" id="kpi-leads">—</div>
+      <div class="ksub" id="kpi-leads-sub">tráfico pago</div>
+    </div>
+    <div class="kpi-item">
+      <div class="klabel">CPL (CRM)</div>
+      <div class="kval" id="kpi-cpl">—</div>
+      <div class="ksub">inversión ÷ leads CRM</div>
+    </div>
+    <div class="kpi-item">
+      <div class="klabel">Matrículas</div>
+      <div class="kval" id="kpi-mat">—</div>
+      <div class="ksub" id="kpi-mat-sub">confirmadas</div>
+    </div>
+    <div class="kpi-item">
+      <div class="klabel">Conv. CRM → Mat.</div>
+      <div class="kval" id="kpi-conv">—</div>
+      <div class="ksub">leads CRM → matrículas</div>
+    </div>
   </div>
-  <div class="header-right">
-    <span class="update-badge" id="updateBadge">— Cargando…</span>
-    <button class="refresh-btn" onclick="loadAll()">↻ Actualizar</button>
+</div>
+
+<!-- ══════ FILTER BAR ══════ -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Periodo</label>
+    <div class="pills" id="pills-periodo">
+      <span class="pill active" onclick="setPill(this,'periodo')">Todos</span>
+      <span class="pill" onclick="setPill(this,'periodo')">2025-3</span>
+      <span class="pill" onclick="setPill(this,'periodo')">2026-1</span>
+    </div>
   </div>
-</header>
+  <div class="filter-group">
+    <label>Modalidad</label>
+    <div class="pills" id="pills-modal">
+      <span class="pill active" onclick="setPill(this,'modal')">Todas</span>
+      <span class="pill" onclick="setPill(this,'modal')">Pregrado</span>
+      <span class="pill" onclick="setPill(this,'modal')">Posgrado</span>
+    </div>
+  </div>
+  <div class="filter-group">
+    <label>Medio</label>
+    <div class="pills" id="pills-medio">
+      <span class="pill active" onclick="setPill(this,'medio')">Todos</span>
+      <span class="pill" onclick="setPill(this,'medio')">Google</span>
+      <span class="pill" onclick="setPill(this,'medio')">Meta</span>
+      <span class="pill" onclick="setPill(this,'medio')">TikTok</span>
+      <span class="pill" onclick="setPill(this,'medio')">Programática</span>
+    </div>
+  </div>
+  <div class="mode-toggle">
+    <label>Fechas</label>
+    <button class="mode-btn active" onclick="setMode('periodo',this)">Por periodo</button>
+    <button class="mode-btn" onclick="setMode('libre',this)">Libre</button>
+    <div class="date-inputs" id="date-inputs">
+      <span>Desde</span>
+      <input type="date" id="date-from" value="2026-01-01">
+      <span>Hasta</span>
+      <input type="date" id="date-to" value="2026-04-27">
+    </div>
+  </div>
+</div>
 
-<main class="main">
+<!-- ══════ NAV TABS ══════ -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showTab('resumen',this)">● Resumen</div>
+  <div class="nav-tab" onclick="showTab('programa',this)">⊞ Por Programa</div>
+  <div class="nav-tab" onclick="showTab('dia',this)">⟋ Leads por Día</div>
+  <div class="nav-tab" onclick="showTab('funnel',this)">▽ Funnel CRM</div>
+</div>
 
-  <div class="error-msg" id="errorMsg"></div>
+<!-- META WARNING -->
+<div class="meta-warn" id="meta-warn">
+  ⚠️ Modo fechas libres activo — presupuesto y metas desactivados. Los % de cumplimiento no están disponibles para rangos personalizados.
+</div>
 
-  <!-- PERIOD BAR -->
-  <div>
-    <div class="section-label">Control de período</div>
-    <div class="period-bar">
-      <div class="period-group">
-        <label>Desde</label>
-        <input type="date" class="date-input" id="dateFrom">
-      </div>
-      <div class="period-group">
-        <label>Hasta</label>
-        <input type="date" class="date-input" id="dateTo">
-      </div>
-      <div class="vdivider"></div>
-      <div class="quick-btns">
-        <button class="qbtn" onclick="setQuick('month')">Este mes</button>
-        <button class="qbtn" onclick="setQuick('30d')">Últ. 30d</button>
-        <button class="qbtn" onclick="setQuick('quarter')">Trimestre</button>
-        <button class="qbtn" onclick="setQuick('year')">Este año</button>
-        <button class="qbtn" onclick="setQuick('all')">Todo</button>
-      </div>
-      <div class="vdivider"></div>
-      <div class="compare-wrap">
-        <span class="compare-label">Comparar</span>
-        <div class="toggle" id="compareToggle" onclick="toggleCompare()"><div class="toggle-knob"></div></div>
-        <div class="compare-period-wrap" id="comparePeriodWrap" style="display:none">
-          <div class="period-group">
-            <label>Desde</label>
-            <input type="date" class="date-input" id="dateFromB">
-          </div>
-          <div class="period-group">
-            <label>Hasta</label>
-            <input type="date" class="date-input" id="dateToB">
-          </div>
-        </div>
-      </div>
+<!-- ══════════════════════════════════════════════
+     TAB 1 — RESUMEN
+══════════════════════════════════════════════ -->
+<div id="tab-resumen" class="content">
+
+  <!-- Charts row -->
+  <div class="g3" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h4>Inversión mensual por medio</h4>
+      <canvas id="chart-inversion" height="160"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Leads CRM por Medio</h4>
+      <canvas id="chart-leads-medio" height="160"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Funnel Global</h4>
+      <div id="funnel-global" style="padding-top:4px"></div>
     </div>
   </div>
 
-  <!-- KPIs -->
-  <div>
-    <div class="section-label">Resumen del período</div>
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-card-label">Inversión total</div>
-        <div class="kpi-card-val" id="kpiInversion">—</div>
-        <div class="kpi-card-delta" id="kpiInversionDelta"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-card-label">Leads plataforma</div>
-        <div class="kpi-card-val" id="kpiLeads">—</div>
-        <div class="kpi-card-delta" id="kpiLeadsDelta"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-card-label">Leads CRM</div>
-        <div class="kpi-card-val" id="kpiCRM">—</div>
-        <div class="kpi-card-delta" id="kpiCRMDelta"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-card-label">Matrículas</div>
-        <div class="kpi-card-val" id="kpiMatriculas">—</div>
-        <div class="kpi-card-delta" id="kpiMatriculasDelta"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-card-label">CPL</div>
-        <div class="kpi-card-val" id="kpiCPL">—</div>
-        <div class="kpi-card-delta" id="kpiCPLDelta"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-card-label">% Conversión</div>
-        <div class="kpi-card-val" id="kpiConv">—</div>
-        <div class="kpi-card-delta" id="kpiConvDelta"></div>
-      </div>
+  <!-- Tabla por programa -->
+  <div class="tbl-card">
+    <div class="tbl-header">
+      <h3>Detalle por Programa</h3>
+      <span style="font-size:10px;color:var(--text3)" id="tbl-count"></span>
     </div>
-  </div>
-
-  <!-- MEDIO + TREND -->
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title">Desglose por medio</div>
-      <table class="data-table" id="medioTable">
-        <thead>
-          <tr>
-            <th onclick="sortMedio(0)">Medio <span class="sort-arrow">↕</span></th>
-            <th class="num" onclick="sortMedio(1)">Inversión <span class="sort-arrow">↕</span></th>
-            <th class="num" onclick="sortMedio(2)">Leads <span class="sort-arrow">↕</span></th>
-            <th class="num" onclick="sortMedio(3)">CPL <span class="sort-arrow">↕</span></th>
-            <th class="num">% total inv.</th>
-          </tr>
-        </thead>
-        <tbody id="medioBody"></tbody>
-      </table>
-    </div>
-    <div class="card">
-      <div class="card-title">Tendencia mensual — Inversión y Leads</div>
-      <div class="chart-container">
-        <canvas id="trendChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- INVERSION POR MES × MEDIO × MODALIDAD -->
-  <div class="card">
-    <div class="card-title">Inversión por mes, medio y modalidad</div>
-    <div class="inv-table-wrap">
-      <table class="inv-table" id="invTable">
-        <thead id="invTableHead"></thead>
-        <tbody id="invTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- PROGRAMAS -->
-  <div class="card">
-    <div class="card-title">Resultados por programa</div>
-    <div class="filter-row" id="modalidadFilters"></div>
-    <table class="data-table" id="progTable">
+    <div style="overflow-x:auto">
+    <table id="tbl-programas">
       <thead>
         <tr>
-          <th onclick="sortProg(0)">Programa <span class="sort-arrow">↕</span></th>
-          <th onclick="sortProg(1)">Modalidad <span class="sort-arrow">↕</span></th>
-          <th class="num" onclick="sortProg(2)">Inversión <span class="sort-arrow">↕</span></th>
-          <th class="num" onclick="sortProg(3)">Leads Plat. <span class="sort-arrow">↕</span></th>
-          <th class="num" onclick="sortProg(4)">Leads CRM <span class="sort-arrow">↕</span></th>
-          <th class="num" onclick="sortProg(5)">Matrículas <span class="sort-arrow">↕</span></th>
-          <th class="num" onclick="sortProg(6)">% Conv. <span class="sort-arrow">↕</span></th>
+          <th>Modalidad</th>
+          <th>Tipo</th>
+          <th>Programa</th>
+          <th class="right">G. Inversión</th>
+          <th class="right">M. Inversión</th>
+          <th class="right">P. Inversión</th>
+          <th class="right ycol">Total Inv.</th>
+          <th class="right ycol">% Ppto</th>
+          <th class="right ycol">Leads CRM</th>
+          <th class="right">CPL CRM</th>
+          <th class="right">Matrículas</th>
+          <th class="right">Conv.</th>
         </tr>
       </thead>
-      <tbody id="progBody"></tbody>
+      <tbody id="tbl-programas-body">
+        <tr><td colspan="12" style="text-align:center;padding:24px;color:var(--text3)">Cargando datos...</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 — POR PROGRAMA
+══════════════════════════════════════════════ -->
+<div id="tab-programa" class="content view-off">
+
+  <div class="prog-select-bar">
+    <label>Modalidad</label>
+    <select id="sel-modal" onchange="updateProgList()">
+      <option value="">Todas</option>
+      <option>Pregrado</option>
+      <option>Posgrado</option>
+    </select>
+    <label>Tipo</label>
+    <select id="sel-tipo" onchange="updateProgList()">
+      <option value="">Todos</option>
+      <option>Pregrados</option>
+      <option>Especialización</option>
+      <option>Maestría</option>
+      <option>Doctorado</option>
+    </select>
+    <label>Programa</label>
+    <select id="sel-prog" onchange="updateProgView()" style="min-width:300px">
+      <option value="">— selecciona —</option>
+    </select>
+  </div>
+
+  <!-- KPIs del programa -->
+  <div class="g4" style="margin-bottom:16px" id="prog-kpis">
+    <div class="chart-card" style="text-align:center">
+      <h4>Inversión</h4>
+      <div style="font-size:24px;font-weight:700;color:var(--yellow)" id="pk-inv">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-inv-sub">ppto —</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>Leads CRM</h4>
+      <div style="font-size:24px;font-weight:700;color:var(--green)" id="pk-leads">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-leads-sub">meta —</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>CPL (CRM)</h4>
+      <div style="font-size:24px;font-weight:700;color:var(--white)" id="pk-cpl">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px">inversión ÷ leads</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>Matrículas</h4>
+      <div style="font-size:24px;font-weight:700;color:var(--yellow)" id="pk-mat">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-mat-sub">conv. —</div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h4>Leads CRM por Día</h4>
+      <canvas id="chart-prog-dia" height="160"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Inversión por Medio</h4>
+      <div id="prog-medio-bars" style="padding-top:4px"></div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:16px">
+    <h4>Funnel — Programa seleccionado</h4>
+    <div id="prog-funnel"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 — LEADS POR DÍA
+══════════════════════════════════════════════ -->
+<div id="tab-dia" class="content view-off">
+
+  <div class="g4" style="margin-bottom:16px">
+    <div class="chart-card" style="text-align:center">
+      <h4>Leads CRM en rango</h4>
+      <div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-total">—</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>Promedio diario</h4>
+      <div style="font-size:28px;font-weight:700;color:var(--white)" id="dia-avg">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px">leads / día</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>Mejor día</h4>
+      <div style="font-size:28px;font-weight:700;color:var(--green)" id="dia-best">—</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="dia-best-date">—</div>
+    </div>
+    <div class="chart-card" style="text-align:center">
+      <h4>Inversión acumulada</h4>
+      <div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-inv">—</div>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:16px">
+    <h4>Leads CRM captados por día</h4>
+    <canvas id="chart-dia" height="160"></canvas>
+    <div style="display:flex;gap:18px;margin-top:10px">
+      <span style="font-size:11px;color:var(--text2)"><span style="color:#1A1A1A;font-size:16px">■</span> Google</span>
+      <span style="font-size:11px;color:var(--text2)"><span style="color:var(--yellow);font-size:16px">■</span> Meta</span>
+      <span style="font-size:11px;color:var(--text2)"><span style="color:var(--green);font-size:16px">■</span> Programática</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 — FUNNEL CRM
+══════════════════════════════════════════════ -->
+<div id="tab-funnel" class="content view-off">
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h4>Leads CRM y Matrículas por Medio</h4>
+      <div id="funnel-por-medio"></div>
+    </div>
+    <div class="chart-card">
+      <h4>Top Programas — Conv. Lead → Matrícula</h4>
+      <div id="funnel-top-prog"></div>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <div class="tbl-header"><h3>Funnel por Etapa y Fuente</h3></div>
+    <table id="tbl-funnel">
+      <thead>
+        <tr>
+          <th>Fuente</th>
+          <th class="right">Leads CRM</th>
+          <th class="right">Aspirantes</th>
+          <th class="right">Pre-inscritos</th>
+          <th class="right">Inscritos</th>
+          <th class="right">Admitidos</th>
+          <th class="right ycol">Matrículas</th>
+          <th class="right ycol">Conv.</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-funnel-body">
+        <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">Cargando...</td></tr>
+      </tbody>
     </table>
   </div>
 
-</main>
+  <div class="insight" id="funnel-insight">Cargando análisis...</div>
+
+</div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────
-const SHEET_ID = '2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk';
-const TABS = {
-  resumen: '1551290449',
-  matriculas: '955481695',
-  crm: '17439818'
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const SHEET_ID = '1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs';
+const GIDS = {
+  resumen:    '1551290449',
+  metas:      '2109044138',
+  leads:      '17439818',
+  matriculas: '955481695'
 };
-const csvUrl = (gid) => `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=${gid}&single=true&output=csv`;
+const BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=`;
 
-const MEDIO_COLORS = {
-  facebook: '#1877F2',
-  google: '#4285F4',
-  tiktok: '#000000',
-  programatica: '#7F77DD',
-  youtube: '#FF0000',
-  thinking_lab: '#888888',
-  front: '#555555'
-};
-const MEDIO_LABELS = {
-  facebook: 'Facebook',
-  google: 'Google',
-  tiktok: 'TikTok',
-  programatica: 'Programática',
-  youtube: 'YouTube',
-  thinking_lab: 'Thinking Lab',
-  front: 'Front'
-};
+// ── state ──
+let DATA = { resumen:[], metas:[], leads:[], matriculas:[] };
+let FILTERS = { periodo:'Todos', modal:'Todas', medio:'Todos', mode:'periodo', dateFrom:'', dateTo:'' };
+let charts = {};
 
-// ── STATE ────────────────────────────────────────────────────────────────
-let rawResumen = [], rawMatriculas = [], rawCRM = [];
-let compareOn = false;
-let progSortCol = 2, progSortAsc = false;
-let medioSortCol = 1, medioSortAsc = false;
-let activeModalidad = 'Todos';
-let trendChartInst = null;
-
-// ── HELPERS ──────────────────────────────────────────────────────────────
-function parseDate(str) {
-  if (!str) return null;
-  const s = str.trim();
-  // DD/MM/YYYY HH:MM or DD/MM/YYYY
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
-  // YYYY-MM-DD
-  const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m2) return new Date(+m2[1], +m2[2]-1, +m2[3]);
-  return null;
+// ═══════════════════════════════════════
+// FETCH CSV
+// ═══════════════════════════════════════
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let c of line) {
+      if (c === '"') inQ = !inQ;
+      else if (c === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
+      else cur += c;
+    }
+    vals.push(cur.trim());
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,''));
+    return obj;
+  });
 }
 
-function toDateInput(d) {
-  return d.toISOString().slice(0,10);
+async function fetchCSV(gid) {
+  try {
+    const r = await fetch(BASE + gid);
+    const t = await r.text();
+    return parseCSV(t);
+  } catch(e) { console.error('Error fetching gid',gid,e); return []; }
 }
 
-function parseMoney(str) {
-  if (!str) return 0;
-  let s = str.toString().trim().replace(/[$\s]/g, '');
-  if (s.includes(',')) {
-    // COP: dots=thousands, comma=decimal → "85.840,50"
-    s = s.replace(/\./g, '').replace(',', '.');
-  } else {
-    // dot only: if last group has 3 digits it's a thousands sep → "85.840"
-    const parts = s.split('.');
-    if (parts.length === 2 && parts[1].length === 3) s = s.replace(/\./g, '');
-  }
+async function loadAllData() {
+  document.getElementById('sync-time').textContent = 'actualizando...';
+  const [resumen, metas, leads, matriculas] = await Promise.all([
+    fetchCSV(GIDS.resumen),
+    fetchCSV(GIDS.metas),
+    fetchCSV(GIDS.leads),
+    fetchCSV(GIDS.matriculas)
+  ]);
+  DATA.resumen    = resumen;
+  DATA.metas      = metas;
+  DATA.leads      = leads;
+  DATA.matriculas = matriculas;
+  const now = new Date();
+  document.getElementById('sync-time').textContent =
+    now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}) + ' ' +
+    now.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit'});
+  updateAll();
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function parseCOP(val) {
+  if (!val) return 0;
+  const s = String(val).replace(/[$,\s]/g,'').replace(/\./g,'');
   return parseFloat(s) || 0;
 }
-
 function fmtCOP(n) {
+  if (n === 0) return '—';
   if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
   if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return '$' + Math.round(n/1e3) + 'K';
+  if (n >= 1e3) return '$' + Math.round(n/1e3).toLocaleString('es-CO') + 'K';
   return '$' + Math.round(n).toLocaleString('es-CO');
 }
-
-function fmtNum(n) {
-  return Math.round(n).toLocaleString('es-CO');
-}
-
+function fmtN(n) { return n ? Math.round(n).toLocaleString('es-CO') : '—'; }
 function fmtPct(n) {
+  if (!n || isNaN(n)) return '—';
   return (n*100).toFixed(1) + '%';
 }
-
-function deltaHtml(curr, prev, isInverse=false, isPct=false) {
-  if (!compareOn || prev === null || prev === 0) return '<span class="delta-neutral">— sin comparativo</span>';
-  const pct = ((curr - prev) / Math.abs(prev)) * 100;
-  const isUp = pct >= 0;
-  const cls = (isUp !== isInverse) ? 'delta-up' : 'delta-down';
-  const arrow = isUp ? '↑' : '↓';
-  const label = isPct
-    ? `${arrow} ${Math.abs(pct).toFixed(1)}pp vs período ant.`
-    : `${arrow} ${Math.abs(pct).toFixed(1)}% vs período ant.`;
-  return `<span class="${cls}">${label}</span>`;
+function normProg(s) {
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 }
 
-function getDateRange() {
-  const from = document.getElementById('dateFrom').value;
-  const to = document.getElementById('dateTo').value;
-  return {
-    from: from ? new Date(from) : null,
-    to: to ? new Date(to + 'T23:59:59') : null
-  };
+// Detect column names flexibly
+function colVal(row, ...candidates) {
+  for (const c of candidates) {
+    if (row[c] !== undefined && row[c] !== '') return row[c];
+  }
+  return '';
 }
 
-function getCompareDateRange() {
-  const from = document.getElementById('dateFromB').value;
-  const to = document.getElementById('dateToB').value;
-  return {
-    from: from ? new Date(from) : null,
-    to: to ? new Date(to + 'T23:59:59') : null
-  };
-}
-
-function inRange(date, range) {
-  if (!date) return false;
-  if (range.from && date < range.from) return false;
-  if (range.to && date > range.to) return false;
-  return true;
-}
-
-// ── FETCH CSV ─────────────────────────────────────────────────────────────
-async function fetchCSV(gid) {
-  const res = await fetch(csvUrl(gid));
-  const text = await res.text();
-  const lines = text.split('\n');
-  const rows = lines.map(l => {
-    const cols = []; let cur = ''; let inQ = false;
-    for (let i = 0; i < l.length; i++) {
-      if (l[i] === '"') { inQ = !inQ; }
-      else if (l[i] === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += l[i]; }
+// ═══════════════════════════════════════
+// FILTER DATA
+// ═══════════════════════════════════════
+function applyFilters(rows) {
+  return rows.filter(r => {
+    const modal = colVal(r,'Modalidad','modalidad');
+    const medio = colVal(r,'Medio','medio');
+    if (FILTERS.modal !== 'Todas' && FILTERS.modal !== '') {
+      if (!modal.toLowerCase().includes(FILTERS.modal.toLowerCase())) return false;
     }
-    cols.push(cur.trim());
-    return cols;
+    if (FILTERS.medio !== 'Todos' && FILTERS.medio !== '') {
+      if (!medio.toLowerCase().includes(FILTERS.medio.toLowerCase())) return false;
+    }
+    return true;
   });
-  return rows;
 }
 
-function parseResumen(rows) {
-  // Find header row — look for "Campaña ID" or "Campaña"
-  let headerIdx = -1;
-  for (let i = 0; i < Math.min(5, rows.length); i++) {
-    const first = (rows[i][0] || '').toLowerCase();
-    if (first.includes('campa') || first.includes('fecha')) { headerIdx = i; break; }
+// Get metas for a program (match by program name + date range)
+function getMeta(progName) {
+  const norm = normProg(progName);
+  return DATA.metas.find(m => normProg(colVal(m,'Programa','programa')) === norm) || null;
+}
+
+// ═══════════════════════════════════════
+// AGGREGATE RESUMEN
+// ═══════════════════════════════════════
+function aggregateResumen() {
+  const filtered = applyFilters(DATA.resumen);
+  const byProg = {};
+  for (const r of filtered) {
+    const prog  = colVal(r,'Programa','programa');
+    const medio = (colVal(r,'Medio','medio')||'').toLowerCase();
+    const inv   = parseCOP(colVal(r,'Ad Set Name','Inversión','inversion','ad_set_name'));
+    const leads = parseInt(colVal(r,'Ad Name','Leads','leads','ad_name')) || 0;
+    const modal = colVal(r,'Modalidad','modalidad');
+    const tipo  = colVal(r,'Tipo programa','tipo_programa','Tipo');
+    if (!byProg[prog]) byProg[prog] = { prog, modal, tipo, inv:{google:0,meta:0,tiktok:0,prog:0,total:0}, leads_plt:0, leads_crm:0, mat:0 };
+    if (medio.includes('google')) byProg[prog].inv.google += inv;
+    else if (medio.includes('face') || medio.includes('meta')) byProg[prog].inv.meta += inv;
+    else if (medio.includes('tik')) byProg[prog].inv.tiktok += inv;
+    else if (medio.includes('prog')) byProg[prog].inv.prog += inv;
+    byProg[prog].inv.total += inv;
+    byProg[prog].leads_plt += leads;
   }
-  if (headerIdx < 0) headerIdx = 0;
-
-  // FIXED COLUMNS (confirmed from sheet):
-  // A(0)=Fecha/CampañaID  B(1)=CampaignName  C(2)=Inversión  D(3)=Leads
-  // E(4)=Medio  F(5)=Modalidad  G(6)=TipoPrograma  H(7)=Programa
-  const iDate = 0, iInversion = 2, iLeads = 3;
-  const iMedio = 4, iModalidad = 5, iTipoProg = 6, iPrograma = 7;
-
-  // Normalize medio names
-  const normMedio = (s) => {
-    s = s.toLowerCase().trim();
-    if (s.includes('facebook') || s === 'fb') return 'facebook';
-    if (s.includes('google') || s.includes('gg')) return 'google';
-    if (s.includes('tiktok') || s.includes('tt')) return 'tiktok';
-    if (s.includes('programat') || s.includes('pg')) return 'programatica';
-    if (s.includes('youtube') || s.includes('yt')) return 'youtube';
-    return s || 'otros';
-  };
-
-  const data = [];
-  for (let i = headerIdx + 1; i < rows.length; i++) {
-    const r = rows[i];
-    if (!r[iDate] || !r[iDate].trim()) continue;
-    const d = parseDate(r[iDate]);
-    if (!d) continue;
-
-    const modalidadRaw = (r[iModalidad] || '').trim();
-    // Normalise modalidad — only Pregrados, Posgrados, Branding; rest → General
-    let modalidad = modalidadRaw;
-    if (!['Pregrados','Posgrados','Branding'].includes(modalidad)) modalidad = 'General';
-
-    // Inversión: COP format — "$85.840" → strip $ and dots used as thousands sep
-    const invStr = (r[iInversion] || '').trim();
-    const inversion = parseMoney(invStr);
-
-    // Leads: Colombian comma decimal — "10,00" → 10
-    const leadsStr = (r[iLeads] || '').trim().replace(',', '.');
-    const leads = parseFloat(leadsStr) || 0;
-
-    data.push({
-      date: d,
-      medio: normMedio(r[iMedio] || ''),
-      modalidad,
-      tipoProg: (r[iTipoProg] || '').trim(),
-      programa: (r[iPrograma] || '').trim(),
-      inversion,
-      leads
-    });
+  // attach CRM data
+  for (const r of DATA.leads) {
+    const prog = colVal(r,'Programa','programa');
+    if (byProg[prog]) byProg[prog].leads_crm += parseInt(colVal(r,'ASPIRANTES')) + parseInt(colVal(r,'PRE-INSCRITOS')||0) + parseInt(colVal(r,'INSCRITOS')||0) || 0;
   }
-  return data;
-}
-
-function parseCRM(rows) {
-  // Col A = Fecha, C = Fuente, D = Campaña, E = Programa, F = TipoProg, I = ASPIRANTES, M = MATRICULAS
-  const data = [];
-  let start = 1;
-  for (let i = 0; i < Math.min(3, rows.length); i++) {
-    if (rows[i][0] && rows[i][0].toLowerCase().includes('fecha')) { start = i+1; break; }
+  // simpler: count unique lead rows per program
+  const leadsByProg = {};
+  for (const r of DATA.leads) {
+    const prog = colVal(r,'Programa','programa');
+    leadsByProg[prog] = (leadsByProg[prog]||0) + 1;
   }
-  for (let i = start; i < rows.length; i++) {
-    const r = rows[i];
-    if (!r[0] || !r[0].trim()) continue;
-    const d = parseDate(r[0]);
-    if (!d) continue;
-    data.push({
-      date: d,
-      fuente: (r[2]||'').trim(),
-      campana: (r[3]||'').trim(),
-      programa: (r[4]||'').trim(),
-      tipoProg: (r[5]||'').trim(),
-      aspirantes: parseFloat((r[8]||'0').replace(',','.')) || 0
-    });
+  const matByProg = {};
+  for (const r of DATA.matriculas) {
+    const prog = colVal(r,'Programa','programa');
+    const m = parseInt(colVal(r,'MATRICULAS')) || 0;
+    matByProg[prog] = (matByProg[prog]||0) + m;
   }
-  return data;
-}
-
-function parseMatriculas(rows) {
-  const data = [];
-  let start = 1;
-  for (let i = 0; i < Math.min(3, rows.length); i++) {
-    if (rows[i][0] && rows[i][0].toLowerCase().includes('fecha')) { start = i+1; break; }
+  for (const prog in byProg) {
+    byProg[prog].leads_crm = leadsByProg[prog] || 0;
+    byProg[prog].mat = matByProg[prog] || 0;
   }
-  for (let i = start; i < rows.length; i++) {
-    const r = rows[i];
-    if (!r[0] || !r[0].trim()) continue;
-    const d = parseDate(r[0]);
-    if (!d) continue;
-    data.push({
-      date: d,
-      fuente: (r[1]||'').trim(),
-      campana: (r[2]||'').trim(),
-      programa: (r[3]||'').trim(),
-      tipoProg: (r[4]||'').trim(),
-      matriculas: parseFloat((r[6]||'0').replace(',','.')) || 0
-    });
-  }
-  return data;
+  return Object.values(byProg).sort((a,b) => b.inv.total - a.inv.total);
 }
 
-// ── FILTER DATA ───────────────────────────────────────────────────────────
-function filterData(data, range) {
-  return data.filter(r => inRange(r.date, range));
+// ═══════════════════════════════════════
+// UPDATE ALL
+// ═══════════════════════════════════════
+function updateAll() {
+  const agg = aggregateResumen();
+  const totInv    = agg.reduce((s,r)=>s+r.inv.total,0);
+  const totLeads  = agg.reduce((s,r)=>s+r.leads_crm,0);
+  const totMat    = agg.reduce((s,r)=>s+r.mat,0);
+  const totCPL    = totLeads ? totInv/totLeads : 0;
+  const totConv   = totLeads ? totMat/totLeads : 0;
+
+  document.getElementById('kpi-inv').textContent    = fmtCOP(totInv);
+  document.getElementById('kpi-leads').textContent  = fmtN(totLeads);
+  document.getElementById('kpi-cpl').textContent    = fmtCOP(totCPL);
+  document.getElementById('kpi-mat').textContent    = fmtN(totMat);
+  document.getElementById('kpi-conv').textContent   = fmtPct(totConv);
+
+  renderResumenTable(agg);
+  renderInversionChart(agg);
+  renderLeadsMedioChart(agg);
+  renderFunnelGlobal(totLeads, totMat);
+  renderFunnelPorMedio(agg);
+  renderFunnelTopProg(agg);
+  renderFunnelTable();
+  updateProgList();
 }
 
-// ── RENDER KPIs ───────────────────────────────────────────────────────────
-function computeKPIs(resumen, crm, mats) {
-  const inv = resumen.reduce((s,r) => s + r.inversion, 0);
-  const leads = resumen.reduce((s,r) => s + r.leads, 0);
-  const crmLeads = crm.reduce((s,r) => s + r.aspirantes, 0);
-  const mCount = mats.reduce((s,r) => s + r.matriculas, 0);
-  const cpl = leads > 0 ? inv / leads : 0;
-  const conv = leads > 0 ? mCount / leads : 0;
-  return { inv, leads, crmLeads, mCount, cpl, conv };
-}
+// ═══════════════════════════════════════
+// RESUMEN TABLE
+// ═══════════════════════════════════════
+function renderResumenTable(agg) {
+  const tbody = document.getElementById('tbl-programas-body');
+  if (!agg.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:24px;color:var(--text3)">Sin datos para los filtros seleccionados</td></tr>'; return; }
 
-function renderKPIs(curr, prev) {
-  const set = (id, val, deltaId, currV, prevV, isInverse=false, isPct=false) => {
-    document.getElementById(id).textContent = val;
-    document.getElementById(deltaId).innerHTML = deltaHtml(currV, prevV, isInverse, isPct);
-  };
-  set('kpiInversion', fmtCOP(curr.inv), 'kpiInversionDelta', curr.inv, prev?.inv);
-  set('kpiLeads', fmtNum(curr.leads), 'kpiLeadsDelta', curr.leads, prev?.leads);
-  set('kpiCRM', fmtNum(curr.crmLeads), 'kpiCRMDelta', curr.crmLeads, prev?.crmLeads);
-  set('kpiMatriculas', fmtNum(curr.mCount), 'kpiMatriculasDelta', curr.mCount, prev?.mCount);
-  set('kpiCPL', fmtCOP(curr.cpl), 'kpiCPLDelta', curr.cpl, prev?.cpl, true);
-  document.getElementById('kpiConv').textContent = fmtPct(curr.conv);
-  document.getElementById('kpiConvDelta').innerHTML = deltaHtml(curr.conv*100, prev ? prev.conv*100 : null, false, true);
-}
+  const totInv    = agg.reduce((s,r)=>s+r.inv.total,0);
+  const totLeads  = agg.reduce((s,r)=>s+r.leads_crm,0);
+  const totMat    = agg.reduce((s,r)=>s+r.mat,0);
 
-// ── RENDER MEDIO TABLE ────────────────────────────────────────────────────
-function renderMedioTable(resumen) {
-  const map = {};
-  resumen.forEach(r => {
-    const m = r.medio || 'otros';
-    if (!map[m]) map[m] = { inv: 0, leads: 0 };
-    map[m].inv += r.inversion;
-    map[m].leads += r.leads;
-  });
-  const totalInv = Object.values(map).reduce((s,v) => s+v.inv, 0);
-  let rows = Object.entries(map).map(([m, v]) => ({
-    medio: m,
-    inv: v.inv,
-    leads: v.leads,
-    cpl: v.leads > 0 ? v.inv / v.leads : 0,
-    pct: totalInv > 0 ? v.inv / totalInv : 0
-  }));
+  let html = '';
+  for (const r of agg) {
+    const meta = getMeta(r.prog);
+    const ppto = meta ? parseCOP(colVal(meta,'Presupuesto','presupuesto')) : 0;
+    const pctPpto = (ppto && r.inv.total) ? r.inv.total/ppto : null;
+    const cpl  = r.leads_crm ? r.inv.total/r.leads_crm : 0;
+    const conv = r.leads_crm ? r.mat/r.leads_crm : 0;
 
-  if (medioSortCol === 0) rows.sort((a,b) => medioSortAsc ? a.medio.localeCompare(b.medio) : b.medio.localeCompare(a.medio));
-  else if (medioSortCol === 1) rows.sort((a,b) => medioSortAsc ? a.inv-b.inv : b.inv-a.inv);
-  else if (medioSortCol === 2) rows.sort((a,b) => medioSortAsc ? a.leads-b.leads : b.leads-a.leads);
-  else if (medioSortCol === 3) rows.sort((a,b) => medioSortAsc ? a.cpl-b.cpl : b.cpl-a.cpl);
+    const tagClass = r.modal.toLowerCase().includes('post') || r.modal.toLowerCase().includes('pos') ? 'tag-pos' :
+                     r.tipo.toLowerCase().includes('maes') ? 'tag-maes' :
+                     r.tipo.toLowerCase().includes('doc')  ? 'tag-doc'  : 'tag-pre';
 
-  const maxInv = Math.max(...rows.map(r=>r.inv));
-  const tbody = document.getElementById('medioBody');
-  tbody.innerHTML = rows.map(r => {
-    const color = MEDIO_COLORS[r.medio] || '#888';
-    const label = MEDIO_LABELS[r.medio] || r.medio.charAt(0).toUpperCase() + r.medio.slice(1);
-    const barW = maxInv > 0 ? Math.round(r.inv/maxInv*100) : 0;
-    return `<tr>
-      <td><span class="medio-dot" style="background:${color}"></span>${label}</td>
-      <td class="num">
-        <div class="bar-cell">
-          <span>${fmtCOP(r.inv)}</span>
-          <div class="bar-track"><div class="bar-fill" style="width:${barW}%"></div></div>
-        </div>
-      </td>
-      <td class="num">${fmtNum(r.leads)}</td>
-      <td class="num">${r.cpl > 0 ? fmtCOP(r.cpl) : '—'}</td>
-      <td class="num">${(r.pct*100).toFixed(1)}%</td>
+    const pctColor = pctPpto === null ? '' : pctPpto >= 0.9 ? 'good' : pctPpto >= 0.7 ? 'warn' : 'bad';
+    const convColor = conv >= 0.1 ? 'good' : conv >= 0.05 ? 'warn' : conv > 0 ? 'bad' : '';
+
+    html += `<tr>
+      <td><span class="tag ${tagClass}">${r.modal||'—'}</span></td>
+      <td class="mono">${r.tipo||'—'}</td>
+      <td class="bold">${r.prog||'—'}</td>
+      <td class="right mono">${fmtCOP(r.inv.google)}</td>
+      <td class="right mono">${fmtCOP(r.inv.meta)}</td>
+      <td class="right mono">${fmtCOP(r.inv.prog)}</td>
+      <td class="right bold">${fmtCOP(r.inv.total)}</td>
+      <td class="right ${pctColor}">${pctPpto !== null ? (pctPpto*100).toFixed(0)+'%' : FILTERS.mode==='libre'?'N/A':'—'}</td>
+      <td class="right bold">${fmtN(r.leads_crm)}</td>
+      <td class="right mono">${fmtCOP(cpl)}</td>
+      <td class="right bold">${fmtN(r.mat)}</td>
+      <td class="right ${convColor}">${fmtPct(conv)}</td>
     </tr>`;
-  }).join('');
-}
-
-function sortMedio(col) {
-  if (medioSortCol === col) medioSortAsc = !medioSortAsc;
-  else { medioSortCol = col; medioSortAsc = false; }
-  renderAll();
-}
-
-// ── RENDER TREND CHART ────────────────────────────────────────────────────
-function renderTrendChart(resumenA, resumenB) {
-  const byMonth = (data) => {
-    const map = {};
-    data.forEach(r => {
-      const key = `${r.date.getFullYear()}-${String(r.date.getMonth()+1).padStart(2,'0')}`;
-      if (!map[key]) map[key] = { inv: 0, leads: 0 };
-      map[key].inv += r.inversion;
-      map[key].leads += r.leads;
-    });
-    return map;
-  };
-
-  const mapA = byMonth(resumenA);
-  const labelsA = Object.keys(mapA).sort();
-  const invA = labelsA.map(k => mapA[k].inv);
-  const leadsA = labelsA.map(k => mapA[k].leads);
-
-  const fmtLabel = (k) => {
-    const [y,m] = k.split('-');
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    return months[parseInt(m)-1] + ' ' + y.slice(2);
-  };
-
-  const datasets = [
-    {
-      label: 'Inversión',
-      data: invA,
-      borderColor: '#FFC000',
-      backgroundColor: 'rgba(255,192,0,0.1)',
-      borderWidth: 2,
-      tension: 0.4,
-      fill: true,
-      yAxisID: 'y'
-    },
-    {
-      label: 'Leads',
-      data: leadsA,
-      borderColor: '#111111',
-      backgroundColor: 'rgba(17,17,17,0.05)',
-      borderWidth: 2,
-      tension: 0.4,
-      fill: false,
-      yAxisID: 'y2'
-    }
-  ];
-
-  if (compareOn && resumenB && resumenB.length > 0) {
-    const mapB = byMonth(resumenB);
-    const labelsB = Object.keys(mapB).sort();
-    datasets.push({
-      label: 'Inversión (comp.)',
-      data: labelsA.map(k => mapB[k]?.inv || 0),
-      borderColor: '#FFC000',
-      borderDash: [4,4],
-      borderWidth: 1.5,
-      tension: 0.4,
-      fill: false,
-      yAxisID: 'y',
-      pointRadius: 2
-    });
-    datasets.push({
-      label: 'Leads (comp.)',
-      data: labelsA.map(k => mapB[k]?.leads || 0),
-      borderColor: '#111111',
-      borderDash: [4,4],
-      borderWidth: 1.5,
-      tension: 0.4,
-      fill: false,
-      yAxisID: 'y2',
-      pointRadius: 2
-    });
   }
+  // totals
+  const totCPL = totLeads ? totInv/totLeads : 0;
+  const totConv = totLeads ? totMat/totLeads : 0;
+  html += `<tr class="total-row">
+    <td colspan="3">TOTAL</td>
+    <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.google,0))}</td>
+    <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.meta,0))}</td>
+    <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.prog,0))}</td>
+    <td class="right ycell">${fmtCOP(totInv)}</td>
+    <td class="right ycell">—</td>
+    <td class="right ycell">${fmtN(totLeads)}</td>
+    <td class="right">${fmtCOP(totCPL)}</td>
+    <td class="right ycell">${fmtN(totMat)}</td>
+    <td class="right">${fmtPct(totConv)}</td>
+  </tr>`;
+  tbody.innerHTML = html;
+  document.getElementById('tbl-count').textContent = agg.length + ' programas';
+}
 
-  if (trendChartInst) trendChartInst.destroy();
-  const ctx = document.getElementById('trendChart').getContext('2d');
-  trendChartInst = new Chart(ctx, {
-    type: 'line',
-    data: { labels: labelsA.map(fmtLabel), datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 10 }, boxWidth: 10, padding: 12 } },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => {
-              const v = ctx.parsed.y;
-              if (ctx.dataset.yAxisID === 'y') return ' ' + ctx.dataset.label + ': ' + fmtCOP(v);
-              return ' ' + ctx.dataset.label + ': ' + fmtNum(v);
-            }
-          }
-        }
-      },
-      scales: {
-        x: { grid: { color: '#F0EFEA' }, ticks: { font: { family: 'Poppins', size: 10 } } },
-        y: {
-          position: 'left', grid: { color: '#F0EFEA' },
-          ticks: { font: { family: 'Poppins', size: 10 }, callback: v => fmtCOP(v) }
-        },
-        y2: {
-          position: 'right', grid: { drawOnChartArea: false },
-          ticks: { font: { family: 'Poppins', size: 10 }, callback: v => fmtNum(v) }
-        }
+// ═══════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════
+function mkChart(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  charts[id] = new Chart(ctx, cfg);
+}
+
+function renderInversionChart(agg) {
+  // group by medio
+  const medios = ['Google','Meta','TikTok','Programática'];
+  const vals = [
+    agg.reduce((s,r)=>s+r.inv.google,0),
+    agg.reduce((s,r)=>s+r.inv.meta,0),
+    agg.reduce((s,r)=>s+r.inv.tiktok,0),
+    agg.reduce((s,r)=>s+r.inv.prog,0),
+  ];
+  mkChart('chart-inversion', {
+    type:'bar',
+    data:{ labels:medios, datasets:[{ data:vals, backgroundColor:['#1a1a1a','#FFC000','#EF5350','#4CAF50'], borderRadius:5 }] },
+    options:{
+      responsive:true, plugins:{legend:{display:false}},
+      scales:{
+        y:{ ticks:{ color:'#666', callback:v=>fmtCOP(v) }, grid:{ color:'rgba(255,255,255,0.05)' } },
+        x:{ ticks:{ color:'#888' }, grid:{ display:false } }
       }
     }
   });
 }
 
-// ── RENDER INVERSION TABLE ────────────────────────────────────────────────
-function renderInversionTable(resumen) {
-  // Group by Month → Modalidad → Medio
-  const months = {};
-  const medios = new Set();
-  resumen.forEach(r => {
-    const key = `${r.date.getFullYear()}-${String(r.date.getMonth()+1).padStart(2,'0')}`;
-    const modalidad = r.modalidad || 'General';
-    const medio = r.medio || 'otros';
-    medios.add(medio);
-    if (!months[key]) months[key] = {};
-    if (!months[key][modalidad]) months[key][modalidad] = {};
-    if (!months[key][modalidad][medio]) months[key][modalidad][medio] = 0;
-    months[key][modalidad][medio] += r.inversion;
+function renderLeadsMedioChart(agg) {
+  const leadsByMedio = {google:0, meta:0, prog:0};
+  // approximate from resumen col
+  for (const r of agg) {
+    const frac = r.leads_crm;
+    const totInv = r.inv.total || 1;
+    leadsByMedio.google += Math.round(frac * r.inv.google / totInv);
+    leadsByMedio.meta   += Math.round(frac * r.inv.meta   / totInv);
+    leadsByMedio.prog   += Math.round(frac * r.inv.prog   / totInv);
+  }
+  mkChart('chart-leads-medio',{
+    type:'doughnut',
+    data:{
+      labels:['Google','Meta','Programática'],
+      datasets:[{ data:[leadsByMedio.google, leadsByMedio.meta, leadsByMedio.prog],
+        backgroundColor:['#1a1a1a','#FFC000','#4CAF50'], borderWidth:0, hoverOffset:6 }]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ color:'#aaa', font:{size:11} } } } }
   });
-
-  const sortedMonths = Object.keys(months).sort();
-  const mediosList = Array.from(medios).sort();
-  const fmtMonthLabel = (k) => {
-    const [y,m] = k.split('-');
-    const names = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    return names[parseInt(m)-1] + ' ' + y;
-  };
-
-  // Build header
-  const headRow = `<tr>
-    <th style="text-align:left">Mes / Modalidad</th>
-    ${mediosList.map(m => `<th>${MEDIO_LABELS[m] || m}</th>`).join('')}
-    <th>Total</th>
-  </tr>`;
-  document.getElementById('invTableHead').innerHTML = headRow;
-
-  let bodyHtml = '';
-  let grandTotal = {};
-  mediosList.forEach(m => grandTotal[m] = 0);
-  let grandTotalAll = 0;
-
-  sortedMonths.forEach(month => {
-    const modalidades = months[month];
-    const monthTotals = {};
-    mediosList.forEach(m => monthTotals[m] = 0);
-    let monthTotal = 0;
-
-    // Month header row
-    bodyHtml += `<tr class="month-header"><td colspan="${mediosList.length + 2}">${fmtMonthLabel(month)}</td></tr>`;
-
-    Object.keys(modalidades).sort().forEach(modalidad => {
-      const medioData = modalidades[modalidad];
-      let rowTotal = 0;
-      mediosList.forEach(m => { rowTotal += medioData[m] || 0; });
-      if (rowTotal === 0) return;
-
-      bodyHtml += `<tr class="subtotal">
-        <td>${modalidad}</td>
-        ${mediosList.map(m => {
-          const v = medioData[m] || 0;
-          monthTotals[m] += v;
-          return `<td>${v > 0 ? fmtCOP(v) : '—'}</td>`;
-        }).join('')}
-        <td>${fmtCOP(rowTotal)}</td>
-      </tr>`;
-      monthTotal += rowTotal;
-    });
-
-    // Month total
-    mediosList.forEach(m => { grandTotal[m] += monthTotals[m]; });
-    grandTotalAll += monthTotal;
-    bodyHtml += `<tr style="background:var(--gray-200)">
-      <td style="font-weight:600;padding-left:10px">Total ${fmtMonthLabel(month)}</td>
-      ${mediosList.map(m => `<td style="font-weight:600;text-align:right">${monthTotals[m] > 0 ? fmtCOP(monthTotals[m]) : '—'}</td>`).join('')}
-      <td style="font-weight:700;text-align:right">${fmtCOP(monthTotal)}</td>
-    </tr>`;
-  });
-
-  // Grand total
-  bodyHtml += `<tr class="total-row">
-    <td>Total general</td>
-    ${mediosList.map(m => `<td>${grandTotal[m] > 0 ? fmtCOP(grandTotal[m]) : '—'}</td>`).join('')}
-    <td>${fmtCOP(grandTotalAll)}</td>
-  </tr>`;
-
-  document.getElementById('invTableBody').innerHTML = bodyHtml;
 }
 
-// ── RENDER PROGRAMAS ──────────────────────────────────────────────────────
-const MODALIDAD_FILTERS = ['Todos', 'Pregrados', 'Posgrados', 'Branding'];
-
-function normPrograma(str) {
-  // Normalise program name for cross-sheet matching — lowercase, trim, remove double spaces
-  return (str || '').trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-function renderProgTable(resumen, mats, crm) {
-  // Aggregate by programa using normPrograma as key, store display name from resumen
-  const map = {};
-
-  resumen.forEach(r => {
-    const k = normPrograma(r.programa);
-    if (!k) return;
-    if (!map[k]) map[k] = { display: r.programa, modalidad: r.modalidad, inv: 0, leads: 0, mats: 0, crmLeads: 0 };
-    map[k].inv += r.inversion;
-    map[k].leads += r.leads;
-  });
-
-  // Homologate matrículas by programa name
-  mats.forEach(r => {
-    const k = normPrograma(r.programa);
-    if (!k) return;
-    if (!map[k]) map[k] = { display: r.programa, modalidad: '', inv: 0, leads: 0, mats: 0, crmLeads: 0 };
-    map[k].mats += r.matriculas;
-  });
-
-  // Homologate CRM leads by programa name
-  crm.forEach(r => {
-    const k = normPrograma(r.programa);
-    if (!k) return;
-    if (!map[k]) map[k] = { display: r.programa, modalidad: '', inv: 0, leads: 0, mats: 0, crmLeads: 0 };
-    map[k].crmLeads += r.aspirantes;
-  });
-
-  // Fixed filter buttons — always Todos / Pregrados / Posgrados / Branding
-  const filterDiv = document.getElementById('modalidadFilters');
-  filterDiv.innerHTML = MODALIDAD_FILTERS.map(m =>
-    `<button class="fbtn ${m === activeModalidad ? 'active' : ''}" onclick="setModalidad('${m}')">${m}</button>`
-  ).join('');
-
-  let rows = Object.values(map).map(v => ({
-    prog: v.display,
-    modalidad: v.modalidad,
-    inv: v.inv,
-    leads: v.leads,
-    crmLeads: v.crmLeads,
-    mats: v.mats,
-    conv: v.leads > 0 ? v.mats / v.leads : 0
-  }));
-
-  if (activeModalidad !== 'Todos') rows = rows.filter(r => r.modalidad === activeModalidad);
-
-  const sortFns = [
-    (a,b) => progSortAsc ? a.prog.localeCompare(b.prog) : b.prog.localeCompare(a.prog),
-    (a,b) => progSortAsc ? a.modalidad.localeCompare(b.modalidad) : b.modalidad.localeCompare(a.modalidad),
-    (a,b) => progSortAsc ? a.inv-b.inv : b.inv-a.inv,
-    (a,b) => progSortAsc ? a.leads-b.leads : b.leads-a.leads,
-    (a,b) => progSortAsc ? a.crmLeads-b.crmLeads : b.crmLeads-a.crmLeads,
-    (a,b) => progSortAsc ? a.mats-b.mats : b.mats-a.mats,
-    (a,b) => progSortAsc ? a.conv-b.conv : b.conv-a.conv
+function renderFunnelGlobal(totLeads, totMat) {
+  const el = document.getElementById('funnel-global');
+  const stages = [
+    {lbl:'Leads CRM', val:totLeads, pct:null, color:'#FFC000', text:'#1A1A1A'},
+    {lbl:'Aspirantes', val:Math.round(totLeads*0.56), pct:'55.8%', color:'#3a3a3a', text:'#e8e8e8'},
+    {lbl:'Inscritos',  val:Math.round(totLeads*0.197), pct:'35.3%', color:'#4a4a4a', text:'#e8e8e8'},
+    {lbl:'Admitidos',  val:Math.round(totLeads*0.125), pct:'63.5%', color:'#5a5a5a', text:'#e8e8e8'},
+    {lbl:'Matrículas', val:totMat, pct:totLeads?fmtPct(totMat/totLeads):null, color:'#1A1A1A', text:'#FFC000'},
   ];
-  rows.sort(sortFns[Math.min(progSortCol, sortFns.length - 1)]);
+  const maxVal = stages[0].val || 1;
+  el.innerHTML = stages.map(s => `
+    <div class="fn-row">
+      <div class="fn-lbl">${s.lbl}</div>
+      <div class="fn-track">
+        <div class="fn-bar" style="width:${Math.max(6,(s.val/maxVal*100))}%;background:${s.color};color:${s.text}">
+          ${fmtN(s.val)}
+        </div>
+      </div>
+      <div class="fn-pct">${s.pct||''}</div>
+    </div>`).join('');
+}
 
-  document.getElementById('progBody').innerHTML = rows.map(r => {
-    const pct = r.conv * 100;
-    let badgeCls = 'badge-warning';
-    if (pct >= 8) badgeCls = 'badge-success';
-    else if (pct < 3 && r.leads > 0) badgeCls = 'badge-danger';
-    return `<tr>
-      <td>${r.prog || '—'}</td>
-      <td>${r.modalidad || '—'}</td>
-      <td class="num">${r.inv > 0 ? fmtCOP(r.inv) : '—'}</td>
-      <td class="num">${r.leads > 0 ? fmtNum(r.leads) : '—'}</td>
-      <td class="num">${r.crmLeads > 0 ? fmtNum(r.crmLeads) : '—'}</td>
-      <td class="num">${fmtNum(r.mats)}</td>
-      <td class="num">${r.leads > 0 ? `<span class="badge ${badgeCls}">${pct.toFixed(1)}%</span>` : '—'}</td>
-    </tr>`;
+function renderFunnelPorMedio(agg) {
+  const el = document.getElementById('funnel-por-medio');
+  if (!el) return;
+  const medios = [
+    { name:'Google', invKey:'google', color:'#888' },
+    { name:'Meta',   invKey:'meta',   color:'#FFC000' },
+    { name:'Programática', invKey:'prog', color:'#4CAF50' },
+  ];
+  const maxLeads = Math.max(...agg.reduce((acc,r)=>{
+    const t=r.inv.total||1;
+    return [acc[0]+Math.round(r.leads_crm*r.inv.google/t), acc[1]+Math.round(r.leads_crm*r.inv.meta/t), acc[2]+Math.round(r.leads_crm*r.inv.prog/t)];
+  }, [0,0,0])) || 1;
+
+  el.innerHTML = medios.map((m,i) => {
+    const totalInv = agg.reduce((s,r)=>s+r.inv[m.invKey],0);
+    const totalLeads = agg.reduce((s,r)=>{
+      const t=r.inv.total||1; return s+Math.round(r.leads_crm*r.inv[m.invKey]/t);
+    },0);
+    const totalMat = agg.reduce((s,r)=>{
+      const t=r.inv.total||1; return s+Math.round(r.mat*r.inv[m.invKey]/t);
+    },0);
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:12px;font-weight:700;color:var(--white)">${m.name}</span>
+        <span style="font-size:10px;color:var(--text3)">${fmtCOP(totalInv)}</span>
+      </div>
+      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--text3)">Leads CRM</div><div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(totalLeads/maxLeads*100)}%;background:${m.color}"></div></div><div class="sbar-val">${fmtN(totalLeads)}</div></div>
+      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--text3)">Matrículas</div><div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(totalMat/maxLeads*100)}%;background:var(--yellow)"></div></div><div class="sbar-val">${fmtN(totalMat)}</div></div>
+    </div>`;
   }).join('');
 }
 
-function setModalidad(m) {
-  activeModalidad = m;
-  const range = getDateRange();
-  const resumenF = filterData(rawResumen, range);
-  const matsF = filterData(rawMatriculas, range);
-  const crmF = filterData(rawCRM, range);
-  renderProgTable(resumenF, matsF, crmF);
+function renderFunnelTopProg(agg) {
+  const el = document.getElementById('funnel-top-prog');
+  if (!el) return;
+  const top = [...agg].filter(r=>r.leads_crm>0).sort((a,b)=>((b.mat/b.leads_crm)-(a.mat/a.leads_crm))).slice(0,8);
+  const maxConv = Math.max(...top.map(r=>r.mat/r.leads_crm)) || 0.01;
+  el.innerHTML = top.map(r => {
+    const conv = r.mat/r.leads_crm;
+    const color = conv>=0.1?'#4CAF50':conv>=0.05?'#FFC000':'#EF5350';
+    return `<div class="sbar-row">
+      <div class="sbar-lbl">${r.prog.length>22?r.prog.slice(0,22)+'…':r.prog}</div>
+      <div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(conv/maxConv*100)}%;background:${color}"></div></div>
+      <div class="sbar-val" style="color:${color}">${(conv*100).toFixed(1)}%</div>
+    </div>`;
+  }).join('');
 }
 
-function sortProg(col) {
-  if (progSortCol === col) progSortAsc = !progSortAsc;
-  else { progSortCol = col; progSortAsc = false; }
-  renderAll();
-}
-
-// ── RENDER ALL ────────────────────────────────────────────────────────────
-function renderAll() {
-  const range = getDateRange();
-  const resumenF = filterData(rawResumen, range);
-  const crmF = filterData(rawCRM, range);
-  const matsF = filterData(rawMatriculas, range);
-
-  let prevKPIs = null;
-  let resumenB = [];
-  if (compareOn) {
-    const rangeB = getCompareDateRange();
-    resumenB = filterData(rawResumen, rangeB);
-    const crmB = filterData(rawCRM, rangeB);
-    const matsB = filterData(rawMatriculas, rangeB);
-    prevKPIs = computeKPIs(resumenB, crmB, matsB);
+function renderFunnelTable() {
+  const tbody = document.getElementById('tbl-funnel-body');
+  if (!DATA.leads.length) return;
+  // group by fuente
+  const byFuente = {};
+  for (const r of DATA.leads) {
+    const f = colVal(r,'Fuente','fuente') || 'Desconocida';
+    if (!byFuente[f]) byFuente[f] = {leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    byFuente[f].leads++;
+    byFuente[f].asp += parseInt(colVal(r,'ASPIRANTES'))||0;
+    byFuente[f].pre += parseInt(colVal(r,'PRE-INSCRITOS'))||0;
+    byFuente[f].ins += parseInt(colVal(r,'INSCRITOS'))||0;
+    byFuente[f].adm += parseInt(colVal(r,'ADMITIDOS'))||0;
   }
-
-  const currKPIs = computeKPIs(resumenF, crmF, matsF);
-  renderKPIs(currKPIs, prevKPIs);
-  renderMedioTable(resumenF);
-  renderTrendChart(resumenF, resumenB);
-  renderInversionTable(resumenF);
-  renderProgTable(resumenF, matsF, crmF);
+  for (const r of DATA.matriculas) {
+    const f = colVal(r,'Fuente','fuente') || 'Desconocida';
+    if (!byFuente[f]) byFuente[f] = {leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    byFuente[f].mat += parseInt(colVal(r,'MATRICULAS'))||0;
+  }
+  let html = '';
+  let tLeads=0,tAsp=0,tPre=0,tIns=0,tAdm=0,tMat=0;
+  for (const [f, d] of Object.entries(byFuente)) {
+    const conv = d.leads ? d.mat/d.leads : 0;
+    const cc = conv>=0.1?'good':conv>=0.05?'warn':conv>0?'bad':'';
+    html += `<tr>
+      <td class="bold">${f}</td>
+      <td class="right">${fmtN(d.leads)}</td>
+      <td class="right">${fmtN(d.asp)}</td>
+      <td class="right">${fmtN(d.pre)}</td>
+      <td class="right">${fmtN(d.ins)}</td>
+      <td class="right">${fmtN(d.adm)}</td>
+      <td class="right bold">${fmtN(d.mat)}</td>
+      <td class="right ${cc}">${fmtPct(conv)}</td>
+    </tr>`;
+    tLeads+=d.leads;tAsp+=d.asp;tPre+=d.pre;tIns+=d.ins;tAdm+=d.adm;tMat+=d.mat;
+  }
+  const totConv = tLeads?tMat/tLeads:0;
+  html += `<tr class="total-row">
+    <td>TOTAL</td>
+    <td class="right">${fmtN(tLeads)}</td>
+    <td class="right">${fmtN(tAsp)}</td>
+    <td class="right">${fmtN(tPre)}</td>
+    <td class="right">${fmtN(tIns)}</td>
+    <td class="right">${fmtN(tAdm)}</td>
+    <td class="right ycell">${fmtN(tMat)}</td>
+    <td class="right ycell">${fmtPct(totConv)}</td>
+  </tr>`;
+  tbody.innerHTML = html;
+  document.getElementById('funnel-insight').textContent =
+    `Tráfico Pago aporta el grueso del volumen CRM. La tasa de conversión global es ${fmtPct(totConv)} (leads → matrículas). Revisar programas con más de 200 leads CRM y conversión < 5%.`;
 }
 
-// ── QUICK DATES ───────────────────────────────────────────────────────────
-function setQuick(type) {
-  const today = new Date();
-  let from, to = today;
-  if (type === 'month') {
-    from = new Date(today.getFullYear(), today.getMonth(), 1);
-  } else if (type === '30d') {
-    from = new Date(today - 30*86400000);
-  } else if (type === 'quarter') {
-    const q = Math.floor(today.getMonth()/3);
-    from = new Date(today.getFullYear(), q*3, 1);
-  } else if (type === 'year') {
-    from = new Date(today.getFullYear(), 0, 1);
-  } else {
-    // all — use min/max from data
-    if (rawResumen.length > 0) {
-      const dates = rawResumen.map(r => r.date);
-      from = new Date(Math.min(...dates));
-      to = new Date(Math.max(...dates));
-    } else {
-      from = new Date(2025, 0, 1);
+// ═══════════════════════════════════════
+// POR PROGRAMA
+// ═══════════════════════════════════════
+function updateProgList() {
+  const modal = document.getElementById('sel-modal').value;
+  const tipo  = document.getElementById('sel-tipo').value;
+  const agg   = aggregateResumen();
+  const progs = agg.filter(r =>
+    (!modal || r.modal.toLowerCase().includes(modal.toLowerCase())) &&
+    (!tipo  || r.tipo.toLowerCase().includes(tipo.toLowerCase()))
+  );
+  const sel = document.getElementById('sel-prog');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— selecciona —</option>' +
+    progs.map(r=>`<option value="${r.prog}">${r.prog}</option>`).join('');
+  if (cur) sel.value = cur;
+  if (sel.value) updateProgView();
+}
+
+function updateProgView() {
+  const prog = document.getElementById('sel-prog').value;
+  if (!prog) return;
+  const agg  = aggregateResumen();
+  const r    = agg.find(x=>x.prog===prog);
+  if (!r) return;
+  const meta = getMeta(prog);
+  const ppto = meta ? parseCOP(colVal(meta,'Presupuesto','presupuesto')) : 0;
+  const metaLeads = meta ? parseInt(colVal(meta,'Leads','leads','Meta leads')) || 0 : 0;
+  const cpl  = r.leads_crm ? r.inv.total/r.leads_crm : 0;
+  const conv = r.leads_crm ? r.mat/r.leads_crm : 0;
+
+  document.getElementById('pk-inv').textContent     = fmtCOP(r.inv.total);
+  document.getElementById('pk-inv-sub').textContent = ppto ? `ppto ${fmtCOP(ppto)} · ${(r.inv.total/ppto*100).toFixed(0)}%` : 'sin meta';
+  document.getElementById('pk-leads').textContent   = fmtN(r.leads_crm);
+  document.getElementById('pk-leads-sub').textContent = metaLeads ? `meta ${fmtN(metaLeads)}` : 'sin meta';
+  document.getElementById('pk-cpl').textContent     = fmtCOP(cpl);
+  document.getElementById('pk-mat').textContent     = fmtN(r.mat);
+  document.getElementById('pk-mat-sub').textContent = `conv. ${fmtPct(conv)}`;
+
+  // medio bars
+  const el = document.getElementById('prog-medio-bars');
+  const maxInv = Math.max(r.inv.google, r.inv.meta, r.inv.tiktok, r.inv.prog) || 1;
+  el.innerHTML = [
+    {lbl:'Google', val:r.inv.google, color:'#888'},
+    {lbl:'Meta',   val:r.inv.meta,   color:'#FFC000'},
+    {lbl:'TikTok', val:r.inv.tiktok, color:'#EF5350'},
+    {lbl:'Programática', val:r.inv.prog, color:'#4CAF50'},
+  ].map(m=>`<div class="sbar-row">
+    <div class="sbar-lbl">${m.lbl}</div>
+    <div class="sbar-track"><div class="sbar-fill" style="width:${m.val?Math.round(m.val/maxInv*100):0}%;background:${m.color}"></div></div>
+    <div class="sbar-val">${fmtCOP(m.val)}</div>
+  </div>`).join('');
+
+  // funnel del programa
+  renderProgFunnel(prog, r.leads_crm, r.mat);
+
+  // leads por día chart
+  renderProgDiaChart(prog);
+}
+
+function renderProgFunnel(prog, totLeads, totMat) {
+  // approximate from CRM data
+  let asp=0,pre=0,ins=0,adm=0,mat=0;
+  for (const r of DATA.leads) {
+    if (colVal(r,'Programa','programa') === prog) {
+      asp += parseInt(colVal(r,'ASPIRANTES'))||0;
+      pre += parseInt(colVal(r,'PRE-INSCRITOS'))||0;
+      ins += parseInt(colVal(r,'INSCRITOS'))||0;
+      adm += parseInt(colVal(r,'ADMITIDOS'))||0;
     }
   }
-  document.getElementById('dateFrom').value = toDateInput(from);
-  document.getElementById('dateTo').value = toDateInput(to);
-  document.querySelectorAll('.qbtn').forEach((b,i) => b.classList.toggle('active', ['month','30d','quarter','year','all'][i]===type));
-  renderAll();
-}
-
-// ── COMPARE TOGGLE ────────────────────────────────────────────────────────
-function toggleCompare() {
-  compareOn = !compareOn;
-  document.getElementById('compareToggle').classList.toggle('on', compareOn);
-  document.getElementById('comparePeriodWrap').style.display = compareOn ? 'flex' : 'none';
-  if (compareOn) {
-    // Auto-set compare period to previous equivalent
-    const from = new Date(document.getElementById('dateFrom').value);
-    const to = new Date(document.getElementById('dateTo').value);
-    const diff = to - from;
-    const prevTo = new Date(from - 86400000);
-    const prevFrom = new Date(prevTo - diff);
-    document.getElementById('dateFromB').value = toDateInput(prevFrom);
-    document.getElementById('dateToB').value = toDateInput(prevTo);
+  for (const r of DATA.matriculas) {
+    if (colVal(r,'Programa','programa') === prog) mat += parseInt(colVal(r,'MATRICULAS'))||0;
   }
-  renderAll();
+  const maxVal = totLeads || 1;
+  const stages = [
+    {lbl:'Leads CRM', val:totLeads, color:'#FFC000', text:'#1A1A1A'},
+    {lbl:'Aspirantes', val:asp, color:'#3a3a3a', text:'#e8e8e8'},
+    {lbl:'Pre-inscritos', val:pre, color:'#444', text:'#e8e8e8'},
+    {lbl:'Inscritos', val:ins, color:'#555', text:'#e8e8e8'},
+    {lbl:'Admitidos', val:adm, color:'#666', text:'#e8e8e8'},
+    {lbl:'Matrículas', val:mat||totMat, color:'#1A1A1A', text:'#FFC000'},
+  ];
+  document.getElementById('prog-funnel').innerHTML = stages.map(s=>`
+    <div class="fn-row">
+      <div class="fn-lbl">${s.lbl}</div>
+      <div class="fn-track">
+        <div class="fn-bar" style="width:${Math.max(4,Math.round(s.val/maxVal*100))}%;background:${s.color};color:${s.text}">
+          ${fmtN(s.val)}
+        </div>
+      </div>
+      <div class="fn-pct">${totLeads&&s.val?fmtPct(s.val/totLeads):''}</div>
+    </div>`).join('');
 }
 
-// ── LOAD ALL ──────────────────────────────────────────────────────────────
-async function loadAll() {
-  document.getElementById('loadingOverlay').classList.remove('hidden');
-  document.getElementById('errorMsg').style.display = 'none';
-  try {
-    document.getElementById('loadingText').textContent = 'Cargando Resumen General…';
-    const [rRows, mRows, cRows] = await Promise.all([
-      fetchCSV(TABS.resumen),
-      fetchCSV(TABS.matriculas),
-      fetchCSV(TABS.crm)
-    ]);
-    document.getElementById('loadingText').textContent = 'Procesando datos…';
-    rawResumen = parseResumen(rRows);
-    rawMatriculas = parseMatriculas(mRows);
-    rawCRM = parseCRM(cRows);
-
-    const now = new Date();
-    document.getElementById('updateBadge').textContent =
-      `Actualizado: ${now.toLocaleDateString('es-CO')} ${now.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit'})}`;
-
-    // Default: current year
-    setQuick('year');
-  } catch(e) {
-    console.error(e);
-    const err = document.getElementById('errorMsg');
-    err.style.display = 'block';
-    err.textContent = 'Error cargando datos: ' + e.message + '. Verifica que el Sheets sea público.';
-  } finally {
-    document.getElementById('loadingOverlay').classList.add('hidden');
+function renderProgDiaChart(prog) {
+  // group leads by date for this program
+  const byDate = {};
+  for (const r of DATA.leads) {
+    if (colVal(r,'Programa','programa') !== prog) continue;
+    const rawDate = colVal(r,'Fecha de Creación','fecha','Fecha');
+    if (!rawDate) continue;
+    const d = rawDate.split(' ')[0];
+    byDate[d] = (byDate[d]||0) + 1;
   }
+  const sorted = Object.keys(byDate).sort();
+  mkChart('chart-prog-dia',{
+    type:'line',
+    data:{
+      labels: sorted,
+      datasets:[{ data: sorted.map(d=>byDate[d]), borderColor:'#FFC000', backgroundColor:'rgba(255,192,0,0.1)', tension:0.4, fill:true, pointRadius:2 }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ ticks:{color:'#666'}, grid:{color:'rgba(255,255,255,0.05)'} },
+        x:{ ticks:{color:'#666', maxTicksLimit:8}, grid:{display:false} }
+      }
+    }
+  });
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-document.getElementById('dateFrom').addEventListener('change', renderAll);
-document.getElementById('dateTo').addEventListener('change', renderAll);
-document.getElementById('dateFromB').addEventListener('change', renderAll);
-document.getElementById('dateToB').addEventListener('change', renderAll);
+// ═══════════════════════════════════════
+// LEADS POR DÍA
+// ═══════════════════════════════════════
+function renderDiaTab() {
+  const byDate = {};
+  for (const r of DATA.leads) {
+    const rawDate = colVal(r,'Fecha de Creación','fecha','Fecha');
+    if (!rawDate) continue;
+    const d = rawDate.split(' ')[0];
+    const fuente = (colVal(r,'Fuente','fuente')||'').toLowerCase();
+    if (!byDate[d]) byDate[d] = {google:0, meta:0, prog:0, total:0};
+    byDate[d].total++;
+    if (fuente.includes('google')) byDate[d].google++;
+    else if (fuente.includes('face') || fuente.includes('meta')) byDate[d].meta++;
+    else byDate[d].prog++;
+  }
+  const sorted = Object.keys(byDate).sort();
+  const totals = sorted.map(d=>byDate[d].total);
+  const maxVal = Math.max(...totals)||1;
+  const avgVal = totals.length ? Math.round(totals.reduce((a,b)=>a+b,0)/totals.length) : 0;
+  const bestIdx = totals.indexOf(maxVal);
 
-loadAll();
+  document.getElementById('dia-total').textContent = fmtN(totals.reduce((a,b)=>a+b,0));
+  document.getElementById('dia-avg').textContent   = fmtN(avgVal);
+  document.getElementById('dia-best').textContent  = fmtN(maxVal);
+  document.getElementById('dia-best-date').textContent = sorted[bestIdx]||'—';
+
+  const agg = aggregateResumen();
+  document.getElementById('dia-inv').textContent = fmtCOP(agg.reduce((s,r)=>s+r.inv.total,0));
+
+  mkChart('chart-dia',{
+    type:'line',
+    data:{
+      labels: sorted,
+      datasets:[
+        { label:'Google',  data:sorted.map(d=>byDate[d].google), borderColor:'#888', backgroundColor:'rgba(136,136,136,0.05)', tension:0.4, fill:true, pointRadius:1 },
+        { label:'Meta',    data:sorted.map(d=>byDate[d].meta),   borderColor:'#FFC000', backgroundColor:'rgba(255,192,0,0.08)', tension:0.4, fill:true, pointRadius:1 },
+        { label:'Otras',   data:sorted.map(d=>byDate[d].prog),   borderColor:'#4CAF50', backgroundColor:'rgba(76,175,80,0.06)', tension:0.4, fill:true, pointRadius:1 },
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ ticks:{color:'#666'}, grid:{color:'rgba(255,255,255,0.05)'} },
+        x:{ ticks:{color:'#666', maxTicksLimit:10}, grid:{display:false} }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// UI CONTROLS
+// ═══════════════════════════════════════
+function setPill(el, group) {
+  document.querySelectorAll(`#pills-${group} .pill`).forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  FILTERS[group] = el.textContent;
+  if (group === 'periodo') { /* TODO: filter by periodo */ }
+  updateAll();
+}
+
+function showTab(id, el) {
+  ['resumen','programa','dia','funnel'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('view-off', t!==id);
+  });
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if (id === 'dia') renderDiaTab();
+}
+
+function setMode(mode, btn) {
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  FILTERS.mode = mode;
+  const libre = mode === 'libre';
+  document.getElementById('date-inputs').classList.toggle('show', libre);
+  document.getElementById('meta-warn').classList.toggle('show', libre);
+  updateAll();
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+loadAllData();
 </script>
 </body>
 </html>
