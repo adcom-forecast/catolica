@@ -4,337 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Católica — Adcom</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231A1A1A'/><rect x='4' y='4' width='24' height='24' rx='5' fill='%23FFC000'/><text x='16' y='23' text-anchor='middle' font-family='Poppins,sans-serif' font-weight='700' font-size='16' fill='%231A1A1A'>A</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
-  --black: #0f0f0f;
-  --black2: #1a1a1a;
-  --black3: #242424;
-  --black4: #2e2e2e;
-  --yellow: #FFC000;
-  --yellow2: #e6ac00;
-  --white: #ffffff;
-  --gray: #888888;
-  --gray2: #555555;
-  --gray3: #333333;
-  --green: #4CAF50;
-  --red: #EF5350;
-  --blue: #4A9EFF;
-  --border: rgba(255,255,255,0.08);
-  --text: #e8e8e8;
-  --text2: #aaaaaa;
-  --text3: #666666;
+  --bg:#F5F5F5; --bg2:#ECECEC; --white:#FFFFFF;
+  --black:#1A1A1A; --black2:#242424; --black3:#2e2e2e;
+  --yellow:#FFC000; --yellow2:#e6ac00;
+  --border:#E0E0E0; --border-dark:rgba(0,0,0,0.08);
+  --t1:#1A1A1A; --t2:#333333; --t3:#999999; --t4:#666666;
+  --green:#4CAF50; --red:#EF5350; --blue:#2563EB;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--black); color:var(--text); font-family:'Poppins',sans-serif; font-size:13px; min-height:100vh; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--t1);font-family:'Poppins',sans-serif;font-size:13px;min-height:100vh;}
 
-/* ── TOPBAR ── */
-.topbar {
-  background:var(--black2);
-  border-bottom:1px solid var(--border);
-  padding:0 24px;
-  height:48px;
-  display:flex; align-items:center; justify-content:space-between;
-  position:sticky; top:0; z-index:200;
-}
-.topbar-left { display:flex; align-items:center; gap:14px; }
-.logo-badge {
-  width:30px; height:30px; background:var(--yellow); border-radius:7px;
-  display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:13px; color:var(--black2);
-}
-.topbar-brand { font-size:12px; font-weight:600; color:var(--text2); }
-.topbar-title { font-size:13px; font-weight:600; color:var(--white); }
-.topbar-right { display:flex; align-items:center; gap:10px; }
-.sync-label { font-size:11px; color:var(--text3); }
-.sync-label span { color:var(--text2); }
-.btn-sync {
-  background:var(--yellow); color:var(--black2);
-  border:none; border-radius:5px; padding:5px 12px;
-  font-size:11px; font-weight:700; font-family:'Poppins',sans-serif;
-  cursor:pointer; display:flex; align-items:center; gap:5px;
-}
+/* TOPBAR */
+.topbar{background:var(--black);border-bottom:2px solid var(--yellow);padding:0 24px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.logo-badge{width:30px;height:30px;background:var(--yellow);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--black);}
+.topbar-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;}
+.topbar-sep{color:rgba(255,255,255,0.15);}
+.topbar-title{font-size:14px;font-weight:700;color:#fff;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.sync-label{font-size:11px;color:rgba(255,255,255,0.4);}
+.sync-label span{color:rgba(255,255,255,0.7);}
+.btn-sync{background:var(--yellow);color:var(--black);border:none;border-radius:5px;padding:6px 14px;font-size:11px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;}
 
-/* ── PAGE HEADER ── */
-.page-header {
-  background:var(--black2); border-bottom:1px solid var(--border);
-  padding:16px 24px 0;
-}
-.page-header h1 { font-size:20px; font-weight:700; color:var(--white); margin-bottom:3px; }
-.page-header p  { font-size:11px; color:var(--text2); margin-bottom:14px; }
+/* PAGE HEADER */
+.page-header{background:var(--black);padding:14px 24px 0;}
+.page-header h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px;}
+.page-header p{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:14px;}
 
-/* ── KPI STRIP ── */
-.kpi-strip {
-  background:var(--black3); border:1px solid var(--border);
-  border-radius:8px; margin:0 24px 0;
-  display:grid; grid-template-columns:repeat(5,1fr);
-  position:relative; top:-1px;
-}
-.kpi-item {
-  padding:14px 18px; border-right:1px solid var(--border);
-}
-.kpi-item:last-child { border-right:none; }
-.kpi-item .klabel { font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:5px; }
-.kpi-item .kval   { font-size:22px; font-weight:700; color:var(--yellow); line-height:1; margin-bottom:3px; }
-.kpi-item .ksub   { font-size:10px; color:var(--text2); }
-.kpi-item.dim .kval { color:var(--text2); }
-.kpi-item.dim .klabel::after { content:' (sin periodo)'; color:var(--text3); }
+/* KPI STRIP */
+.kpi-strip{background:var(--black2);border:1px solid rgba(255,255,255,0.08);border-radius:8px;margin:0;display:grid;grid-template-columns:repeat(5,1fr);}
+.kpi-item{padding:14px 18px;border-right:1px solid rgba(255,255,255,0.07);}
+.kpi-item:last-child{border-right:none;}
+.kpi-item .klabel{font-size:9px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
+.kpi-item .kval{font-size:20px;font-weight:700;color:var(--yellow);line-height:1;margin-bottom:3px;font-variant-numeric:tabular-nums;}
+.kpi-item .ksub{font-size:10px;color:rgba(255,255,255,0.35);}
+.kpi-item.dim .kval{color:rgba(255,255,255,0.25);}
 
-/* ── FILTER BAR ── */
-.filter-bar {
-  background:var(--black2); border-bottom:1px solid var(--border);
-  padding:10px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
-}
-.filter-group { display:flex; align-items:center; gap:6px; }
-.filter-group label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
-.pills { display:flex; gap:4px; }
-.pill {
-  padding:4px 11px; border-radius:20px; font-size:11px; font-weight:600;
-  background:var(--black4); color:var(--text2); cursor:pointer;
-  border:1px solid transparent; transition:all .15s;
-}
-.pill:hover { background:var(--black3); color:var(--white); }
-.pill.active { background:var(--yellow); color:var(--black2); border-color:var(--yellow); }
+/* FILTER BAR */
+.filter-bar{background:var(--black);border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.filter-group{display:flex;align-items:center;gap:6px;}
+.filter-group label{font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1.2px;}
+.pills{display:flex;gap:4px;}
+.pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);cursor:pointer;border:1px solid transparent;transition:all .15s;white-space:nowrap;}
+.pill:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.pill.active{background:var(--yellow);color:var(--black);border-color:var(--yellow);}
+.mode-toggle{margin-left:auto;display:flex;gap:4px;align-items:center;}
+.mode-toggle label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-right:4px;}
+.mode-btn{padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:all .15s;font-family:'Poppins',sans-serif;}
+.mode-btn.active{background:var(--yellow);color:var(--black);border-color:var(--yellow);}
+.date-inputs{display:none;align-items:center;gap:6px;}
+.date-inputs.show{display:flex;}
+.date-inputs input[type=date]{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:5px;padding:4px 8px;font-size:11px;color:#fff;font-family:'Poppins',sans-serif;outline:none;color-scheme:dark;}
+.date-inputs span{font-size:10px;color:rgba(255,255,255,0.35);}
 
-/* ── MODE TOGGLE ── */
-.mode-toggle { margin-left:auto; display:flex; gap:4px; align-items:center; }
-.mode-toggle label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-right:4px; }
-.mode-btn {
-  padding:4px 11px; border-radius:5px; font-size:11px; font-weight:600;
-  background:var(--black4); color:var(--text2); cursor:pointer; border:1px solid var(--border);
-  transition:all .15s; font-family:'Poppins',sans-serif;
-}
-.mode-btn.active { background:var(--yellow); color:var(--black2); border-color:var(--yellow); }
+/* NAV TABS */
+.nav-tabs{background:var(--black);border-bottom:1px solid rgba(255,255,255,0.08);padding:0 24px;display:flex;gap:2px;}
+.nav-tab{padding:10px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.nav-tab:hover{color:#fff;}
+.nav-tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
 
-/* free date inputs */
-.date-inputs { display:none; align-items:center; gap:6px; }
-.date-inputs.show { display:flex; }
-.date-inputs input[type=date] {
-  background:var(--black4); border:1px solid var(--border); border-radius:5px;
-  padding:4px 8px; font-size:11px; color:var(--text); font-family:'Poppins',sans-serif; outline:none;
-  color-scheme: dark;
-}
-.date-inputs span { font-size:10px; color:var(--text3); }
+/* META WARN */
+.meta-warn{margin:16px 24px 0;background:rgba(255,192,0,0.08);border:1px solid rgba(255,192,0,0.3);border-radius:6px;padding:8px 14px;font-size:11px;color:#f5cc5a;display:none;align-items:center;gap:8px;}
+.meta-warn.show{display:flex;}
 
-/* ── NAV TABS ── */
-.nav-tabs {
-  background:var(--black2); border-bottom:2px solid var(--border);
-  padding:0 24px; display:flex; gap:2px;
-}
-.nav-tab {
-  padding:10px 18px; font-size:12px; font-weight:600; color:var(--text2);
-  cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
-  transition:all .15s; display:flex; align-items:center; gap:6px;
-}
-.nav-tab:hover { color:var(--white); }
-.nav-tab.active { color:var(--yellow); border-bottom-color:var(--yellow); }
+/* CONTENT */
+.content{padding:20px 24px;}
 
-/* ── META WARN ── */
-.meta-warn {
-  margin:16px 24px 0;
-  background:rgba(255,192,0,0.08); border:1px solid rgba(255,192,0,0.25);
-  border-radius:6px; padding:8px 14px; font-size:11px; color:#f5cc5a;
-  display:none; align-items:center; gap:8px;
-}
-.meta-warn.show { display:flex; }
+/* CHART CARDS */
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.chart-card h4{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.chart-card h4::before{content:'■';color:var(--yellow);font-size:7px;}
 
-/* ── CONTENT ── */
-.content { padding:20px 24px; }
+/* TABLE CARDS */
+.tbl-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px;}
+.tbl-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--white);}
+.tbl-header h3{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:6px;}
+.tbl-header h3::before{content:'■';color:var(--yellow);font-size:8px;}
+.tbl-count{font-size:10px;color:var(--t3);}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead th{padding:9px 12px;text-align:left;font-size:9px;font-weight:700;color:#fff;background:var(--black);text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap;cursor:pointer;user-select:none;transition:background .1s;}
+thead th:hover{background:#333;}
+thead th.ycol{color:var(--yellow);}
+thead th.right,tbody td.right{text-align:right;}
+thead th .sort-arrow{margin-left:4px;opacity:0.4;font-size:9px;}
+thead th.sort-asc .sort-arrow::after{content:'▲';opacity:1;}
+thead th.sort-desc .sort-arrow::after{content:'▼';opacity:1;}
+thead th .sort-arrow::after{content:'⇅';}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:hover{background:#fffbee;}
+tbody tr.total-row{background:var(--black);}
+tbody tr.total-row td{color:#fff;font-weight:700;}
+tbody tr.total-row td.ycell{color:var(--yellow);}
+tbody td{padding:8px 12px;color:var(--t2);white-space:nowrap;}
+tbody td.bold{font-weight:700;color:var(--t1);}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;}
+.tag-pre{background:#fff8e1;color:#b45309;}
+.tag-pos{background:#ede9fe;color:#5b21b6;}
+.tag-maes{background:#e8f5e9;color:#2e7d32;}
+.tag-doc{background:#fce4ec;color:#c62828;}
+.good{color:var(--green);font-weight:700;}
+.warn{color:#f59e0b;font-weight:700;}
+.bad{color:var(--red);font-weight:700;}
 
-/* ── SECTION TITLE ── */
-.section-title {
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:12px;
-}
-.section-title h3 {
-  font-size:11px; font-weight:700; color:var(--text2);
-  text-transform:uppercase; letter-spacing:1.5px;
-  display:flex; align-items:center; gap:8px;
-}
-.section-title h3::before { content:'■'; color:var(--yellow); font-size:8px; }
-.section-title .badge {
-  font-size:10px; color:var(--text3); cursor:pointer;
-  padding:2px 8px; border-radius:4px; background:var(--black3);
-  transition:color .15s;
-}
-.section-title .badge:hover { color:var(--text2); }
+/* FUNNEL */
+.fn-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.fn-lbl{font-size:10px;color:var(--t3);width:95px;text-align:right;font-weight:600;}
+.fn-track{flex:1;height:28px;background:var(--bg);border-radius:5px;overflow:hidden;}
+.fn-bar{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:10px;font-size:11px;font-weight:700;}
+.fn-pct{font-size:10px;color:var(--t3);width:42px;text-align:right;}
 
-/* ── CHART CARDS ── */
-.charts-row { display:grid; gap:14px; margin-bottom:20px; }
-.chart-card {
-  background:var(--black2); border:1px solid var(--border);
-  border-radius:8px; padding:16px;
-}
-.chart-card h4 { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:14px; }
+/* SMALL BARS */
+.sbar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sbar-lbl{font-size:11px;color:var(--t2);width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sbar-track{flex:1;height:7px;background:var(--bg2);border-radius:4px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:4px;}
+.sbar-val{font-size:10px;font-weight:700;color:var(--t1);width:80px;text-align:right;}
 
-/* ── TABLES ── */
-.tbl-card {
-  background:var(--black2); border:1px solid var(--border);
-  border-radius:8px; overflow:hidden; margin-bottom:20px;
-}
-.tbl-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 16px; border-bottom:1px solid var(--border);
-}
-.tbl-header h3 { font-size:10px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1.5px; display:flex; align-items:center; gap:6px; }
-.tbl-header h3::before { content:'■'; color:var(--yellow); font-size:8px; }
-.tbl-toggle { font-size:10px; color:var(--text3); cursor:pointer; background:var(--black3); border:none; border-radius:4px; padding:3px 10px; color:var(--text3); font-family:'Poppins',sans-serif; }
-table { width:100%; border-collapse:collapse; font-size:11px; }
-thead th {
-  padding:9px 12px; text-align:left; font-size:9px; font-weight:700;
-  color:var(--text2); background:var(--black3); text-transform:uppercase;
-  letter-spacing:0.8px; white-space:nowrap; border-bottom:1px solid var(--border);
-}
-thead th.ycol { color:var(--yellow); }
-thead th.right, tbody td.right { text-align:right; }
-tbody tr { border-bottom:1px solid rgba(255,255,255,0.04); transition:background .1s; }
-tbody tr:hover { background:rgba(255,255,255,0.03); }
-tbody tr.total-row { background:var(--black3); }
-tbody tr.total-row td { color:var(--white); font-weight:700; }
-tbody tr.total-row td.ycell { color:var(--yellow); }
-tbody td { padding:8px 12px; color:var(--text2); white-space:nowrap; }
-tbody td.bold { font-weight:700; color:var(--white); }
-tbody td.mono { font-weight:600; }
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
 
-/* colored program pills in tables */
-.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:9px; font-weight:700; }
-.tag-pre  { background:rgba(255,192,0,0.15);  color:var(--yellow); }
-.tag-pos  { background:rgba(74,158,255,0.15); color:var(--blue); }
-.tag-maes { background:rgba(76,175,80,0.15);  color:var(--green); }
-.tag-doc  { background:rgba(239,83,80,0.15);  color:var(--red); }
+.view-off{display:none!important;}
+.mb16{margin-bottom:16px;}
+.mb20{margin-bottom:20px;}
 
-/* pct good/bad */
-.good { color:var(--green); font-weight:700; }
-.warn { color:var(--yellow); font-weight:700; }
-.bad  { color:var(--red);   font-weight:700; }
+/* PROG SELECTOR */
+.prog-select-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+.prog-select-bar label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;}
+.prog-select-bar select{background:var(--white);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;font-family:'Poppins',sans-serif;color:var(--t1);outline:none;cursor:pointer;}
 
-/* progress bar inline */
-.pbar-wrap { display:flex; align-items:center; gap:6px; }
-.pbar { flex:1; height:4px; background:var(--black4); border-radius:2px; min-width:40px; }
-.pbar-fill { height:100%; border-radius:2px; background:var(--yellow); }
-.pbar-fill.bad-fill { background:var(--red); }
-.pbar-fill.good-fill { background:var(--green); }
-
-/* ── FUNNEL BARS ── */
-.fn-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
-.fn-lbl { font-size:10px; color:var(--text2); width:95px; text-align:right; font-weight:600; }
-.fn-track { flex:1; height:28px; background:var(--black3); border-radius:5px; overflow:hidden; }
-.fn-bar { height:100%; border-radius:5px; display:flex; align-items:center; padding-left:10px; font-size:11px; font-weight:700; }
-.fn-pct { font-size:10px; color:var(--text3); width:42px; text-align:right; }
-
-/* ── SMALL BARS ── */
-.sbar-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.sbar-lbl { font-size:11px; color:var(--text2); width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.sbar-track { flex:1; height:7px; background:var(--black3); border-radius:4px; overflow:hidden; }
-.sbar-fill { height:100%; border-radius:4px; }
-.sbar-val { font-size:10px; font-weight:700; color:var(--white); width:70px; text-align:right; }
-
-/* ── GRID HELPERS ── */
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.g3 { display:grid; grid-template-columns:2fr 1fr 1fr; gap:14px; }
-.g4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
-
-/* ── VIEW TOGGLE ── */
-.view-off { display:none !important; }
-
-/* ── INSIGHT ── */
-.insight {
-  background:var(--black2); border:1px solid var(--border); border-left:3px solid var(--yellow);
-  border-radius:6px; padding:10px 14px; font-size:11px; color:var(--text2);
-  font-style:italic; line-height:1.6; margin-top:14px;
-}
-
-/* ── PROG SELECTOR ── */
-.prog-select-bar {
-  background:var(--black2); border:1px solid var(--border); border-radius:8px;
-  padding:14px 16px; margin-bottom:16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
-}
-.prog-select-bar label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
-.prog-select-bar select {
-  background:var(--black3); border:1px solid var(--border); border-radius:5px;
-  padding:6px 10px; font-size:12px; font-family:'Poppins',sans-serif;
-  color:var(--text); outline:none; cursor:pointer;
-}
+/* INSIGHT */
+.insight{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:6px;padding:10px 14px;font-size:11px;color:var(--t4);font-style:italic;line-height:1.6;margin-top:14px;}
 </style>
 </head>
 <body>
 
-<!-- ══════ TOPBAR ══════ -->
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-left">
     <div class="logo-badge">A</div>
     <span class="topbar-brand">ADCOM</span>
-    <span style="color:var(--border)">|</span>
+    <span class="topbar-sep">|</span>
     <span class="topbar-title">Dashboard Católica</span>
   </div>
   <div class="topbar-right">
-    <span class="sync-label">Actualizado: <span id="sync-time">--</span></span>
+    <span class="sync-label">Actualizado: <span id="sync-time">—</span></span>
     <button class="btn-sync" onclick="loadAllData()">↻ Actualizar</button>
   </div>
 </div>
 
-<!-- ══════ PAGE HEADER ══════ -->
+<!-- PAGE HEADER -->
 <div class="page-header">
   <h1>Dashboard Digital</h1>
   <p>Universidad Católica de Colombia · Inversión, Leads CRM y Matrículas</p>
-
-  <!-- KPI STRIP -->
-  <div class="kpi-strip" style="margin:0 0 14px;">
-    <div class="kpi-item">
-      <div class="klabel">Inversión Total</div>
-      <div class="kval" id="kpi-inv">—</div>
-      <div class="ksub" id="kpi-inv-sub">cargando...</div>
-    </div>
-    <div class="kpi-item">
-      <div class="klabel">Leads CRM</div>
-      <div class="kval" id="kpi-leads">—</div>
-      <div class="ksub" id="kpi-leads-sub">tráfico pago</div>
-    </div>
-    <div class="kpi-item">
-      <div class="klabel">CPL (CRM)</div>
-      <div class="kval" id="kpi-cpl">—</div>
-      <div class="ksub">inversión ÷ leads CRM</div>
-    </div>
-    <div class="kpi-item">
-      <div class="klabel">Matrículas</div>
-      <div class="kval" id="kpi-mat">—</div>
-      <div class="ksub" id="kpi-mat-sub">confirmadas</div>
-    </div>
-    <div class="kpi-item">
-      <div class="klabel">Conv. CRM → Mat.</div>
-      <div class="kval" id="kpi-conv">—</div>
-      <div class="ksub">leads CRM → matrículas</div>
-    </div>
+  <div class="kpi-strip" id="kpi-strip" style="margin-bottom:14px;">
+    <div class="kpi-item"><div class="klabel">Inversión Total</div><div class="kval" id="kpi-inv">—</div><div class="ksub" id="kpi-inv-sub">—</div></div>
+    <div class="kpi-item"><div class="klabel">Leads CRM</div><div class="kval" id="kpi-leads">—</div><div class="ksub" id="kpi-leads-sub">—</div></div>
+    <div class="kpi-item"><div class="klabel">CPL (CRM)</div><div class="kval" id="kpi-cpl">—</div><div class="ksub">inversión ÷ leads CRM</div></div>
+    <div class="kpi-item"><div class="klabel">Matrículas</div><div class="kval" id="kpi-mat">—</div><div class="ksub" id="kpi-mat-sub">—</div></div>
+    <div class="kpi-item"><div class="klabel">Conv. CRM → Mat.</div><div class="kval" id="kpi-conv">—</div><div class="ksub">leads → matrículas</div></div>
   </div>
 </div>
 
-<!-- ══════ FILTER BAR ══════ -->
+<!-- FILTER BAR -->
 <div class="filter-bar">
   <div class="filter-group">
     <label>Periodo</label>
-    <div class="pills" id="pills-periodo">
-      <span class="pill active" onclick="setPill(this,'periodo')">Todos</span>
-      <span class="pill" onclick="setPill(this,'periodo')">2025-3</span>
-      <span class="pill" onclick="setPill(this,'periodo')">2026-1</span>
-    </div>
+    <div class="pills" id="pills-periodo"><span class="pill active" onclick="setPill(this,'periodo','Todos')">Todos</span></div>
   </div>
   <div class="filter-group">
     <label>Modalidad</label>
     <div class="pills" id="pills-modal">
-      <span class="pill active" onclick="setPill(this,'modal')">Todas</span>
-      <span class="pill" onclick="setPill(this,'modal')">Pregrado</span>
-      <span class="pill" onclick="setPill(this,'modal')">Posgrado</span>
+      <span class="pill active" onclick="setPill(this,'modal','Todas')">Todas</span>
+      <span class="pill" onclick="setPill(this,'modal','Pregrado')">Pregrado</span>
+      <span class="pill" onclick="setPill(this,'modal','Posgrado')">Posgrado</span>
     </div>
   </div>
   <div class="filter-group">
     <label>Medio</label>
     <div class="pills" id="pills-medio">
-      <span class="pill active" onclick="setPill(this,'medio')">Todos</span>
-      <span class="pill" onclick="setPill(this,'medio')">Google</span>
-      <span class="pill" onclick="setPill(this,'medio')">Meta</span>
-      <span class="pill" onclick="setPill(this,'medio')">TikTok</span>
-      <span class="pill" onclick="setPill(this,'medio')">Programática</span>
+      <span class="pill active" onclick="setPill(this,'medio','Todos')">Todos</span>
+      <span class="pill" onclick="setPill(this,'medio','google')">Google</span>
+      <span class="pill" onclick="setPill(this,'medio','meta')">Meta</span>
+      <span class="pill" onclick="setPill(this,'medio','tiktok')">TikTok</span>
+      <span class="pill" onclick="setPill(this,'medio','programatica')">Programática</span>
     </div>
   </div>
   <div class="mode-toggle">
@@ -342,15 +202,13 @@ tbody td.mono { font-weight:600; }
     <button class="mode-btn active" onclick="setMode('periodo',this)">Por periodo</button>
     <button class="mode-btn" onclick="setMode('libre',this)">Libre</button>
     <div class="date-inputs" id="date-inputs">
-      <span>Desde</span>
-      <input type="date" id="date-from" value="2026-01-01">
-      <span>Hasta</span>
-      <input type="date" id="date-to" value="2026-04-27">
+      <span>Desde</span><input type="date" id="date-from" onchange="updateAll()">
+      <span>Hasta</span><input type="date" id="date-to" onchange="updateAll()">
     </div>
   </div>
 </div>
 
-<!-- ══════ NAV TABS ══════ -->
+<!-- NAV TABS -->
 <div class="nav-tabs">
   <div class="nav-tab active" onclick="showTab('resumen',this)">● Resumen</div>
   <div class="nav-tab" onclick="showTab('programa',this)">⊞ Por Programa</div>
@@ -358,847 +216,842 @@ tbody td.mono { font-weight:600; }
   <div class="nav-tab" onclick="showTab('funnel',this)">▽ Funnel CRM</div>
 </div>
 
-<!-- META WARNING -->
-<div class="meta-warn" id="meta-warn">
-  ⚠️ Modo fechas libres activo — presupuesto y metas desactivados. Los % de cumplimiento no están disponibles para rangos personalizados.
-</div>
+<div class="meta-warn" id="meta-warn">⚠️ Modo fechas libres — presupuesto y metas desactivados para este rango personalizado.</div>
 
-<!-- ══════════════════════════════════════════════
-     TAB 1 — RESUMEN
-══════════════════════════════════════════════ -->
+<!-- ════ TAB RESUMEN ════ -->
 <div id="tab-resumen" class="content">
-
-  <!-- Charts row -->
-  <div class="g3" style="margin-bottom:16px">
-    <div class="chart-card">
-      <h4>Inversión mensual por medio</h4>
-      <canvas id="chart-inversion" height="160"></canvas>
-    </div>
-    <div class="chart-card">
-      <h4>Leads CRM por Medio</h4>
-      <canvas id="chart-leads-medio" height="160"></canvas>
-    </div>
-    <div class="chart-card">
-      <h4>Funnel Global</h4>
-      <div id="funnel-global" style="padding-top:4px"></div>
-    </div>
+  <div class="g3 mb16">
+    <div class="chart-card"><h4>Inversión por Medio</h4><canvas id="chart-inv-medio" height="160"></canvas></div>
+    <div class="chart-card"><h4>Leads CRM por Medio</h4><canvas id="chart-leads-medio" height="160"></canvas></div>
+    <div class="chart-card"><h4>Funnel Global</h4><div id="funnel-global"></div></div>
   </div>
-
-  <!-- Tabla por programa -->
   <div class="tbl-card">
     <div class="tbl-header">
       <h3>Detalle por Programa</h3>
-      <span style="font-size:10px;color:var(--text3)" id="tbl-count"></span>
+      <span class="tbl-count" id="tbl-count"></span>
     </div>
     <div style="overflow-x:auto">
-    <table id="tbl-programas">
-      <thead>
-        <tr>
-          <th>Modalidad</th>
-          <th>Tipo</th>
-          <th>Programa</th>
-          <th class="right">G. Inversión</th>
-          <th class="right">M. Inversión</th>
-          <th class="right">P. Inversión</th>
-          <th class="right ycol">Total Inv.</th>
-          <th class="right ycol">% Ppto</th>
-          <th class="right ycol">Leads CRM</th>
-          <th class="right">CPL CRM</th>
-          <th class="right">Matrículas</th>
-          <th class="right">Conv.</th>
-        </tr>
-      </thead>
-      <tbody id="tbl-programas-body">
-        <tr><td colspan="12" style="text-align:center;padding:24px;color:var(--text3)">Cargando datos...</td></tr>
-      </tbody>
-    </table>
+      <table id="tbl-prog">
+        <thead>
+          <tr>
+            <th onclick="sortTable('tbl-prog-body','modal',0)">Modalidad<span class="sort-arrow"></span></th>
+            <th onclick="sortTable('tbl-prog-body','tipo',1)">Tipo<span class="sort-arrow"></span></th>
+            <th onclick="sortTable('tbl-prog-body','prog',2)">Programa<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','inv_google',3)">Google Inv.<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','inv_meta',4)">Meta Inv.<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','inv_tiktok',5)">TikTok Inv.<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','inv_prog',6)">Prog. Inv.<span class="sort-arrow"></span></th>
+            <th class="right ycol" onclick="sortTable('tbl-prog-body','inv_total',7)">Total Inv.<span class="sort-arrow"></span></th>
+            <th class="right ycol" onclick="sortTable('tbl-prog-body','pct_ppto',8)">% Ppto<span class="sort-arrow"></span></th>
+            <th class="right ycol" onclick="sortTable('tbl-prog-body','leads_crm',9)">Leads CRM<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','cpl',10)">CPL CRM<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','mat',11)">Matrículas<span class="sort-arrow"></span></th>
+            <th class="right" onclick="sortTable('tbl-prog-body','conv',12)">Conv.<span class="sort-arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="tbl-prog-body"></tbody>
+      </table>
     </div>
   </div>
-
 </div>
 
-<!-- ══════════════════════════════════════════════
-     TAB 2 — POR PROGRAMA
-══════════════════════════════════════════════ -->
+<!-- ════ TAB POR PROGRAMA ════ -->
 <div id="tab-programa" class="content view-off">
-
   <div class="prog-select-bar">
     <label>Modalidad</label>
     <select id="sel-modal" onchange="updateProgList()">
       <option value="">Todas</option>
-      <option>Pregrado</option>
-      <option>Posgrado</option>
+      <option>Pregrado</option><option>Posgrado</option>
     </select>
     <label>Tipo</label>
     <select id="sel-tipo" onchange="updateProgList()">
       <option value="">Todos</option>
-      <option>Pregrados</option>
-      <option>Especialización</option>
-      <option>Maestría</option>
-      <option>Doctorado</option>
+      <option>Pregrados</option><option>Especialización</option><option>Maestría</option><option>Doctorado</option>
     </select>
     <label>Programa</label>
-    <select id="sel-prog" onchange="updateProgView()" style="min-width:300px">
-      <option value="">— selecciona —</option>
-    </select>
+    <select id="sel-prog" onchange="updateProgView()" style="min-width:300px"><option value="">— selecciona —</option></select>
   </div>
-
-  <!-- KPIs del programa -->
-  <div class="g4" style="margin-bottom:16px" id="prog-kpis">
-    <div class="chart-card" style="text-align:center">
-      <h4>Inversión</h4>
-      <div style="font-size:24px;font-weight:700;color:var(--yellow)" id="pk-inv">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-inv-sub">ppto —</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>Leads CRM</h4>
-      <div style="font-size:24px;font-weight:700;color:var(--green)" id="pk-leads">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-leads-sub">meta —</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>CPL (CRM)</h4>
-      <div style="font-size:24px;font-weight:700;color:var(--white)" id="pk-cpl">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px">inversión ÷ leads</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>Matrículas</h4>
-      <div style="font-size:24px;font-weight:700;color:var(--yellow)" id="pk-mat">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="pk-mat-sub">conv. —</div>
-    </div>
+  <div class="g4 mb16" id="prog-kpis">
+    <div class="chart-card" style="text-align:center"><h4>Inversión</h4><div style="font-size:22px;font-weight:700;color:var(--yellow)" id="pk-inv">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px" id="pk-inv-sub"></div></div>
+    <div class="chart-card" style="text-align:center"><h4>Leads CRM</h4><div style="font-size:22px;font-weight:700;color:var(--green)" id="pk-leads">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px" id="pk-leads-sub"></div></div>
+    <div class="chart-card" style="text-align:center"><h4>CPL (CRM)</h4><div style="font-size:22px;font-weight:700;color:var(--t1)" id="pk-cpl">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px">inversión ÷ leads</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Matrículas</h4><div style="font-size:22px;font-weight:700;color:var(--yellow)" id="pk-mat">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px" id="pk-mat-sub"></div></div>
   </div>
-
-  <div class="g2" style="margin-bottom:16px">
-    <div class="chart-card">
-      <h4>Leads CRM por Día</h4>
-      <canvas id="chart-prog-dia" height="160"></canvas>
-    </div>
-    <div class="chart-card">
-      <h4>Inversión por Medio</h4>
-      <div id="prog-medio-bars" style="padding-top:4px"></div>
-    </div>
+  <div class="g2 mb16">
+    <div class="chart-card"><h4>Leads CRM por Día</h4><canvas id="chart-prog-dia" height="160"></canvas></div>
+    <div class="chart-card"><h4>Inversión por Medio</h4><div id="prog-medio-bars" style="padding-top:4px"></div></div>
   </div>
-
-  <div class="chart-card" style="margin-bottom:16px">
-    <h4>Funnel — Programa seleccionado</h4>
-    <div id="prog-funnel"></div>
-  </div>
-
-</div>
-
-<!-- ══════════════════════════════════════════════
-     TAB 3 — LEADS POR DÍA
-══════════════════════════════════════════════ -->
-<div id="tab-dia" class="content view-off">
-
-  <div class="g4" style="margin-bottom:16px">
-    <div class="chart-card" style="text-align:center">
-      <h4>Leads CRM en rango</h4>
-      <div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-total">—</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>Promedio diario</h4>
-      <div style="font-size:28px;font-weight:700;color:var(--white)" id="dia-avg">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px">leads / día</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>Mejor día</h4>
-      <div style="font-size:28px;font-weight:700;color:var(--green)" id="dia-best">—</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px" id="dia-best-date">—</div>
-    </div>
-    <div class="chart-card" style="text-align:center">
-      <h4>Inversión acumulada</h4>
-      <div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-inv">—</div>
-    </div>
-  </div>
-
-  <div class="chart-card" style="margin-bottom:16px">
-    <h4>Leads CRM captados por día</h4>
-    <canvas id="chart-dia" height="160"></canvas>
-    <div style="display:flex;gap:18px;margin-top:10px">
-      <span style="font-size:11px;color:var(--text2)"><span style="color:#1A1A1A;font-size:16px">■</span> Google</span>
-      <span style="font-size:11px;color:var(--text2)"><span style="color:var(--yellow);font-size:16px">■</span> Meta</span>
-      <span style="font-size:11px;color:var(--text2)"><span style="color:var(--green);font-size:16px">■</span> Programática</span>
-    </div>
-  </div>
-
-</div>
-
-<!-- ══════════════════════════════════════════════
-     TAB 4 — FUNNEL CRM
-══════════════════════════════════════════════ -->
-<div id="tab-funnel" class="content view-off">
-
-  <div class="g2" style="margin-bottom:16px">
-    <div class="chart-card">
-      <h4>Leads CRM y Matrículas por Medio</h4>
-      <div id="funnel-por-medio"></div>
-    </div>
-    <div class="chart-card">
-      <h4>Top Programas — Conv. Lead → Matrícula</h4>
-      <div id="funnel-top-prog"></div>
-    </div>
-  </div>
-
+  <!-- Funnel todos los programas -->
   <div class="tbl-card">
-    <div class="tbl-header"><h3>Funnel por Etapa y Fuente</h3></div>
-    <table id="tbl-funnel">
+    <div class="tbl-header"><h3>Funnel CRM — Todos los Programas</h3><span class="tbl-count" id="funnel-count"></span></div>
+    <div style="overflow-x:auto">
+    <table id="tbl-funnel-prog">
       <thead>
         <tr>
-          <th>Fuente</th>
-          <th class="right">Leads CRM</th>
-          <th class="right">Aspirantes</th>
-          <th class="right">Pre-inscritos</th>
-          <th class="right">Inscritos</th>
-          <th class="right">Admitidos</th>
-          <th class="right ycol">Matrículas</th>
-          <th class="right ycol">Conv.</th>
+          <th onclick="sortTable('tbl-funnel-prog-body','prog',0)">Programa<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-prog-body','leads_crm',1)">Leads CRM<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-prog-body','asp',2)">Aspirantes<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-prog-body','pre',3)">Pre-inscritos<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-prog-body','ins',4)">Inscritos<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-prog-body','adm',5)">Admitidos<span class="sort-arrow"></span></th>
+          <th class="right ycol" onclick="sortTable('tbl-funnel-prog-body','mat',6)">Matrículas<span class="sort-arrow"></span></th>
+          <th class="right ycol" onclick="sortTable('tbl-funnel-prog-body','conv',7)">Conv.<span class="sort-arrow"></span></th>
         </tr>
       </thead>
-      <tbody id="tbl-funnel-body">
-        <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">Cargando...</td></tr>
-      </tbody>
+      <tbody id="tbl-funnel-prog-body"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB LEADS POR DÍA ════ -->
+<div id="tab-dia" class="content view-off">
+  <div class="g4 mb16">
+    <div class="chart-card" style="text-align:center"><h4>Leads CRM en rango</h4><div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-total">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Promedio diario</h4><div style="font-size:28px;font-weight:700;color:var(--t1)" id="dia-avg">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px">leads / día</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Mejor día</h4><div style="font-size:28px;font-weight:700;color:var(--green)" id="dia-best">—</div><div style="font-size:10px;color:var(--t3);margin-top:4px" id="dia-best-date">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Inversión acumulada</h4><div style="font-size:28px;font-weight:700;color:var(--yellow)" id="dia-inv">—</div></div>
+  </div>
+  <div class="chart-card mb16"><h4>Leads CRM captados por día — por fuente</h4><canvas id="chart-dia" height="150"></canvas>
+    <div style="display:flex;gap:18px;margin-top:10px">
+      <span style="font-size:11px;color:var(--t2)"><span style="color:var(--t2);font-size:14px">■</span> Tráfico Pago</span>
+      <span style="font-size:11px;color:var(--t2)"><span style="color:var(--yellow);font-size:14px">■</span> Facebook Ads</span>
+      <span style="font-size:11px;color:var(--t2)"><span style="color:var(--green);font-size:14px">■</span> Test Vocacional</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB FUNNEL CRM ════ -->
+<div id="tab-funnel" class="content view-off">
+  <div class="g5 mb16">
+    <div class="chart-card" style="text-align:center"><h4>Leads CRM</h4><div style="font-size:24px;font-weight:700;color:var(--yellow)" id="fn-leads">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Aspirantes</h4><div style="font-size:24px;font-weight:700;color:var(--t1)" id="fn-asp">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Inscritos</h4><div style="font-size:24px;font-weight:700;color:var(--t1)" id="fn-ins">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Admitidos</h4><div style="font-size:24px;font-weight:700;color:var(--t1)" id="fn-adm">—</div></div>
+    <div class="chart-card" style="text-align:center"><h4>Matrículas</h4><div style="font-size:24px;font-weight:700;color:var(--yellow)" id="fn-mat">—</div></div>
+  </div>
+  <div class="g2 mb16">
+    <div class="chart-card"><h4>Leads CRM y Matrículas por Medio</h4><div id="funnel-por-medio"></div></div>
+    <div class="chart-card"><h4>Top Programas — Conv. Lead → Matrícula</h4><div id="funnel-top-prog"></div></div>
+  </div>
+  <div class="tbl-card">
+    <div class="tbl-header"><h3>Funnel por Fuente</h3></div>
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortTable('tbl-funnel-src-body','fuente',0)">Fuente<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-src-body','leads',1)">Leads CRM<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-src-body','asp',2)">Aspirantes<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-src-body','pre',3)">Pre-inscritos<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-src-body','ins',4)">Inscritos<span class="sort-arrow"></span></th>
+          <th class="right" onclick="sortTable('tbl-funnel-src-body','adm',5)">Admitidos<span class="sort-arrow"></span></th>
+          <th class="right ycol" onclick="sortTable('tbl-funnel-src-body','mat',6)">Matrículas<span class="sort-arrow"></span></th>
+          <th class="right ycol" onclick="sortTable('tbl-funnel-src-body','conv',7)">Conv.<span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbl-funnel-src-body"></tbody>
     </table>
   </div>
-
-  <div class="insight" id="funnel-insight">Cargando análisis...</div>
-
+  <div class="insight" id="funnel-insight">Cargando...</div>
 </div>
 
 <script>
-// ═══════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════
+// ═══════════ CONFIG ═══════════
 const SHEET_ID = '1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs';
-const GIDS = {
-  resumen:    '1551290449',
-  metas:      '2109044138',
-  leads:      '17439818',
-  matriculas: '955481695'
-};
+const GIDS = { resumen:'1551290449', metas:'2109044138', leads:'17439818', matriculas:'955481695' };
 const BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=`;
 
-// ── state ──
 let DATA = { resumen:[], metas:[], leads:[], matriculas:[] };
 let FILTERS = { periodo:'Todos', modal:'Todas', medio:'Todos', mode:'periodo', dateFrom:'', dateTo:'' };
 let charts = {};
+let sortState = {};
 
-// ═══════════════════════════════════════
-// FETCH CSV
-// ═══════════════════════════════════════
+// ═══════════ CSV PARSER ═══════════
 function parseCSV(text) {
   const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line => {
-    const vals = [];
-    let cur = '', inQ = false;
-    for (let c of line) {
-      if (c === '"') inQ = !inQ;
-      else if (c === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
-      else cur += c;
-    }
-    vals.push(cur.trim());
+  if (!lines.length) return [];
+  const headers = splitCSVLine(lines[0]);
+  return lines.slice(1).filter(l=>l.trim()).map(line => {
+    const vals = splitCSVLine(line);
     const obj = {};
-    headers.forEach((h,i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,''));
+    headers.forEach((h,i) => obj[h] = (vals[i]||'').trim());
     return obj;
   });
 }
-
-async function fetchCSV(gid) {
-  try {
-    const r = await fetch(BASE + gid);
-    const t = await r.text();
-    return parseCSV(t);
-  } catch(e) { console.error('Error fetching gid',gid,e); return []; }
+function splitCSVLine(line) {
+  const vals = []; let cur = '', inQ = false;
+  for (let c of line) {
+    if (c==='"') inQ=!inQ;
+    else if (c===',' && !inQ) { vals.push(cur.trim()); cur=''; }
+    else cur+=c;
+  }
+  vals.push(cur.trim());
+  return vals.map(v=>v.replace(/^"|"$/g,''));
 }
-
+async function fetchCSV(gid) {
+  try { const r=await fetch(BASE+gid); const t=await r.text(); return parseCSV(t); }
+  catch(e) { console.error('Error gid',gid,e); return []; }
+}
 async function loadAllData() {
-  document.getElementById('sync-time').textContent = 'actualizando...';
-  const [resumen, metas, leads, matriculas] = await Promise.all([
-    fetchCSV(GIDS.resumen),
-    fetchCSV(GIDS.metas),
-    fetchCSV(GIDS.leads),
-    fetchCSV(GIDS.matriculas)
+  document.getElementById('sync-time').textContent='actualizando...';
+  const [resumen,metas,leads,matriculas] = await Promise.all([
+    fetchCSV(GIDS.resumen), fetchCSV(GIDS.metas),
+    fetchCSV(GIDS.leads), fetchCSV(GIDS.matriculas)
   ]);
-  DATA.resumen    = resumen;
-  DATA.metas      = metas;
-  DATA.leads      = leads;
-  DATA.matriculas = matriculas;
-  const now = new Date();
-  document.getElementById('sync-time').textContent =
-    now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}) + ' ' +
-    now.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit'});
+  DATA.resumen=resumen; DATA.metas=metas;
+  DATA.leads=leads; DATA.matriculas=matriculas;
+  buildPeriodoPills();
+  const now=new Date();
+  document.getElementById('sync-time').textContent=
+    now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+' '+
+    now.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
   updateAll();
 }
 
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
-function parseCOP(val) {
-  if (!val) return 0;
-  const s = String(val).replace(/[$,\s]/g,'').replace(/\./g,'');
-  return parseFloat(s) || 0;
-}
-function fmtCOP(n) {
-  if (n === 0) return '—';
-  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
-  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return '$' + Math.round(n/1e3).toLocaleString('es-CO') + 'K';
-  return '$' + Math.round(n).toLocaleString('es-CO');
-}
-function fmtN(n) { return n ? Math.round(n).toLocaleString('es-CO') : '—'; }
-function fmtPct(n) {
-  if (!n || isNaN(n)) return '—';
-  return (n*100).toFixed(1) + '%';
-}
-function normProg(s) {
-  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+// ═══════════ DYNAMIC PERIODO PILLS ═══════════
+function buildPeriodoPills() {
+  // Extract unique periods from metas sheet
+  const periodos = new Set();
+  for (const r of DATA.metas) {
+    const p = colVal(r,'Periodo','periodo','PERIODO');
+    if (p) {
+      // Convert date like "1/3/2025" to period label using Fecha Inicio / Fecha Fin
+      // Try direct period column first, else derive from date
+      const label = derivePeriodoLabel(r);
+      if (label) periodos.add(label);
+    }
+  }
+  // Also from resumen if has periodo col
+  for (const r of DATA.resumen) {
+    const p = colVal(r,'Campaña ID','campaign_id');
+    // Derive from date in Campaña ID col (it's a date)
+  }
+  const container = document.getElementById('pills-periodo');
+  let html = '<span class="pill active" onclick="setPill(this,\'periodo\',\'Todos\')">Todos</span>';
+  [...periodos].sort().forEach(p => {
+    html += `<span class="pill" onclick="setPill(this,'periodo','${p}')">${p}</span>`;
+  });
+  container.innerHTML = html;
 }
 
-// Detect column names flexibly
-function colVal(row, ...candidates) {
-  for (const c of candidates) {
-    if (row[c] !== undefined && row[c] !== '') return row[c];
+function derivePeriodoLabel(r) {
+  // Try columns: Periodo, periodo, PERIODO
+  const raw = colVal(r,'Periodo','periodo','PERIODO');
+  if (!raw) return null;
+  // If it's a date like 1/3/2025 or 2025-03-01
+  const d = parseDate(raw);
+  if (!d) return raw; // return as-is if not a date
+  // Build label like "2025-1" based on month: ene-jun = 1, jul-dic = 3 (or whatever client uses)
+  // Since client uses 2025-3, 2026-1 etc — use Fecha Inicio/Fin columns if present
+  const fi = colVal(r,'Fecha Inicio','fecha_inicio','FechaInicio');
+  const ff = colVal(r,'Fecha Fin','fecha_fin','FechaFin');
+  if (fi && ff) {
+    const dStart = parseDate(fi);
+    const dEnd   = parseDate(ff);
+    if (dStart) return `${dStart.getFullYear()}-${dStart.getMonth()<6?'1':'3'}`;
   }
+  return raw;
+}
+
+// ═══════════ HELPERS ═══════════
+function colVal(row, ...keys) {
+  for (const k of keys) { if (row[k]!==undefined && row[k]!=='') return row[k]; }
   return '';
 }
+function parseDate(s) {
+  if (!s) return null;
+  // handles: "15/02/2025 06:27 PM", "2025-01-01", "1/3/2025"
+  const clean = s.trim().split(' ')[0];
+  const parts = clean.includes('-') ? clean.split('-') : clean.split('/');
+  if (parts.length < 3) return null;
+  let day,mon,year;
+  if (parts[0].length===4) { year=+parts[0];mon=+parts[1]-1;day=+parts[2]; }
+  else { day=+parts[0];mon=+parts[1]-1;year=+parts[2]; }
+  const d = new Date(year,mon,day);
+  return isNaN(d.getTime()) ? null : d;
+}
+function parseCOP(val) {
+  if (!val) return 0;
+  return parseFloat(String(val).replace(/[$,.\s]/g,'').replace(/,/g,'')) || 0;
+}
+function fmtCOP(n) {
+  if (!n || n===0) return '—';
+  // Full number in thousands (thousands separator, no abbreviation)
+  return '$' + Math.round(n).toLocaleString('es-CO');
+}
+function fmtN(n) { return (n||n===0) ? Math.round(n).toLocaleString('es-CO') : '—'; }
+function fmtPct(n) { if (!n||isNaN(n)||n===0) return '—'; return (n*100).toFixed(1)+'%'; }
+function normStr(s) { return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
 
-// ═══════════════════════════════════════
-// FILTER DATA
-// ═══════════════════════════════════════
-function applyFilters(rows) {
-  return rows.filter(r => {
-    const modal = colVal(r,'Modalidad','modalidad');
-    const medio = colVal(r,'Medio','medio');
-    if (FILTERS.modal !== 'Todas' && FILTERS.modal !== '') {
-      if (!modal.toLowerCase().includes(FILTERS.modal.toLowerCase())) return false;
+// ═══════════ FILTER ENGINE ═══════════
+function filterResumen() {
+  return DATA.resumen.filter(r => {
+    const modal = normStr(colVal(r,'Modalidad','modalidad'));
+    const medio = normStr(colVal(r,'Medio','medio'));
+    // Modalidad filter
+    if (FILTERS.modal !== 'Todas') {
+      if (!modal.includes(normStr(FILTERS.modal))) return false;
     }
-    if (FILTERS.medio !== 'Todos' && FILTERS.medio !== '') {
-      if (!medio.toLowerCase().includes(FILTERS.medio.toLowerCase())) return false;
+    // Medio filter
+    if (FILTERS.medio !== 'Todos') {
+      if (!medio.includes(normStr(FILTERS.medio))) return false;
+    }
+    // Date filter (Campaña ID is date in resumen)
+    if (FILTERS.mode === 'libre' && FILTERS.dateFrom && FILTERS.dateTo) {
+      const rawDate = colVal(r,'Campaña ID');
+      const d = parseDate(rawDate);
+      if (d) {
+        const from = parseDate(FILTERS.dateFrom);
+        const to   = parseDate(FILTERS.dateTo);
+        if (from && d < from) return false;
+        if (to   && d > to)   return false;
+      }
     }
     return true;
   });
 }
 
-// Get metas for a program (match by program name + date range)
-function getMeta(progName) {
-  const norm = normProg(progName);
-  return DATA.metas.find(m => normProg(colVal(m,'Programa','programa')) === norm) || null;
+function filterCRM(arr) {
+  return arr.filter(r => {
+    const modal = normStr(colVal(r,'Tipo de programa','modalidad','Modalidad'));
+    if (FILTERS.modal !== 'Todas') {
+      // CRM doesn't have modalidad directly — skip modal filter here, use prog filter
+    }
+    if (FILTERS.mode === 'libre' && FILTERS.dateFrom && FILTERS.dateTo) {
+      const raw = colVal(r,'Fecha de Creación','fecha','Fecha');
+      const d = parseDate(raw);
+      if (d) {
+        const from = parseDate(FILTERS.dateFrom);
+        const to   = parseDate(FILTERS.dateTo);
+        if (from && d < from) return false;
+        if (to   && d > to)   return false;
+      }
+    }
+    return true;
+  });
 }
 
-// ═══════════════════════════════════════
-// AGGREGATE RESUMEN
-// ═══════════════════════════════════════
-function aggregateResumen() {
-  const filtered = applyFilters(DATA.resumen);
+// ═══════════ AGGREGATE ═══════════
+function aggregateByProg() {
+  const filtered = filterResumen();
   const byProg = {};
+
   for (const r of filtered) {
     const prog  = colVal(r,'Programa','programa');
-    const medio = (colVal(r,'Medio','medio')||'').toLowerCase();
-    const inv   = parseCOP(colVal(r,'Ad Set Name','Inversión','inversion','ad_set_name'));
-    const leads = parseInt(colVal(r,'Ad Name','Leads','leads','ad_name')) || 0;
+    const medio = normStr(colVal(r,'Medio','medio'));
+    const inv   = parseCOP(colVal(r,'Ad Set Name'));
+    const leads = parseInt(colVal(r,'Ad Name'))||0;
     const modal = colVal(r,'Modalidad','modalidad');
-    const tipo  = colVal(r,'Tipo programa','tipo_programa','Tipo');
-    if (!byProg[prog]) byProg[prog] = { prog, modal, tipo, inv:{google:0,meta:0,tiktok:0,prog:0,total:0}, leads_plt:0, leads_crm:0, mat:0 };
-    if (medio.includes('google')) byProg[prog].inv.google += inv;
-    else if (medio.includes('face') || medio.includes('meta')) byProg[prog].inv.meta += inv;
-    else if (medio.includes('tik')) byProg[prog].inv.tiktok += inv;
-    else if (medio.includes('prog')) byProg[prog].inv.prog += inv;
-    byProg[prog].inv.total += inv;
-    byProg[prog].leads_plt += leads;
+    const tipo  = colVal(r,'Tipo programa','Tipo');
+
+    if (!byProg[prog]) byProg[prog]={prog,modal,tipo,
+      inv:{google:0,meta:0,tiktok:0,prog:0,total:0},leads_plt:0,leads_crm:0,mat:0};
+
+    if (medio.includes('google'))           byProg[prog].inv.google+=inv;
+    else if (medio.includes('face')||medio.includes('meta')) byProg[prog].inv.meta+=inv;
+    else if (medio.includes('tik'))         byProg[prog].inv.tiktok+=inv;
+    else if (medio.includes('prog')||medio.includes('programat')) byProg[prog].inv.prog+=inv;
+    else byProg[prog].inv.prog+=inv; // fallback
+
+    byProg[prog].inv.total+=inv;
+    byProg[prog].leads_plt+=leads;
   }
-  // attach CRM data
-  for (const r of DATA.leads) {
-    const prog = colVal(r,'Programa','programa');
-    if (byProg[prog]) byProg[prog].leads_crm += parseInt(colVal(r,'ASPIRANTES')) + parseInt(colVal(r,'PRE-INSCRITOS')||0) + parseInt(colVal(r,'INSCRITOS')||0) || 0;
-  }
-  // simpler: count unique lead rows per program
+
+  // CRM leads
+  const crmFiltered = filterCRM(DATA.leads);
   const leadsByProg = {};
-  for (const r of DATA.leads) {
-    const prog = colVal(r,'Programa','programa');
-    leadsByProg[prog] = (leadsByProg[prog]||0) + 1;
+  for (const r of crmFiltered) {
+    const p = colVal(r,'Programa','programa');
+    leadsByProg[p] = (leadsByProg[p]||0)+1;
   }
+
+  // Matriculas
+  const matFiltered = filterCRM(DATA.matriculas);
   const matByProg = {};
-  for (const r of DATA.matriculas) {
-    const prog = colVal(r,'Programa','programa');
-    const m = parseInt(colVal(r,'MATRICULAS')) || 0;
-    matByProg[prog] = (matByProg[prog]||0) + m;
+  for (const r of matFiltered) {
+    const p = colVal(r,'Programa','programa');
+    matByProg[p] = (matByProg[p]||0)+(parseInt(colVal(r,'MATRICULAS'))||0);
   }
+
   for (const prog in byProg) {
-    byProg[prog].leads_crm = leadsByProg[prog] || 0;
-    byProg[prog].mat = matByProg[prog] || 0;
+    byProg[prog].leads_crm = leadsByProg[prog]||0;
+    byProg[prog].mat       = matByProg[prog]||0;
   }
-  return Object.values(byProg).sort((a,b) => b.inv.total - a.inv.total);
+
+  return Object.values(byProg).sort((a,b)=>b.inv.total-a.inv.total);
 }
 
-// ═══════════════════════════════════════
-// UPDATE ALL
-// ═══════════════════════════════════════
+function getMeta(prog) {
+  return DATA.metas.find(m=>normStr(colVal(m,'Programa','programa'))===normStr(prog))||null;
+}
+function getMetaVal(m, ...keys) { return m ? parseCOP(colVal(m,...keys)) : 0; }
+
+// ═══════════ UPDATE ALL ═══════════
 function updateAll() {
-  const agg = aggregateResumen();
-  const totInv    = agg.reduce((s,r)=>s+r.inv.total,0);
-  const totLeads  = agg.reduce((s,r)=>s+r.leads_crm,0);
-  const totMat    = agg.reduce((s,r)=>s+r.mat,0);
-  const totCPL    = totLeads ? totInv/totLeads : 0;
-  const totConv   = totLeads ? totMat/totLeads : 0;
+  const agg = aggregateByProg();
+  const totInv   = agg.reduce((s,r)=>s+r.inv.total,0);
+  const totLeads = agg.reduce((s,r)=>s+r.leads_crm,0);
+  const totMat   = agg.reduce((s,r)=>s+r.mat,0);
+  const totCPL   = totLeads ? totInv/totLeads : 0;
+  const totConv  = totLeads ? totMat/totLeads : 0;
 
-  document.getElementById('kpi-inv').textContent    = fmtCOP(totInv);
-  document.getElementById('kpi-leads').textContent  = fmtN(totLeads);
-  document.getElementById('kpi-cpl').textContent    = fmtCOP(totCPL);
-  document.getElementById('kpi-mat').textContent    = fmtN(totMat);
-  document.getElementById('kpi-conv').textContent   = fmtPct(totConv);
+  document.getElementById('kpi-inv').textContent   = fmtCOP(totInv);
+  document.getElementById('kpi-leads').textContent = fmtN(totLeads);
+  document.getElementById('kpi-cpl').textContent   = fmtCOP(totCPL);
+  document.getElementById('kpi-mat').textContent   = fmtN(totMat);
+  document.getElementById('kpi-conv').textContent  = fmtPct(totConv);
 
-  renderResumenTable(agg);
-  renderInversionChart(agg);
+  const libre = FILTERS.mode==='libre';
+  ['kpi-inv','kpi-leads','kpi-cpl','kpi-mat','kpi-conv'].forEach((id,i)=>{
+    const item = document.getElementById(id).closest('.kpi-item');
+    if (item && i<2) item.classList.toggle('dim',libre);
+  });
+
+  renderProgTable(agg);
+  renderInvMedioChart(agg);
   renderLeadsMedioChart(agg);
-  renderFunnelGlobal(totLeads, totMat);
+  renderFunnelGlobal(totLeads,totMat);
   renderFunnelPorMedio(agg);
   renderFunnelTopProg(agg);
-  renderFunnelTable();
+  renderFunnelSrcTable();
+  renderFunnelProgTable();
+  if (!document.getElementById('tab-dia').classList.contains('view-off')) renderDiaTab();
   updateProgList();
 }
 
-// ═══════════════════════════════════════
-// RESUMEN TABLE
-// ═══════════════════════════════════════
-function renderResumenTable(agg) {
-  const tbody = document.getElementById('tbl-programas-body');
-  if (!agg.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:24px;color:var(--text3)">Sin datos para los filtros seleccionados</td></tr>'; return; }
-
-  const totInv    = agg.reduce((s,r)=>s+r.inv.total,0);
-  const totLeads  = agg.reduce((s,r)=>s+r.leads_crm,0);
-  const totMat    = agg.reduce((s,r)=>s+r.mat,0);
-
-  let html = '';
+// ═══════════ RESUMEN TABLE ═══════════
+function renderProgTable(agg) {
+  const tbody = document.getElementById('tbl-prog-body');
+  if (!agg.length) {
+    tbody.innerHTML='<tr><td colspan="13" style="text-align:center;padding:24px;color:var(--t3)">Sin datos para los filtros seleccionados</td></tr>';
+    document.getElementById('tbl-count').textContent='';
+    return;
+  }
+  const libre = FILTERS.mode==='libre';
+  let html='', rows=[];
   for (const r of agg) {
     const meta = getMeta(r.prog);
-    const ppto = meta ? parseCOP(colVal(meta,'Presupuesto','presupuesto')) : 0;
-    const pctPpto = (ppto && r.inv.total) ? r.inv.total/ppto : null;
+    const ppto = libre ? 0 : getMetaVal(meta,'Presupuesto','presupuesto');
+    const pctPpto = (ppto&&r.inv.total) ? r.inv.total/ppto : null;
     const cpl  = r.leads_crm ? r.inv.total/r.leads_crm : 0;
     const conv = r.leads_crm ? r.mat/r.leads_crm : 0;
-
-    const tagClass = r.modal.toLowerCase().includes('post') || r.modal.toLowerCase().includes('pos') ? 'tag-pos' :
-                     r.tipo.toLowerCase().includes('maes') ? 'tag-maes' :
-                     r.tipo.toLowerCase().includes('doc')  ? 'tag-doc'  : 'tag-pre';
-
-    const pctColor = pctPpto === null ? '' : pctPpto >= 0.9 ? 'good' : pctPpto >= 0.7 ? 'warn' : 'bad';
-    const convColor = conv >= 0.1 ? 'good' : conv >= 0.05 ? 'warn' : conv > 0 ? 'bad' : '';
-
-    html += `<tr>
-      <td><span class="tag ${tagClass}">${r.modal||'—'}</span></td>
-      <td class="mono">${r.tipo||'—'}</td>
-      <td class="bold">${r.prog||'—'}</td>
-      <td class="right mono">${fmtCOP(r.inv.google)}</td>
-      <td class="right mono">${fmtCOP(r.inv.meta)}</td>
-      <td class="right mono">${fmtCOP(r.inv.prog)}</td>
-      <td class="right bold">${fmtCOP(r.inv.total)}</td>
-      <td class="right ${pctColor}">${pctPpto !== null ? (pctPpto*100).toFixed(0)+'%' : FILTERS.mode==='libre'?'N/A':'—'}</td>
-      <td class="right bold">${fmtN(r.leads_crm)}</td>
-      <td class="right mono">${fmtCOP(cpl)}</td>
-      <td class="right bold">${fmtN(r.mat)}</td>
-      <td class="right ${convColor}">${fmtPct(conv)}</td>
-    </tr>`;
+    const tagC = r.modal.toLowerCase().includes('pos') ? 'tag-pos' :
+                 r.tipo.toLowerCase().includes('maes') ? 'tag-maes' :
+                 r.tipo.toLowerCase().includes('doc')  ? 'tag-doc'  : 'tag-pre';
+    const pctColor = libre ? '' : pctPpto===null?'' : pctPpto>=0.9?'good':pctPpto>=0.7?'warn':'bad';
+    const convColor = conv>=0.1?'good':conv>=0.05?'warn':conv>0?'bad':'';
+    rows.push({modal:r.modal,tipo:r.tipo,prog:r.prog,
+      inv_google:r.inv.google,inv_meta:r.inv.meta,inv_tiktok:r.inv.tiktok,inv_prog:r.inv.prog,
+      inv_total:r.inv.total,pct_ppto:pctPpto,leads_crm:r.leads_crm,cpl,mat:r.mat,conv,
+      html:`<tr>
+        <td><span class="tag ${tagC}">${r.modal||'—'}</span></td>
+        <td>${r.tipo||'—'}</td>
+        <td class="bold">${r.prog||'—'}</td>
+        <td class="right">${fmtCOP(r.inv.google)}</td>
+        <td class="right">${fmtCOP(r.inv.meta)}</td>
+        <td class="right">${fmtCOP(r.inv.tiktok)}</td>
+        <td class="right">${fmtCOP(r.inv.prog)}</td>
+        <td class="right bold">${fmtCOP(r.inv.total)}</td>
+        <td class="right ${pctColor}">${libre?'N/A':pctPpto!==null?(pctPpto*100).toFixed(0)+'%':'—'}</td>
+        <td class="right bold">${fmtN(r.leads_crm)}</td>
+        <td class="right">${fmtCOP(cpl)}</td>
+        <td class="right bold">${fmtN(r.mat)}</td>
+        <td class="right ${convColor}">${fmtPct(conv)}</td>
+      </tr>`
+    });
   }
-  // totals
-  const totCPL = totLeads ? totInv/totLeads : 0;
-  const totConv = totLeads ? totMat/totLeads : 0;
-  html += `<tr class="total-row">
-    <td colspan="3">TOTAL</td>
+  const totInv=agg.reduce((s,r)=>s+r.inv.total,0);
+  const totLeads=agg.reduce((s,r)=>s+r.leads_crm,0);
+  const totMat=agg.reduce((s,r)=>s+r.mat,0);
+  const totConv=totLeads?totMat/totLeads:0;
+  html=rows.map(r=>r.html).join('')+`<tr class="total-row">
+    <td colspan="3">TOTAL (${rows.length} programas)</td>
     <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.google,0))}</td>
     <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.meta,0))}</td>
+    <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.tiktok,0))}</td>
     <td class="right">${fmtCOP(agg.reduce((s,r)=>s+r.inv.prog,0))}</td>
     <td class="right ycell">${fmtCOP(totInv)}</td>
     <td class="right ycell">—</td>
     <td class="right ycell">${fmtN(totLeads)}</td>
-    <td class="right">${fmtCOP(totCPL)}</td>
+    <td class="right">${fmtCOP(totLeads?totInv/totLeads:0)}</td>
     <td class="right ycell">${fmtN(totMat)}</td>
     <td class="right">${fmtPct(totConv)}</td>
   </tr>`;
-  tbody.innerHTML = html;
-  document.getElementById('tbl-count').textContent = agg.length + ' programas';
+  tbody.innerHTML=html;
+  document.getElementById('tbl-count').textContent=rows.length+' programas';
+  // Store rows for sorting
+  tbody._rows=rows;
 }
 
-// ═══════════════════════════════════════
-// CHARTS
-// ═══════════════════════════════════════
-function mkChart(id, cfg) {
+// ═══════════ SORT ═══════════
+function sortTable(tbodyId, key, colIdx) {
+  const tbody=document.getElementById(tbodyId);
+  if (!tbody||!tbody._rows) return;
+  const prev=sortState[tbodyId];
+  const asc=(prev&&prev.key===key&&!prev.asc);
+  sortState[tbodyId]={key,asc};
+  const sorted=[...tbody._rows].sort((a,b)=>{
+    let av=a[key],bv=b[key];
+    if (av===null||av===undefined) av=asc?Infinity:-Infinity;
+    if (bv===null||bv===undefined) bv=asc?Infinity:-Infinity;
+    if (typeof av==='string') return asc?av.localeCompare(bv):bv.localeCompare(av);
+    return asc?av-bv:bv-av;
+  });
+  // Rebuild keeping total row
+  const totalRow=tbody.querySelector('.total-row');
+  tbody.innerHTML=sorted.map(r=>r.html).join('');
+  if (totalRow) tbody.appendChild(totalRow);
+  // Update header arrows
+  const table=tbody.closest('table');
+  table.querySelectorAll('thead th').forEach((th,i)=>{
+    th.classList.remove('sort-asc','sort-desc');
+    if (i===colIdx) th.classList.add(asc?'sort-asc':'sort-desc');
+  });
+}
+
+// ═══════════ CHARTS ═══════════
+function mkChart(id,cfg) {
   if (charts[id]) charts[id].destroy();
-  const ctx = document.getElementById(id);
+  const ctx=document.getElementById(id);
   if (!ctx) return;
-  charts[id] = new Chart(ctx, cfg);
+  charts[id]=new Chart(ctx,cfg);
 }
+const chartDefaults = {
+  scales:{
+    y:{ticks:{color:'#999',font:{size:10},callback:v=>fmtCOP(v)},grid:{color:'rgba(0,0,0,0.05)'}},
+    x:{ticks:{color:'#999',font:{size:10}},grid:{display:false}}
+  },
+  plugins:{legend:{display:false}}
+};
 
-function renderInversionChart(agg) {
-  // group by medio
-  const medios = ['Google','Meta','TikTok','Programática'];
-  const vals = [
-    agg.reduce((s,r)=>s+r.inv.google,0),
-    agg.reduce((s,r)=>s+r.inv.meta,0),
-    agg.reduce((s,r)=>s+r.inv.tiktok,0),
-    agg.reduce((s,r)=>s+r.inv.prog,0),
-  ];
-  mkChart('chart-inversion', {
-    type:'bar',
-    data:{ labels:medios, datasets:[{ data:vals, backgroundColor:['#1a1a1a','#FFC000','#EF5350','#4CAF50'], borderRadius:5 }] },
-    options:{
-      responsive:true, plugins:{legend:{display:false}},
-      scales:{
-        y:{ ticks:{ color:'#666', callback:v=>fmtCOP(v) }, grid:{ color:'rgba(255,255,255,0.05)' } },
-        x:{ ticks:{ color:'#888' }, grid:{ display:false } }
-      }
-    }
+function renderInvMedioChart(agg) {
+  const vals=[agg.reduce((s,r)=>s+r.inv.google,0),agg.reduce((s,r)=>s+r.inv.meta,0),agg.reduce((s,r)=>s+r.inv.tiktok,0),agg.reduce((s,r)=>s+r.inv.prog,0)];
+  mkChart('chart-inv-medio',{type:'bar',
+    data:{labels:['Google','Meta','TikTok','Programática'],
+      datasets:[{data:vals,backgroundColor:['#1A1A1A','#FFC000','#EF5350','#4CAF50'],borderRadius:5}]},
+    options:{responsive:true,...chartDefaults}
   });
 }
 
 function renderLeadsMedioChart(agg) {
-  const leadsByMedio = {google:0, meta:0, prog:0};
-  // approximate from resumen col
-  for (const r of agg) {
-    const frac = r.leads_crm;
-    const totInv = r.inv.total || 1;
-    leadsByMedio.google += Math.round(frac * r.inv.google / totInv);
-    leadsByMedio.meta   += Math.round(frac * r.inv.meta   / totInv);
-    leadsByMedio.prog   += Math.round(frac * r.inv.prog   / totInv);
-  }
-  mkChart('chart-leads-medio',{
-    type:'doughnut',
-    data:{
-      labels:['Google','Meta','Programática'],
-      datasets:[{ data:[leadsByMedio.google, leadsByMedio.meta, leadsByMedio.prog],
-        backgroundColor:['#1a1a1a','#FFC000','#4CAF50'], borderWidth:0, hoverOffset:6 }]
-    },
-    options:{ responsive:true, plugins:{ legend:{ position:'right', labels:{ color:'#aaa', font:{size:11} } } } }
+  const vals=[
+    agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv.google/t);},0),
+    agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv.meta/t);},0),
+    agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv.tiktok/t);},0),
+    agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv.prog/t);},0),
+  ];
+  mkChart('chart-leads-medio',{type:'doughnut',
+    data:{labels:['Google','Meta','TikTok','Programática'],
+      datasets:[{data:vals,backgroundColor:['#1A1A1A','#FFC000','#EF5350','#4CAF50'],borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#666',font:{size:11}}}}}
   });
 }
 
-function renderFunnelGlobal(totLeads, totMat) {
-  const el = document.getElementById('funnel-global');
-  const stages = [
-    {lbl:'Leads CRM', val:totLeads, pct:null, color:'#FFC000', text:'#1A1A1A'},
-    {lbl:'Aspirantes', val:Math.round(totLeads*0.56), pct:'55.8%', color:'#3a3a3a', text:'#e8e8e8'},
-    {lbl:'Inscritos',  val:Math.round(totLeads*0.197), pct:'35.3%', color:'#4a4a4a', text:'#e8e8e8'},
-    {lbl:'Admitidos',  val:Math.round(totLeads*0.125), pct:'63.5%', color:'#5a5a5a', text:'#e8e8e8'},
-    {lbl:'Matrículas', val:totMat, pct:totLeads?fmtPct(totMat/totLeads):null, color:'#1A1A1A', text:'#FFC000'},
+function renderFunnelGlobal(totLeads,totMat) {
+  const el=document.getElementById('funnel-global');
+  const asp=Math.round(totLeads*0.56),ins=Math.round(totLeads*0.197),adm=Math.round(totLeads*0.125);
+  const stages=[
+    {lbl:'Leads CRM',val:totLeads,color:'#FFC000',text:'#1A1A1A'},
+    {lbl:'Aspirantes',val:asp,pct:totLeads?fmtPct(asp/totLeads):null,color:'#e0e0e0',text:'#333'},
+    {lbl:'Inscritos',val:ins,pct:totLeads?fmtPct(ins/totLeads):null,color:'#bdbdbd',text:'#333'},
+    {lbl:'Admitidos',val:adm,pct:totLeads?fmtPct(adm/totLeads):null,color:'#9e9e9e',text:'#fff'},
+    {lbl:'Matrículas',val:totMat,pct:totLeads?fmtPct(totMat/totLeads):null,color:'#1A1A1A',text:'#FFC000'},
   ];
-  const maxVal = stages[0].val || 1;
-  el.innerHTML = stages.map(s => `
-    <div class="fn-row">
-      <div class="fn-lbl">${s.lbl}</div>
-      <div class="fn-track">
-        <div class="fn-bar" style="width:${Math.max(6,(s.val/maxVal*100))}%;background:${s.color};color:${s.text}">
-          ${fmtN(s.val)}
-        </div>
-      </div>
-      <div class="fn-pct">${s.pct||''}</div>
-    </div>`).join('');
+  const mx=totLeads||1;
+  el.innerHTML=stages.map(s=>`<div class="fn-row">
+    <div class="fn-lbl">${s.lbl}</div>
+    <div class="fn-track"><div class="fn-bar" style="width:${Math.max(4,Math.round(s.val/mx*100))}%;background:${s.color};color:${s.text}">${fmtN(s.val)}</div></div>
+    <div class="fn-pct">${s.pct||''}</div>
+  </div>`).join('');
 }
 
+// ═══════════ FUNNEL CRM TAB ═══════════
 function renderFunnelPorMedio(agg) {
-  const el = document.getElementById('funnel-por-medio');
+  const el=document.getElementById('funnel-por-medio');
   if (!el) return;
-  const medios = [
-    { name:'Google', invKey:'google', color:'#888' },
-    { name:'Meta',   invKey:'meta',   color:'#FFC000' },
-    { name:'Programática', invKey:'prog', color:'#4CAF50' },
-  ];
-  const maxLeads = Math.max(...agg.reduce((acc,r)=>{
-    const t=r.inv.total||1;
-    return [acc[0]+Math.round(r.leads_crm*r.inv.google/t), acc[1]+Math.round(r.leads_crm*r.inv.meta/t), acc[2]+Math.round(r.leads_crm*r.inv.prog/t)];
-  }, [0,0,0])) || 1;
-
-  el.innerHTML = medios.map((m,i) => {
-    const totalInv = agg.reduce((s,r)=>s+r.inv[m.invKey],0);
-    const totalLeads = agg.reduce((s,r)=>{
-      const t=r.inv.total||1; return s+Math.round(r.leads_crm*r.inv[m.invKey]/t);
-    },0);
-    const totalMat = agg.reduce((s,r)=>{
-      const t=r.inv.total||1; return s+Math.round(r.mat*r.inv[m.invKey]/t);
-    },0);
+  const medios=[{n:'Google',k:'google'},{n:'Meta',k:'meta'},{n:'TikTok',k:'tiktok'},{n:'Programática',k:'prog'}];
+  const maxL=Math.max(...medios.map(m=>agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv[m.k]/t);},0)))||1;
+  el.innerHTML=medios.map(m=>{
+    const inv=agg.reduce((s,r)=>s+r.inv[m.k],0);
+    const leads=agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.leads_crm*r.inv[m.k]/t);},0);
+    const mat=agg.reduce((s,r)=>{const t=r.inv.total||1;return s+Math.round(r.mat*r.inv[m.k]/t);},0);
     return `<div style="margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <span style="font-size:12px;font-weight:700;color:var(--white)">${m.name}</span>
-        <span style="font-size:10px;color:var(--text3)">${fmtCOP(totalInv)}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--t1)">${m.n}</span>
+        <span style="font-size:10px;color:var(--t3)">${fmtCOP(inv)}</span>
       </div>
-      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--text3)">Leads CRM</div><div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(totalLeads/maxLeads*100)}%;background:${m.color}"></div></div><div class="sbar-val">${fmtN(totalLeads)}</div></div>
-      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--text3)">Matrículas</div><div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(totalMat/maxLeads*100)}%;background:var(--yellow)"></div></div><div class="sbar-val">${fmtN(totalMat)}</div></div>
+      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--t3)">Leads CRM</div><div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(leads/maxL*100)}%;background:#1A1A1A"></div></div><div class="sbar-val">${fmtN(leads)}</div></div>
+      <div class="sbar-row"><div class="sbar-lbl" style="color:var(--t3)">Matrículas</div><div class="sbar-track"><div class="sbar-fill" style="width:${mat?Math.round(mat/maxL*100):0}%;background:var(--yellow)"></div></div><div class="sbar-val">${fmtN(mat)}</div></div>
     </div>`;
   }).join('');
 }
 
 function renderFunnelTopProg(agg) {
-  const el = document.getElementById('funnel-top-prog');
+  const el=document.getElementById('funnel-top-prog');
   if (!el) return;
-  const top = [...agg].filter(r=>r.leads_crm>0).sort((a,b)=>((b.mat/b.leads_crm)-(a.mat/a.leads_crm))).slice(0,8);
-  const maxConv = Math.max(...top.map(r=>r.mat/r.leads_crm)) || 0.01;
-  el.innerHTML = top.map(r => {
-    const conv = r.mat/r.leads_crm;
-    const color = conv>=0.1?'#4CAF50':conv>=0.05?'#FFC000':'#EF5350';
+  const top=[...agg].filter(r=>r.leads_crm>0).sort((a,b)=>(b.mat/b.leads_crm)-(a.mat/a.leads_crm)).slice(0,10);
+  const mx=Math.max(...top.map(r=>r.mat/r.leads_crm))||0.01;
+  el.innerHTML=top.map(r=>{
+    const conv=r.mat/r.leads_crm;
+    const color=conv>=0.1?'var(--green)':conv>=0.05?'var(--yellow)':'var(--red)';
     return `<div class="sbar-row">
       <div class="sbar-lbl">${r.prog.length>22?r.prog.slice(0,22)+'…':r.prog}</div>
-      <div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(conv/maxConv*100)}%;background:${color}"></div></div>
+      <div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(conv/mx*100)}%;background:${color}"></div></div>
       <div class="sbar-val" style="color:${color}">${(conv*100).toFixed(1)}%</div>
     </div>`;
   }).join('');
 }
 
-function renderFunnelTable() {
-  const tbody = document.getElementById('tbl-funnel-body');
-  if (!DATA.leads.length) return;
-  // group by fuente
-  const byFuente = {};
-  for (const r of DATA.leads) {
-    const f = colVal(r,'Fuente','fuente') || 'Desconocida';
-    if (!byFuente[f]) byFuente[f] = {leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
-    byFuente[f].leads++;
-    byFuente[f].asp += parseInt(colVal(r,'ASPIRANTES'))||0;
-    byFuente[f].pre += parseInt(colVal(r,'PRE-INSCRITOS'))||0;
-    byFuente[f].ins += parseInt(colVal(r,'INSCRITOS'))||0;
-    byFuente[f].adm += parseInt(colVal(r,'ADMITIDOS'))||0;
+function renderFunnelSrcTable() {
+  const tbody=document.getElementById('tbl-funnel-src-body');
+  if (!tbody) return;
+  const crmF=filterCRM(DATA.leads);
+  const matF=filterCRM(DATA.matriculas);
+  const bySrc={};
+  for (const r of crmF) {
+    const f=colVal(r,'Fuente','fuente')||'Desconocida';
+    if (!bySrc[f]) bySrc[f]={fuente:f,leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    bySrc[f].leads++;
+    bySrc[f].asp+=parseInt(colVal(r,'ASPIRANTES'))||0;
+    bySrc[f].pre+=parseInt(colVal(r,'PRE-INSCRITOS'))||0;
+    bySrc[f].ins+=parseInt(colVal(r,'INSCRITOS'))||0;
+    bySrc[f].adm+=parseInt(colVal(r,'ADMITIDOS'))||0;
   }
-  for (const r of DATA.matriculas) {
-    const f = colVal(r,'Fuente','fuente') || 'Desconocida';
-    if (!byFuente[f]) byFuente[f] = {leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
-    byFuente[f].mat += parseInt(colVal(r,'MATRICULAS'))||0;
+  for (const r of matF) {
+    const f=colVal(r,'Fuente','fuente')||'Desconocida';
+    if (!bySrc[f]) bySrc[f]={fuente:f,leads:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    bySrc[f].mat+=parseInt(colVal(r,'MATRICULAS'))||0;
   }
-  let html = '';
-  let tLeads=0,tAsp=0,tPre=0,tIns=0,tAdm=0,tMat=0;
-  for (const [f, d] of Object.entries(byFuente)) {
-    const conv = d.leads ? d.mat/d.leads : 0;
-    const cc = conv>=0.1?'good':conv>=0.05?'warn':conv>0?'bad':'';
-    html += `<tr>
-      <td class="bold">${f}</td>
-      <td class="right">${fmtN(d.leads)}</td>
-      <td class="right">${fmtN(d.asp)}</td>
-      <td class="right">${fmtN(d.pre)}</td>
-      <td class="right">${fmtN(d.ins)}</td>
-      <td class="right">${fmtN(d.adm)}</td>
-      <td class="right bold">${fmtN(d.mat)}</td>
-      <td class="right ${cc}">${fmtPct(conv)}</td>
+  const rows=Object.values(bySrc);
+  const tL=rows.reduce((s,r)=>s+r.leads,0),tA=rows.reduce((s,r)=>s+r.asp,0),
+    tP=rows.reduce((s,r)=>s+r.pre,0),tI=rows.reduce((s,r)=>s+r.ins,0),
+    tAd=rows.reduce((s,r)=>s+r.adm,0),tM=rows.reduce((s,r)=>s+r.mat,0);
+  rows.forEach(r=>r.conv=r.leads?r.mat/r.leads:0);
+  let html=rows.map(r=>{
+    const cc=r.conv>=0.1?'good':r.conv>=0.05?'warn':r.conv>0?'bad':'';
+    return `<tr data-row='${JSON.stringify(r)}'>
+      <td class="bold">${r.fuente}</td>
+      <td class="right">${fmtN(r.leads)}</td><td class="right">${fmtN(r.asp)}</td>
+      <td class="right">${fmtN(r.pre)}</td><td class="right">${fmtN(r.ins)}</td>
+      <td class="right">${fmtN(r.adm)}</td>
+      <td class="right bold">${fmtN(r.mat)}</td>
+      <td class="right ${cc}">${fmtPct(r.conv)}</td>
     </tr>`;
-    tLeads+=d.leads;tAsp+=d.asp;tPre+=d.pre;tIns+=d.ins;tAdm+=d.adm;tMat+=d.mat;
-  }
-  const totConv = tLeads?tMat/tLeads:0;
-  html += `<tr class="total-row">
-    <td>TOTAL</td>
-    <td class="right">${fmtN(tLeads)}</td>
-    <td class="right">${fmtN(tAsp)}</td>
-    <td class="right">${fmtN(tPre)}</td>
-    <td class="right">${fmtN(tIns)}</td>
-    <td class="right">${fmtN(tAdm)}</td>
-    <td class="right ycell">${fmtN(tMat)}</td>
-    <td class="right ycell">${fmtPct(totConv)}</td>
+  }).join('');
+  html+=`<tr class="total-row"><td>TOTAL</td>
+    <td class="right">${fmtN(tL)}</td><td class="right">${fmtN(tA)}</td>
+    <td class="right">${fmtN(tP)}</td><td class="right">${fmtN(tI)}</td>
+    <td class="right">${fmtN(tAd)}</td>
+    <td class="right ycell">${fmtN(tM)}</td>
+    <td class="right ycell">${fmtPct(tL?tM/tL:0)}</td>
   </tr>`;
-  tbody.innerHTML = html;
-  document.getElementById('funnel-insight').textContent =
-    `Tráfico Pago aporta el grueso del volumen CRM. La tasa de conversión global es ${fmtPct(totConv)} (leads → matrículas). Revisar programas con más de 200 leads CRM y conversión < 5%.`;
+  tbody.innerHTML=html;
+  tbody._rows=rows.map(r=>({...r,html:`<tr>
+    <td class="bold">${r.fuente}</td>
+    <td class="right">${fmtN(r.leads)}</td><td class="right">${fmtN(r.asp)}</td>
+    <td class="right">${fmtN(r.pre)}</td><td class="right">${fmtN(r.ins)}</td>
+    <td class="right">${fmtN(r.adm)}</td>
+    <td class="right bold">${fmtN(r.mat)}</td>
+    <td class="right ${r.conv>=0.1?'good':r.conv>=0.05?'warn':r.conv>0?'bad':''}">${fmtPct(r.conv)}</td>
+  </tr>`}));
+  document.getElementById('funnel-insight').textContent=
+    `Tráfico Pago aporta el grueso del volumen CRM. Conversión global: ${fmtPct(tL?tM/tL:0)}. Revisar programas con > 200 leads y conversión < 5%.`;
 }
 
-// ═══════════════════════════════════════
-// POR PROGRAMA
-// ═══════════════════════════════════════
+// ═══════════ FUNNEL PROG TABLE (todos los programas) ═══════════
+function renderFunnelProgTable() {
+  const tbody=document.getElementById('tbl-funnel-prog-body');
+  if (!tbody) return;
+  const crmF=filterCRM(DATA.leads);
+  const matF=filterCRM(DATA.matriculas);
+  const byProg={};
+  for (const r of crmF) {
+    const p=colVal(r,'Programa','programa');
+    if (!byProg[p]) byProg[p]={prog:p,leads_crm:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    byProg[p].leads_crm++;
+    byProg[p].asp+=parseInt(colVal(r,'ASPIRANTES'))||0;
+    byProg[p].pre+=parseInt(colVal(r,'PRE-INSCRITOS'))||0;
+    byProg[p].ins+=parseInt(colVal(r,'INSCRITOS'))||0;
+    byProg[p].adm+=parseInt(colVal(r,'ADMITIDOS'))||0;
+  }
+  for (const r of matF) {
+    const p=colVal(r,'Programa','programa');
+    if (!byProg[p]) byProg[p]={prog:p,leads_crm:0,asp:0,pre:0,ins:0,adm:0,mat:0};
+    byProg[p].mat+=parseInt(colVal(r,'MATRICULAS'))||0;
+  }
+  const rows=Object.values(byProg).sort((a,b)=>b.leads_crm-a.leads_crm);
+  rows.forEach(r=>r.conv=r.leads_crm?r.mat/r.leads_crm:0);
+  const tL=rows.reduce((s,r)=>s+r.leads_crm,0),tA=rows.reduce((s,r)=>s+r.asp,0),
+    tP=rows.reduce((s,r)=>s+r.pre,0),tI=rows.reduce((s,r)=>s+r.ins,0),
+    tAd=rows.reduce((s,r)=>s+r.adm,0),tM=rows.reduce((s,r)=>s+r.mat,0);
+  rows.forEach(r=>{
+    const cc=r.conv>=0.1?'good':r.conv>=0.05?'warn':r.conv>0?'bad':'';
+    r.html=`<tr>
+      <td class="bold">${r.prog||'—'}</td>
+      <td class="right">${fmtN(r.leads_crm)}</td><td class="right">${fmtN(r.asp)}</td>
+      <td class="right">${fmtN(r.pre)}</td><td class="right">${fmtN(r.ins)}</td>
+      <td class="right">${fmtN(r.adm)}</td>
+      <td class="right bold">${fmtN(r.mat)}</td>
+      <td class="right ${cc}">${fmtPct(r.conv)}</td>
+    </tr>`;
+  });
+  let html=rows.map(r=>r.html).join('');
+  html+=`<tr class="total-row"><td>TOTAL (${rows.length} programas)</td>
+    <td class="right">${fmtN(tL)}</td><td class="right">${fmtN(tA)}</td>
+    <td class="right">${fmtN(tP)}</td><td class="right">${fmtN(tI)}</td>
+    <td class="right">${fmtN(tAd)}</td>
+    <td class="right ycell">${fmtN(tM)}</td>
+    <td class="right ycell">${fmtPct(tL?tM/tL:0)}</td>
+  </tr>`;
+  tbody.innerHTML=html;
+  tbody._rows=rows;
+  document.getElementById('funnel-count').textContent=rows.length+' programas';
+}
+
+// ═══════════ LEADS POR DÍA ═══════════
+function renderDiaTab() {
+  const crmF=filterCRM(DATA.leads);
+  const byDate={};
+  for (const r of crmF) {
+    const raw=colVal(r,'Fecha de Creación','fecha','Fecha');
+    if (!raw) continue;
+    const d=raw.trim().split(' ')[0];
+    const fuente=normStr(colVal(r,'Fuente','fuente'));
+    if (!byDate[d]) byDate[d]={pago:0,face:0,test:0,total:0};
+    byDate[d].total++;
+    if (fuente.includes('pago')) byDate[d].pago++;
+    else if (fuente.includes('face')) byDate[d].face++;
+    else byDate[d].test++;
+  }
+  const sorted=Object.keys(byDate).sort();
+  const totals=sorted.map(d=>byDate[d].total);
+  const sum=totals.reduce((a,b)=>a+b,0);
+  const avg=totals.length?Math.round(sum/totals.length):0;
+  const mx=Math.max(...totals)||1;
+  const bestIdx=totals.indexOf(mx);
+  document.getElementById('dia-total').textContent=fmtN(sum);
+  document.getElementById('dia-avg').textContent=fmtN(avg);
+  document.getElementById('dia-best').textContent=fmtN(mx);
+  document.getElementById('dia-best-date').textContent=sorted[bestIdx]||'—';
+  const agg=aggregateByProg();
+  document.getElementById('dia-inv').textContent=fmtCOP(agg.reduce((s,r)=>s+r.inv.total,0));
+  mkChart('chart-dia',{type:'line',
+    data:{labels:sorted,datasets:[
+      {label:'Tráfico Pago',data:sorted.map(d=>byDate[d].pago),borderColor:'#333',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,fill:true,pointRadius:1},
+      {label:'Facebook Ads',data:sorted.map(d=>byDate[d].face),borderColor:'#FFC000',backgroundColor:'rgba(255,192,0,0.07)',tension:0.4,fill:true,pointRadius:1},
+      {label:'Test Vocacional',data:sorted.map(d=>byDate[d].test),borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,0.05)',tension:0.4,fill:true,pointRadius:1},
+    ]},
+    options:{responsive:true,plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{color:'#999',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
+        x:{ticks:{color:'#999',font:{size:10},maxTicksLimit:12},grid:{display:false}}
+      }}
+  });
+}
+
+// ═══════════ POR PROGRAMA ═══════════
 function updateProgList() {
-  const modal = document.getElementById('sel-modal').value;
-  const tipo  = document.getElementById('sel-tipo').value;
-  const agg   = aggregateResumen();
-  const progs = agg.filter(r =>
-    (!modal || r.modal.toLowerCase().includes(modal.toLowerCase())) &&
-    (!tipo  || r.tipo.toLowerCase().includes(tipo.toLowerCase()))
+  const modal=document.getElementById('sel-modal').value;
+  const tipo=document.getElementById('sel-tipo').value;
+  const agg=aggregateByProg().filter(r=>
+    (!modal||normStr(r.modal).includes(normStr(modal)))&&
+    (!tipo||normStr(r.tipo).includes(normStr(tipo)))
   );
-  const sel = document.getElementById('sel-prog');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— selecciona —</option>' +
-    progs.map(r=>`<option value="${r.prog}">${r.prog}</option>`).join('');
-  if (cur) sel.value = cur;
-  if (sel.value) updateProgView();
+  const sel=document.getElementById('sel-prog');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— selecciona —</option>'+
+    agg.map(r=>`<option value="${r.prog}">${r.prog}</option>`).join('');
+  if (cur) { sel.value=cur; if(sel.value) updateProgView(); }
+  // Also update funnel prog table
+  renderFunnelProgTable();
 }
 
 function updateProgView() {
-  const prog = document.getElementById('sel-prog').value;
+  const prog=document.getElementById('sel-prog').value;
   if (!prog) return;
-  const agg  = aggregateResumen();
-  const r    = agg.find(x=>x.prog===prog);
+  const agg=aggregateByProg();
+  const r=agg.find(x=>x.prog===prog);
   if (!r) return;
-  const meta = getMeta(prog);
-  const ppto = meta ? parseCOP(colVal(meta,'Presupuesto','presupuesto')) : 0;
-  const metaLeads = meta ? parseInt(colVal(meta,'Leads','leads','Meta leads')) || 0 : 0;
-  const cpl  = r.leads_crm ? r.inv.total/r.leads_crm : 0;
-  const conv = r.leads_crm ? r.mat/r.leads_crm : 0;
+  const meta=getMeta(prog);
+  const libre=FILTERS.mode==='libre';
+  const ppto=libre?0:getMetaVal(meta,'Presupuesto','presupuesto');
+  const metaLeads=libre?0:parseInt(colVal(meta||{},'Leads','leads'))||0;
+  const cpl=r.leads_crm?r.inv.total/r.leads_crm:0;
+  const conv=r.leads_crm?r.mat/r.leads_crm:0;
+  document.getElementById('pk-inv').textContent=fmtCOP(r.inv.total);
+  document.getElementById('pk-inv-sub').textContent=ppto?`ppto ${fmtCOP(ppto)} · ${(r.inv.total/ppto*100).toFixed(0)}%`:'sin meta';
+  document.getElementById('pk-leads').textContent=fmtN(r.leads_crm);
+  document.getElementById('pk-leads-sub').textContent=metaLeads?`meta ${fmtN(metaLeads)}`:'';
+  document.getElementById('pk-cpl').textContent=fmtCOP(cpl);
+  document.getElementById('pk-mat').textContent=fmtN(r.mat);
+  document.getElementById('pk-mat-sub').textContent=`conv. ${fmtPct(conv)}`;
 
-  document.getElementById('pk-inv').textContent     = fmtCOP(r.inv.total);
-  document.getElementById('pk-inv-sub').textContent = ppto ? `ppto ${fmtCOP(ppto)} · ${(r.inv.total/ppto*100).toFixed(0)}%` : 'sin meta';
-  document.getElementById('pk-leads').textContent   = fmtN(r.leads_crm);
-  document.getElementById('pk-leads-sub').textContent = metaLeads ? `meta ${fmtN(metaLeads)}` : 'sin meta';
-  document.getElementById('pk-cpl').textContent     = fmtCOP(cpl);
-  document.getElementById('pk-mat').textContent     = fmtN(r.mat);
-  document.getElementById('pk-mat-sub').textContent = `conv. ${fmtPct(conv)}`;
-
-  // medio bars
-  const el = document.getElementById('prog-medio-bars');
-  const maxInv = Math.max(r.inv.google, r.inv.meta, r.inv.tiktok, r.inv.prog) || 1;
-  el.innerHTML = [
-    {lbl:'Google', val:r.inv.google, color:'#888'},
-    {lbl:'Meta',   val:r.inv.meta,   color:'#FFC000'},
-    {lbl:'TikTok', val:r.inv.tiktok, color:'#EF5350'},
-    {lbl:'Programática', val:r.inv.prog, color:'#4CAF50'},
-  ].map(m=>`<div class="sbar-row">
-    <div class="sbar-lbl">${m.lbl}</div>
-    <div class="sbar-track"><div class="sbar-fill" style="width:${m.val?Math.round(m.val/maxInv*100):0}%;background:${m.color}"></div></div>
-    <div class="sbar-val">${fmtCOP(m.val)}</div>
-  </div>`).join('');
-
-  // funnel del programa
-  renderProgFunnel(prog, r.leads_crm, r.mat);
-
-  // leads por día chart
-  renderProgDiaChart(prog);
-}
-
-function renderProgFunnel(prog, totLeads, totMat) {
-  // approximate from CRM data
-  let asp=0,pre=0,ins=0,adm=0,mat=0;
-  for (const r of DATA.leads) {
-    if (colVal(r,'Programa','programa') === prog) {
-      asp += parseInt(colVal(r,'ASPIRANTES'))||0;
-      pre += parseInt(colVal(r,'PRE-INSCRITOS'))||0;
-      ins += parseInt(colVal(r,'INSCRITOS'))||0;
-      adm += parseInt(colVal(r,'ADMITIDOS'))||0;
-    }
-  }
-  for (const r of DATA.matriculas) {
-    if (colVal(r,'Programa','programa') === prog) mat += parseInt(colVal(r,'MATRICULAS'))||0;
-  }
-  const maxVal = totLeads || 1;
-  const stages = [
-    {lbl:'Leads CRM', val:totLeads, color:'#FFC000', text:'#1A1A1A'},
-    {lbl:'Aspirantes', val:asp, color:'#3a3a3a', text:'#e8e8e8'},
-    {lbl:'Pre-inscritos', val:pre, color:'#444', text:'#e8e8e8'},
-    {lbl:'Inscritos', val:ins, color:'#555', text:'#e8e8e8'},
-    {lbl:'Admitidos', val:adm, color:'#666', text:'#e8e8e8'},
-    {lbl:'Matrículas', val:mat||totMat, color:'#1A1A1A', text:'#FFC000'},
-  ];
-  document.getElementById('prog-funnel').innerHTML = stages.map(s=>`
-    <div class="fn-row">
-      <div class="fn-lbl">${s.lbl}</div>
-      <div class="fn-track">
-        <div class="fn-bar" style="width:${Math.max(4,Math.round(s.val/maxVal*100))}%;background:${s.color};color:${s.text}">
-          ${fmtN(s.val)}
-        </div>
-      </div>
-      <div class="fn-pct">${totLeads&&s.val?fmtPct(s.val/totLeads):''}</div>
+  // Medio bars
+  const el=document.getElementById('prog-medio-bars');
+  const mx=Math.max(r.inv.google,r.inv.meta,r.inv.tiktok,r.inv.prog)||1;
+  el.innerHTML=[{n:'Google',k:'google',c:'#1A1A1A'},{n:'Meta',k:'meta',c:'#FFC000'},{n:'TikTok',k:'tiktok',c:'#EF5350'},{n:'Programática',k:'prog',c:'#4CAF50'}]
+    .map(m=>`<div class="sbar-row">
+      <div class="sbar-lbl">${m.n}</div>
+      <div class="sbar-track"><div class="sbar-fill" style="width:${r.inv[m.k]?Math.round(r.inv[m.k]/mx*100):0}%;background:${m.c}"></div></div>
+      <div class="sbar-val">${fmtCOP(r.inv[m.k])}</div>
     </div>`).join('');
-}
 
-function renderProgDiaChart(prog) {
-  // group leads by date for this program
-  const byDate = {};
-  for (const r of DATA.leads) {
-    if (colVal(r,'Programa','programa') !== prog) continue;
-    const rawDate = colVal(r,'Fecha de Creación','fecha','Fecha');
-    if (!rawDate) continue;
-    const d = rawDate.split(' ')[0];
-    byDate[d] = (byDate[d]||0) + 1;
+  // Leads por día del programa
+  const crmF=filterCRM(DATA.leads).filter(x=>colVal(x,'Programa','programa')===prog);
+  const byDate={};
+  for (const x of crmF) {
+    const raw=colVal(x,'Fecha de Creación','fecha','Fecha');
+    if (!raw) continue;
+    const d=raw.trim().split(' ')[0];
+    byDate[d]=(byDate[d]||0)+1;
   }
-  const sorted = Object.keys(byDate).sort();
-  mkChart('chart-prog-dia',{
-    type:'line',
-    data:{
-      labels: sorted,
-      datasets:[{ data: sorted.map(d=>byDate[d]), borderColor:'#FFC000', backgroundColor:'rgba(255,192,0,0.1)', tension:0.4, fill:true, pointRadius:2 }]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}},
+  const sorted=Object.keys(byDate).sort();
+  mkChart('chart-prog-dia',{type:'line',
+    data:{labels:sorted,datasets:[{data:sorted.map(d=>byDate[d]),
+      borderColor:'#FFC000',backgroundColor:'rgba(255,192,0,0.1)',tension:0.4,fill:true,pointRadius:2}]},
+    options:{responsive:true,plugins:{legend:{display:false}},
       scales:{
-        y:{ ticks:{color:'#666'}, grid:{color:'rgba(255,255,255,0.05)'} },
-        x:{ ticks:{color:'#666', maxTicksLimit:8}, grid:{display:false} }
-      }
-    }
+        y:{ticks:{color:'#999',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},
+        x:{ticks:{color:'#999',font:{size:10},maxTicksLimit:10},grid:{display:false}}
+      }}
   });
 }
 
-// ═══════════════════════════════════════
-// LEADS POR DÍA
-// ═══════════════════════════════════════
-function renderDiaTab() {
-  const byDate = {};
-  for (const r of DATA.leads) {
-    const rawDate = colVal(r,'Fecha de Creación','fecha','Fecha');
-    if (!rawDate) continue;
-    const d = rawDate.split(' ')[0];
-    const fuente = (colVal(r,'Fuente','fuente')||'').toLowerCase();
-    if (!byDate[d]) byDate[d] = {google:0, meta:0, prog:0, total:0};
-    byDate[d].total++;
-    if (fuente.includes('google')) byDate[d].google++;
-    else if (fuente.includes('face') || fuente.includes('meta')) byDate[d].meta++;
-    else byDate[d].prog++;
-  }
-  const sorted = Object.keys(byDate).sort();
-  const totals = sorted.map(d=>byDate[d].total);
-  const maxVal = Math.max(...totals)||1;
-  const avgVal = totals.length ? Math.round(totals.reduce((a,b)=>a+b,0)/totals.length) : 0;
-  const bestIdx = totals.indexOf(maxVal);
-
-  document.getElementById('dia-total').textContent = fmtN(totals.reduce((a,b)=>a+b,0));
-  document.getElementById('dia-avg').textContent   = fmtN(avgVal);
-  document.getElementById('dia-best').textContent  = fmtN(maxVal);
-  document.getElementById('dia-best-date').textContent = sorted[bestIdx]||'—';
-
-  const agg = aggregateResumen();
-  document.getElementById('dia-inv').textContent = fmtCOP(agg.reduce((s,r)=>s+r.inv.total,0));
-
-  mkChart('chart-dia',{
-    type:'line',
-    data:{
-      labels: sorted,
-      datasets:[
-        { label:'Google',  data:sorted.map(d=>byDate[d].google), borderColor:'#888', backgroundColor:'rgba(136,136,136,0.05)', tension:0.4, fill:true, pointRadius:1 },
-        { label:'Meta',    data:sorted.map(d=>byDate[d].meta),   borderColor:'#FFC000', backgroundColor:'rgba(255,192,0,0.08)', tension:0.4, fill:true, pointRadius:1 },
-        { label:'Otras',   data:sorted.map(d=>byDate[d].prog),   borderColor:'#4CAF50', backgroundColor:'rgba(76,175,80,0.06)', tension:0.4, fill:true, pointRadius:1 },
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{ ticks:{color:'#666'}, grid:{color:'rgba(255,255,255,0.05)'} },
-        x:{ ticks:{color:'#666', maxTicksLimit:10}, grid:{display:false} }
-      }
-    }
-  });
-}
-
-// ═══════════════════════════════════════
-// UI CONTROLS
-// ═══════════════════════════════════════
-function setPill(el, group) {
+// ═══════════ UI CONTROLS ═══════════
+function setPill(el, group, val) {
   document.querySelectorAll(`#pills-${group} .pill`).forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
-  FILTERS[group] = el.textContent;
-  if (group === 'periodo') { /* TODO: filter by periodo */ }
+  FILTERS[group]=val;
   updateAll();
+  if (!document.getElementById('tab-dia').classList.contains('view-off')) renderDiaTab();
 }
-
-function showTab(id, el) {
-  ['resumen','programa','dia','funnel'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('view-off', t!==id);
-  });
+function showTab(id,el) {
+  ['resumen','programa','dia','funnel'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('view-off',t!==id));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  if (id === 'dia') renderDiaTab();
+  if (id==='dia') renderDiaTab();
 }
-
-function setMode(mode, btn) {
+function setMode(mode,btn) {
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  FILTERS.mode = mode;
-  const libre = mode === 'libre';
-  document.getElementById('date-inputs').classList.toggle('show', libre);
-  document.getElementById('meta-warn').classList.toggle('show', libre);
+  FILTERS.mode=mode;
+  const libre=mode==='libre';
+  document.getElementById('date-inputs').classList.toggle('show',libre);
+  document.getElementById('meta-warn').classList.toggle('show',libre);
+  if (libre) {
+    const now=new Date(),y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0'),d=String(now.getDate()).padStart(2,'0');
+    document.getElementById('date-to').value=`${y}-${m}-${d}`;
+    document.getElementById('date-from').value=`${y}-01-01`;
+    FILTERS.dateFrom=document.getElementById('date-from').value;
+    FILTERS.dateTo=document.getElementById('date-to').value;
+  }
   updateAll();
 }
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
+document.getElementById('date-from').addEventListener('change',e=>{FILTERS.dateFrom=e.target.value;updateAll();});
+document.getElementById('date-to').addEventListener('change',e=>{FILTERS.dateTo=e.target.value;updateAll();});
+
+// ═══════════ INIT ═══════════
 loadAllData();
 </script>
 </body>
