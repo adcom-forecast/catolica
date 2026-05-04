@@ -358,11 +358,9 @@ function buildTop10(periodo){
 function buildProgramasTable(periodo, color){
   const prog=DATA.programa.filter(r=>periodo?r._periodo===periodo:true);
   
-  // Separar entre programas reales y branding/campaña general
-  const progReales=prog.filter(r=>r.Modalidad!=='Branding'&&r.Programa&&
-    !r.Programa.startsWith('Campaña general')&&!r.Programa.startsWith('Campaña General'));
-  const brandings=prog.filter(r=>r.Modalidad==='Branding'||
-    r.Programa.startsWith('Campaña general')||r.Programa.startsWith('Campaña General'));
+  // Separar SOLO por Modalidad — las Campañas generales de Pregrado/Posgrado van con sus grupos
+  const progReales=prog.filter(r=>r.Modalidad!=='Branding'&&r.Programa);
+  const brandings=prog.filter(r=>r.Modalidad==='Branding');
   
   const pc=color||'#FFC000';
   
@@ -585,14 +583,18 @@ function renderPeriodo(periodo,key){
   // Chart medios por nivel
   html+=`<div class="card" style="margin-bottom:1rem"><div class="card-title">Inversión por Medio y Nivel</div><div style="position:relative;height:200px"><canvas id="cMedNiv_${key}"></canvas></div></div>`;
   
-  // Nivel + Top10
-  html+=`<div class="g2">${buildNivelTable(periodo)}${buildTop10(periodo)}</div>`;
+  // Placeholders para nivel y top10 (se llenan después del innerHTML)
+  html+=`<div class="g2"><div id="nivel_${key}"></div><div id="top10_${key}"></div></div>`;
   
   // Tabla completa de programas (con branding separado)
   html+=`<div class="sec-title"><div class="sec-tl">Inversión por Programa</div></div>`;
   html+=buildProgramasTable(periodo, color);
   
   el.innerHTML=html;
+  
+  // Inyectar nivel y top10 después de que el DOM esté listo
+  document.getElementById('nivel_'+key).innerHTML=buildNivelTable(periodo);
+  document.getElementById('top10_'+key).innerHTML=buildTop10(periodo);
   
   setTimeout(()=>{
     if(mes.length){
