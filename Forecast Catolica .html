@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forecast Digital · Universidad Católica de Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --gold:        #C8A951;
+  --gold-light:  #E8C97A;
+  --gold-pale:   #F5EDD3;
+  --gold-dim:    #8C7535;
+  --ink:         #0D0D0D;
+  --ink2:        #1A1A1A;
+  --ink3:        #2C2C2C;
+  --slate:       #3D3D3D;
+  --mist:        #6B6B6B;
+  --fog:         #9E9E9E;
+  --cloud:       #D8D8D8;
+  --snow:        #F2F0EB;
+  --white:       #FAFAF8;
+  --red:         #C0392B;
+  --green:       #1E7B4C;
+  --blue:        #1A4F8C;
+  --blue2:       #2E6FBF;
+  --teal:        #1A6B6B;
+  --border:      rgba(200,169,81,0.2);
+  --border2:     rgba(200,169,81,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--snow);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 13px;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  background: var(--ink);
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 2px solid var(--gold);
+}
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-logo-wrap {
+  width: 34px; height: 34px; border-radius: 6px;
+  background: var(--gold); display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-wrap svg { width: 20px; height: 20px; }
+.nav-title-group { display: flex; flex-direction: column; }
+.nav-title { font-family: 'DM Serif Display', serif; color: var(--white); font-size: 15px; line-height: 1.1; }
+.nav-sub { color: var(--fog); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-badge { background: rgba(200,169,81,.12); border: 1px solid var(--border); color: var(--gold-light); font-size: 11px; padding: 3px 10px; border-radius: 20px; letter-spacing: .04em; }
+.sync-btn {
+  background: var(--gold); color: var(--ink); border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; transition: background .2s;
+}
+.sync-btn:hover { background: var(--gold-light); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; }
+.sync-dot.spin { background: var(--gold); animation: pulse .7s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, var(--ink2) 0%, #1C1A14 100%);
+  padding: 28px 28px 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(200,169,81,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-head { margin-bottom: 20px; }
+.hero-eyebrow { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.hero-h1 { font-family: 'DM Serif Display', serif; color: var(--white); font-size: 26px; line-height: 1.1; }
+.hero-h1 em { color: var(--gold-light); font-style: italic; }
+.hero-desc { color: var(--fog); font-size: 12px; margin-top: 4px; }
+.hero-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+.hkpi {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(200,169,81,.15);
+  border-radius: 10px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.hkpi:hover { border-color: rgba(200,169,81,.35); }
+.hkpi-label { font-size: 10px; font-weight: 500; color: var(--fog); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+.hkpi-val { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); line-height: 1; }
+.hkpi-val.gold { color: var(--gold-light); }
+.hkpi-sub { font-size: 10px; color: var(--mist); margin-top: 4px; }
+.hkpi-bar { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--gold); border-radius: 0 2px 0 0; }
+
+/* ── TABS ── */
+.tabs-bar {
+  background: var(--ink3);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 2px;
+  border-bottom: 1px solid rgba(200,169,81,.15);
+  overflow-x: auto;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 12px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  color: var(--fog);
+  background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+.tab-btn:hover { color: var(--gold-light); }
+.tab-btn.active { color: var(--white); border-bottom-color: var(--gold); font-weight: 600; }
+.tab-pip {
+  display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%;
+  margin-right: 6px; vertical-align: middle;
+}
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+.container { max-width: 1440px; margin: 0 auto; padding: 24px 28px 60px; }
+
+/* ── SECTION TITLES ── */
+.sec { margin: 28px 0 14px; display: flex; align-items: center; gap: 10px; }
+.sec-line { flex: 1; height: 1px; background: var(--border); }
+.sec-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px; color: var(--ink3);
+  white-space: nowrap;
+}
+.sec-badge {
+  font-size: 10px; font-weight: 600;
+  background: var(--gold-pale); color: var(--gold-dim);
+  padding: 2px 8px; border-radius: 20px;
+  letter-spacing: .04em;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.card-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--mist); text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-title::before { content: ''; width: 3px; height: 12px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+
+/* ── GRIDS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.g21 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+.g31 { display: grid; grid-template-columns: 3fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* ── TABLES ── */
+.tbl-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--cloud); }
+.tbl {
+  width: 100%; font-size: 12px; border-collapse: collapse; min-width: 400px;
+}
+.tbl thead th {
+  background: var(--ink); color: var(--white);
+  font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  text-align: left; padding: 9px 12px;
+  white-space: nowrap;
+}
+.tbl thead th.right { text-align: right; }
+.tbl tbody td { padding: 7px 12px; border-bottom: 1px solid #F0EDE6; color: var(--ink3); white-space: nowrap; }
+.tbl tbody td.right { text-align: right; font-variant-numeric: tabular-nums; }
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td { background: #FDFAF3; }
+.tbl-total td { background: var(--gold-pale) !important; font-weight: 700; color: var(--gold-dim) !important; }
+.tbl-total td.right { color: var(--gold-dim) !important; }
+
+/* ── BADGES ── */
+.bdg { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.bdg-pre { background: #EFF6FF; color: #1A4F8C; }
+.bdg-pos { background: #F0FDF4; color: #1E7B4C; }
+.bdg-brd { background: var(--gold-pale); color: var(--gold-dim); }
+.bdg-tec { background: #F0F7FF; color: #1A6B8C; }
+
+/* ── PBAR ── */
+.pbar-wrap { display: flex; align-items: center; gap: 6px; }
+.pbar { flex: 1; height: 4px; background: #EEE; border-radius: 3px; min-width: 40px; }
+.pbar-fill { height: 100%; border-radius: 3px; background: var(--gold); }
+.pbar-fill.green { background: var(--green); }
+.pbar-fill.blue { background: var(--blue2); }
+.pbar-fill.red { background: var(--red); }
+.pbar-fill.teal { background: var(--teal); }
+
+/* ── MIX CHIPS ── */
+.medio-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.medio-chip {
+  background: var(--white); border: 1px solid var(--cloud);
+  border-radius: 10px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color .2s;
+}
+.medio-chip:hover { border-color: var(--gold); }
+.medio-icon { font-size: 18px; }
+.medio-name { font-size: 11px; font-weight: 600; color: var(--slate); }
+.medio-val { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); }
+.medio-pct { font-size: 10px; color: var(--mist); }
+.medio-bar-h { height: 3px; border-radius: 3px; margin-top: 4px; }
+
+/* ── SPINNER ── */
+.spin-wrap { display: flex; flex-direction: column; align-items: center; padding: 60px; gap: 14px; }
+.spinner { width: 28px; height: 28px; border: 2px solid var(--gold-pale); border-top-color: var(--gold); border-radius: 50%; animation: rotate .7s linear infinite; }
+@keyframes rotate { to { transform: rotate(360deg); } }
+.spin-wrap p { font-size: 13px; color: var(--mist); }
+
+/* ── PERIOD BADGE ── */
+.period-header {
+  background: linear-gradient(90deg, var(--ink2), var(--ink3));
+  border-radius: 10px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 20px; border: 1px solid var(--border);
+}
+.period-label { font-family: 'DM Serif Display', serif; color: var(--gold-light); font-size: 20px; }
+.period-meta { display: flex; flex-direction: column; gap: 2px; }
+.period-meta-title { color: var(--white); font-size: 12px; font-weight: 500; }
+.period-meta-sub { color: var(--fog); font-size: 11px; }
+.period-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-left: auto; }
+.pkpi { text-align: center; }
+.pkpi-val { font-family: 'DM Serif Display', serif; color: var(--gold-light); font-size: 18px; }
+.pkpi-lbl { font-size: 9px; color: var(--fog); text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── CHART CONTAINERS ── */
+.chart-box { position: relative; }
+
+/* ── LOADING OVERLAY ── */
+#loading-overlay {
+  position: fixed; inset: 0;
+  background: var(--ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999;
+  gap: 20px;
+  transition: opacity .5s;
+}
+#loading-overlay.fade { opacity: 0; pointer-events: none; }
+.load-logo { font-family: 'DM Serif Display', serif; color: var(--gold-light); font-size: 28px; }
+.load-sub { color: var(--fog); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.load-bar-wrap { width: 200px; height: 2px; background: rgba(200,169,81,.2); border-radius: 2px; overflow: hidden; }
+.load-bar { height: 100%; background: var(--gold); border-radius: 2px; animation: loadbar 2.5s ease-in-out forwards; }
+@keyframes loadbar { from{width:0} to{width:100%} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-kpis{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3,.g4,.g21,.g31{grid-template-columns:1fr}
+  .medio-grid{grid-template-columns:1fr 1fr}
+  .period-kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .hero-kpis{grid-template-columns:1fr}
+  .period-kpis{display:none}
+}
+
+/* ── LAST UPDATE ── */
+.last-upd { font-size: 10px; color: var(--fog); }
+
+/* no-data */
+.no-data { text-align: center; padding: 40px; color: var(--mist); font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div class="load-logo">Universidad Católica</div>
+  <div class="load-sub">Cargando Forecast Digital</div>
+  <div class="load-bar-wrap"><div class="load-bar"></div></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.5">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div class="nav-title-group">
+      <span class="nav-title">Universidad Católica <em style="font-style:italic;color:var(--gold-light)">·</em> Forecast</span>
+      <span class="nav-sub">Dashboard de Inversión Digital</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge" id="lastUpd">—</span>
+    <button class="sync-btn" id="syncBtn" onclick="loadAll()">
+      <span class="sync-dot" id="syncDot"></span> Actualizar
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-head">
+    <div class="hero-eyebrow">ADCOM · Forecast Digital 2025–2027</div>
+    <div class="hero-h1">Proyección de <em>Inversión</em> y Resultados</div>
+    <div class="hero-desc">Todos los periodos · Pregrado y Posgrado · Facebook, Google, Programática, TikTok</div>
+  </div>
+  <div class="hero-kpis">
+    <div class="hkpi">
+      <div class="hkpi-label">Inversión Total</div>
+      <div class="hkpi-val gold" id="hInv">—</div>
+      <div class="hkpi-sub" id="hInvSub">Todos los periodos</div>
+      <div class="hkpi-bar" style="width:70%"></div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-label">Leads Estimados</div>
+      <div class="hkpi-val" id="hLeads">—</div>
+      <div class="hkpi-sub">Generación digital</div>
+      <div class="hkpi-bar" style="width:55%"></div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-label">Matrículas Est.</div>
+      <div class="hkpi-val" id="hMats">—</div>
+      <div class="hkpi-sub">Aporte de pauta</div>
+      <div class="hkpi-bar" style="width:40%"></div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-label">CPL Promedio</div>
+      <div class="hkpi-val" id="hCPL">—</div>
+      <div class="hkpi-sub">Costo por lead</div>
+      <div class="hkpi-bar" style="width:30%"></div>
+    </div>
+    <div class="hkpi">
+      <div class="hkpi-label">Periodos Activos</div>
+      <div class="hkpi-val" id="hPeriodos">5</div>
+      <div class="hkpi-sub">2025-3 → 2027-3</div>
+      <div class="hkpi-bar" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('general',this)">
+    <span class="tab-pip" style="background:#C8A951"></span>Panel General
+  </button>
+  <button class="tab-btn" onclick="switchTab('p2025_3',this)">
+    <span class="tab-pip" style="background:#3D85C8"></span>2025-3
+  </button>
+  <button class="tab-btn" onclick="switchTab('p2026_1',this)">
+    <span class="tab-pip" style="background:#1E7B4C"></span>2026-1
+  </button>
+  <button class="tab-btn" onclick="switchTab('p2026_3',this)">
+    <span class="tab-pip" style="background:#8B5CF6"></span>2026-3
+  </button>
+  <button class="tab-btn" onclick="switchTab('p2027_1',this)">
+    <span class="tab-pip" style="background:#C0392B"></span>2027-1
+  </button>
+  <button class="tab-btn" onclick="switchTab('p2027_3',this)">
+    <span class="tab-pip" style="background:#D4A017"></span>2027-3
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- PANEL GENERAL -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-general" class="panel active">
+<div class="container">
+  <div id="spin-general" class="spin-wrap"><div class="spinner"></div><p>Conectando con Google Sheets…</p></div>
+  <div id="content-general" style="display:none">
+
+    <!-- Inversión por medio -->
+    <div class="sec">
+      <span class="sec-title">Mix de Medios — Inversión Total</span>
+      <span class="sec-badge">Todos los periodos</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="medio-grid" id="medioChips"></div>
+
+    <!-- Charts -->
+    <div class="g2" style="margin-top:16px">
+      <div class="card">
+        <div class="card-title">Inversión por Periodo</div>
+        <div class="chart-box" style="height:240px"><canvas id="cPeriodos"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mix de Medios — Distribución</div>
+        <div class="chart-box" style="height:240px"><canvas id="cMediosDona"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tabla medios x periodos -->
+    <div class="sec">
+      <span class="sec-title">Inversión por Medio × Periodo</span>
+      <div class="sec-line"></div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl" id="tblMediosPeriodo"></table>
+    </div>
+
+    <!-- Resumen global por nivel -->
+    <div class="g2" style="margin-top:16px">
+      <div>
+        <div class="sec"><span class="sec-title">Resumen por Nivel</span><div class="sec-line"></div></div>
+        <div class="tbl-wrap"><table class="tbl" id="tblNivel"></table></div>
+      </div>
+      <div>
+        <div class="sec"><span class="sec-title">Top 10 Programas — Inversión</span><div class="sec-line"></div></div>
+        <div class="tbl-wrap"><table class="tbl" id="tblTop10"></table></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- PANELS POR PERIODO (generados dinámicamente) -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-p2025_3" class="panel">
+<div class="container"><div id="spin-p2025_3" class="spin-wrap"><div class="spinner"></div><p>Cargando 2025-3…</p></div><div id="content-p2025_3" style="display:none"></div></div>
+</div>
+<div id="panel-p2026_1" class="panel">
+<div class="container"><div id="spin-p2026_1" class="spin-wrap"><div class="spinner"></div><p>Cargando 2026-1…</p></div><div id="content-p2026_1" style="display:none"></div></div>
+</div>
+<div id="panel-p2026_3" class="panel">
+<div class="container"><div id="spin-p2026_3" class="spin-wrap"><div class="spinner"></div><p>Cargando 2026-3…</p></div><div id="content-p2026_3" style="display:none"></div></div>
+</div>
+<div id="panel-p2027_1" class="panel">
+<div class="container"><div id="spin-p2027_1" class="spin-wrap"><div class="spinner"></div><p>Cargando 2027-1…</p></div><div id="content-p2027_1" style="display:none"></div></div>
+</div>
+<div id="panel-p2027_3" class="panel">
+<div class="container"><div id="spin-p2027_3" class="spin-wrap"><div class="spinner"></div><p>Cargando 2027-3…</p></div><div id="content-p2027_3" style="display:none"></div></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════════════════════
+const SSID = '1Zl3K7tvYj3FC6RzkgNux4n5SScDQ5E3rAFABum2cIuM';
+const GID = {
+  mensual:   '80778682',
+  programa:  '11791629',
+  medio:     '1637463126',
+  metas:     '1164696908',
+};
+const PERIODO_COLORS = {
+  '2025-3': '#3D85C8',
+  '2026-1': '#1E7B4C',
+  '2026-3': '#8B5CF6',
+  '2027-1': '#C0392B',
+  '2027-3': '#D4A017',
+};
+const MEDIO_CONFIG = {
+  'Facebook':    { color: '#1877F2', icon: '📘', bar: '#1877F2' },
+  'Google':      { color: '#EA4335', icon: '🔴', bar: '#EA4335' },
+  'Programatica':{ color: '#0F9D58', icon: '🟢', bar: '#0F9D58' },
+  'Tiktok':      { color: '#010101', icon: '🎵', bar: '#555' },
+};
+const GOLD = '#C8A951';
+
+// Estado global
+let DATA = { mensual: [], programa: [], medio: [], metas: [] };
+let charts = {};
+let loaded = { general: false };
+let activePanel = 'general';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════════════
+const fmt = n => {
+  if (!n || isNaN(n)) return '—';
+  const v = Math.round(Number(n));
+  if (v >= 1e9) return '$' + (v/1e9).toFixed(1) + 'B';
+  if (v >= 1e6) return '$' + (v/1e6).toFixed(0) + 'M';
+  if (v >= 1e3) return '$' + (v/1e3).toFixed(0) + 'K';
+  return '$' + v.toLocaleString('es-CO');
+};
+const fmtFull = n => n ? '$' + Math.round(Number(n)).toLocaleString('es-CO') : '—';
+const fmtN  = n => n ? Math.round(Number(n)).toLocaleString('es-CO') : '—';
+const fmtPct = n => n ? (Number(n)*100).toFixed(1) + '%' : '0%';
+const sum    = (arr, key) => arr.reduce((a,r) => a + (Number(r[key])||0), 0);
+
+function csvUrl(gid) {
+  return `https://docs.google.com/spreadsheets/d/${SSID}/export?format=csv&gid=${gid}`;
+}
+
+async function fetchCSV(gid) {
+  const r = await fetch(csvUrl(gid));
+  if (!r.ok) throw new Error(`HTTP ${r.status} para GID ${gid}`);
+  const txt = await r.text();
+  const lines = txt.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
+  return lines.slice(1).map(line => {
+    const cols = parseCsvLine(line);
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = (cols[i]||'').trim().replace(/"/g,''));
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+function parseCsvLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; continue; }
+    if (c === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+    cur += c;
+  }
+  result.push(cur);
+  return result;
+}
+
+// Mapeo fecha → periodo
+const FECHA_PERIODO = {
+  '2025-3-1':'2025-3','3/1/2025':'2025-3','03/01/2025':'2025-3',
+  '2026-1-1':'2026-1','1/1/2026':'2026-1','01/01/2026':'2026-1',
+  '2026-3-1':'2026-3','3/1/2026':'2026-3','03/01/2026':'2026-3',
+  '2027-1-1':'2027-1','1/1/2027':'2027-1','01/01/2027':'2027-1',
+  '2027-3-1':'2027-3','3/1/2027':'2027-3','03/01/2027':'2027-3',
+};
+
+function normPeriodo(raw) {
+  if (!raw) return '';
+  const s = String(raw).trim();
+  if (/^\d{4}-\d$/.test(s)) return s; // ya limpio: 2025-3
+  // intentar como fecha
+  const d = new Date(s);
+  if (!isNaN(d)) {
+    const k = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    return FECHA_PERIODO[k] || s;
+  }
+  // formato m/d/yyyy
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) {
+    const k = `${m[3]}-${parseInt(m[1])}-${parseInt(m[2])}`;
+    return FECHA_PERIODO[k] || s;
+  }
+  return FECHA_PERIODO[s] || s;
+}
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CARGA DATOS
+// ═══════════════════════════════════════════════════════════════════════════════
+async function loadAll() {
+  const dot = document.getElementById('syncDot');
+  const btn = document.getElementById('syncBtn');
+  dot.classList.add('spin');
+  btn.disabled = true;
+
+  try {
+    const [mensual, programa, medio, metas] = await Promise.all([
+      fetchCSV(GID.mensual),
+      fetchCSV(GID.programa),
+      fetchCSV(GID.medio),
+      fetchCSV(GID.metas),
+    ]);
+
+    // Normalizar periodos
+    programa.forEach(r => { r._periodo = normPeriodo(r.Periodo || r['Período']); });
+    medio.forEach(r => { r._periodo = normPeriodo(r.Periodo || r['Período']); });
+    metas.forEach(r => { r._periodo = normPeriodo(r.Periodo || r['Período']); });
+    mensual.forEach(r => { r._periodo = normPeriodo(r.Periodo || r['Período']); });
+
+    DATA = { mensual, programa, medio, metas };
+
+    // Reset loaded flags
+    loaded = { general: false };
+    ['2025_3','2026_1','2026_3','2027_1','2027_3'].forEach(p => loaded[p] = false);
+
+    document.getElementById('lastUpd').textContent = 'Act. ' + new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+
+    updateHeroKPIs();
+    renderActivePanel();
+
+  } catch(e) {
+    alert('Error cargando datos: ' + e.message);
+    console.error(e);
+  } finally {
+    dot.classList.remove('spin');
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// HERO KPIs
+// ═══════════════════════════════════════════════════════════════════════════════
+function updateHeroKPIs() {
+  // Solo programas no-branding para leads y matrículas
+  const prog = DATA.programa.filter(r => r.Modalidad !== 'Branding');
+  const totalInv = sum(DATA.programa, 'Presupuesto');
+  const totalLeads = sum(prog, 'Leads');
+  const totalMats = sum(prog, 'Matriculas');
+  const avgCPL = totalLeads > 0 ? totalInv / totalLeads : 0;
+
+  document.getElementById('hInv').textContent = fmt(totalInv);
+  document.getElementById('hLeads').textContent = fmtN(totalLeads);
+  document.getElementById('hMats').textContent = fmtN(totalMats);
+  document.getElementById('hCPL').textContent = fmt(avgCPL);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  activePanel = id;
+  renderActivePanel();
+}
+
+function renderActivePanel() {
+  if (!DATA.programa.length) return;
+  if (activePanel === 'general' && !loaded.general) {
+    renderGeneral(); loaded.general = true;
+  }
+  const pm = activePanel.replace('p','').replace('_','-');
+  if (activePanel.startsWith('p') && !loaded[activePanel.replace('p','')]) {
+    renderPeriodo(pm, activePanel.replace('p',''));
+    loaded[activePanel.replace('p','')] = true;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PANEL GENERAL
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderGeneral() {
+  document.getElementById('spin-general').style.display = 'none';
+  document.getElementById('content-general').style.display = 'block';
+
+  // ── Medios chips ──────────────────────────────────────────────────────────
+  const totalMed = {};
+  DATA.medio.forEach(r => {
+    const med = r.Medio; const inv = Number(r.Presupuesto)||0;
+    if (med && med !== 'Medio') totalMed[med] = (totalMed[med]||0) + inv;
+  });
+  const grandTotal = Object.values(totalMed).reduce((a,b)=>a+b,0);
+  const chipsEl = document.getElementById('medioChips');
+  chipsEl.innerHTML = '';
+  const medOrder = ['Facebook','Google','Programatica','Tiktok'];
+  medOrder.forEach(m => {
+    const val = totalMed[m]||0;
+    const pct = grandTotal > 0 ? (val/grandTotal*100).toFixed(1) : '0';
+    const cfg = MEDIO_CONFIG[m]||{color:'#888',icon:'📊'};
+    chipsEl.innerHTML += `
+      <div class="medio-chip">
+        <div class="medio-icon">${cfg.icon}</div>
+        <div class="medio-name">${m === 'Programatica' ? 'Programática' : m}</div>
+        <div class="medio-val">${fmt(val)}</div>
+        <div class="medio-pct">${pct}% del total</div>
+        <div class="medio-bar-h" style="background:linear-gradient(90deg,${cfg.color} ${pct}%,#EEE ${pct}%)"></div>
+      </div>`;
+  });
+
+  // ── Chart inversión por periodo ───────────────────────────────────────────
+  const periodos = ['2025-3','2026-1','2026-3','2027-1','2027-3'];
+  const invPer = periodos.map(p =>
+    sum(DATA.programa.filter(r => r._periodo === p), 'Presupuesto')
+  );
+  destroyChart('cPeriodos');
+  charts['cPeriodos'] = new Chart(document.getElementById('cPeriodos'), {
+    type: 'bar',
+    data: {
+      labels: periodos,
+      datasets: [{
+        label: 'Inversión',
+        data: invPer,
+        backgroundColor: periodos.map(p => PERIODO_COLORS[p]+'CC'),
+        borderColor: periodos.map(p => PERIODO_COLORS[p]),
+        borderWidth: 2, borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#F0EDE6' }, ticks: { font: { size: 10 }, callback: v => fmt(v) } }
+      }
+    }
+  });
+
+  // ── Dona medios ───────────────────────────────────────────────────────────
+  destroyChart('cMediosDona');
+  const medVals = medOrder.map(m => totalMed[m]||0);
+  charts['cMediosDona'] = new Chart(document.getElementById('cMediosDona'), {
+    type: 'doughnut',
+    data: {
+      labels: medOrder.map(m => m === 'Programatica' ? 'Programática' : m),
+      datasets: [{ data: medVals, backgroundColor: medOrder.map(m => (MEDIO_CONFIG[m]||{color:'#888'}).color), borderWidth: 3, borderColor: '#FAFAF8', hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { position: 'right', labels: { font: { size: 11 }, padding: 14 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.raw)} (${grandTotal>0?(ctx.raw/grandTotal*100).toFixed(1):0}%)` } } }
+    }
+  });
+
+  // ── Tabla medios x periodos ───────────────────────────────────────────────
+  const tMP = document.getElementById('tblMediosPeriodo');
+  let html = '<thead><tr><th>Medio</th>';
+  periodos.forEach(p => html += `<th class="right">${p}</th>`);
+  html += '<th class="right">Total</th><th class="right">Mix %</th></tr></thead><tbody>';
+  medOrder.forEach(m => {
+    const cfg = MEDIO_CONFIG[m]||{color:'#888'};
+    let rowTotal = 0;
+    html += `<tr><td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${cfg.color};flex-shrink:0"></span>${m === 'Programatica' ? 'Programática' : m}</span></td>`;
+    periodos.forEach(p => {
+      const invs = DATA.medio.filter(r => r._periodo === p && r.Medio === m);
+      const v = sum(invs, 'Presupuesto');
+      rowTotal += v;
+      html += `<td class="right">${fmt(v)}</td>`;
+    });
+    const pct = grandTotal > 0 ? (rowTotal/grandTotal*100).toFixed(1) : '0';
+    html += `<td class="right"><strong>${fmt(rowTotal)}</strong></td>`;
+    html += `<td class="right">
+      <div class="pbar-wrap">
+        <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
+        <span style="min-width:32px">${pct}%</span>
+      </div></td></tr>`;
+  });
+  // Totales
+  html += '<tr class="tbl-total"><td><strong>TOTAL</strong></td>';
+  periodos.forEach(p => {
+    html += `<td class="right">${fmt(sum(DATA.programa.filter(r=>r._periodo===p),'Presupuesto'))}</td>`;
+  });
+  html += `<td class="right">${fmt(grandTotal)}</td><td class="right">100%</td></tr>`;
+  html += '</tbody>';
+  tMP.innerHTML = html;
+
+  // ── Tabla por nivel ───────────────────────────────────────────────────────
+  const tN = document.getElementById('tblNivel');
+  const niveles = ['Pregrado','Posgrado','Branding'];
+  html = '<thead><tr><th>Nivel</th><th class="right">Inversión</th><th class="right">Leads</th><th class="right">Matrículas</th><th class="right">CPL Prom.</th></tr></thead><tbody>';
+  const nivColors = {Pregrado:var_css('--blue2'), Posgrado:var_css('--green'), Branding:'#C8A951'};
+  niveles.forEach(n => {
+    const rows = DATA.programa.filter(r => r.Modalidad === n);
+    const inv = sum(rows,'Presupuesto');
+    const leads = sum(rows,'Leads');
+    const mats = sum(rows,'Matriculas');
+    const cpl = leads > 0 ? inv/leads : 0;
+    const pct = grandTotal > 0 ? (inv/grandTotal*100).toFixed(0) : '0';
+    html += `<tr>
+      <td><span class="bdg bdg-${n.toLowerCase().substring(0,3)}">${n}</span></td>
+      <td class="right">${fmt(inv)}</td>
+      <td class="right">${fmtN(leads)}</td>
+      <td class="right">${fmtN(mats)}</td>
+      <td class="right">${fmt(cpl)}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  tN.innerHTML = html;
+
+  // ── Top 10 programas ──────────────────────────────────────────────────────
+  const progAgg = {};
+  DATA.programa.filter(r => r.Modalidad !== 'Branding' && r.Programa && !r.Programa.includes('Campaña general') && !r.Programa.includes('Campaña Branding')).forEach(r => {
+    const k = r.Programa;
+    if (!progAgg[k]) progAgg[k] = { inv: 0, mod: r.Modalidad };
+    progAgg[k].inv += Number(r.Presupuesto)||0;
+  });
+  const top10 = Object.entries(progAgg).sort((a,b)=>b[1].inv-a[1].inv).slice(0,10);
+  const maxInv = top10[0]?.[1]?.inv||1;
+  html = '<thead><tr><th>Programa</th><th>Nivel</th><th class="right">Inversión</th></tr></thead><tbody>';
+  top10.forEach(([prog,d]) => {
+    const pct = (d.inv/maxInv*100).toFixed(0);
+    const bdg = d.mod === 'Pregrado' ? 'bdg-pre' : 'bdg-pos';
+    html += `<tr>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${prog}">${prog.length>30?prog.substring(0,28)+'…':prog}</td>
+      <td><span class="bdg ${bdg}">${d.mod}</span></td>
+      <td class="right">
+        <div class="pbar-wrap">
+          <div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
+          <span style="min-width:42px">${fmt(d.inv)}</span>
+        </div></td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  document.getElementById('tblTop10').innerHTML = html;
+}
+
+function var_css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PANELS POR PERIODO
+// ═══════════════════════════════════════════════════════════════════════════════
+function renderPeriodo(periodo, panelKey) {
+  const spinEl   = document.getElementById('spin-' + panelKey);
+  const contentEl= document.getElementById('content-' + panelKey);
+  spinEl.style.display = 'none';
+  contentEl.style.display = 'block';
+
+  const progRows = DATA.programa.filter(r => r._periodo === periodo);
+  const medRows  = DATA.medio.filter(r => r._periodo === periodo);
+  const mesRows  = DATA.mensual.filter(r => r._periodo === periodo);
+  const color    = PERIODO_COLORS[periodo] || GOLD;
+
+  if (!progRows.length) {
+    contentEl.innerHTML = `<div class="no-data">No hay datos para el periodo ${periodo}</div>`;
+    return;
+  }
+
+  // KPIs del periodo
+  const inv   = sum(progRows.filter(r=>r.Modalidad!=='Branding'), 'Presupuesto');
+  const leads = sum(progRows.filter(r=>r.Modalidad!=='Branding'), 'Leads');
+  const mats  = sum(progRows.filter(r=>r.Modalidad!=='Branding'), 'Matriculas');
+  const cpl   = leads > 0 ? inv/leads : 0;
+
+  // Meses del periodo
+  const mesesLabel = mesRows.map(r=>r.Mes||r.Mes).join(', ');
+
+  let html = `
+  <div class="period-header" style="border-color:${color}44">
+    <div style="width:4px;height:48px;background:${color};border-radius:3px;flex-shrink:0"></div>
+    <div class="period-meta">
+      <div class="period-label">${periodo}</div>
+      <div class="period-meta-title">${mesRows.length} meses · ${progRows.filter(r=>r.Modalidad!=='Branding').length} programas</div>
+      <div class="period-meta-sub">${mesRows.map(r=>r.Mes).join(' · ')}</div>
+    </div>
+    <div class="period-kpis">
+      <div class="pkpi"><div class="pkpi-val" style="color:${color}">${fmt(inv)}</div><div class="pkpi-lbl">Inversión</div></div>
+      <div class="pkpi"><div class="pkpi-val" style="color:${color}">${fmtN(leads)}</div><div class="pkpi-lbl">Leads</div></div>
+      <div class="pkpi"><div class="pkpi-val" style="color:${color}">${fmtN(mats)}</div><div class="pkpi-lbl">Matrículas</div></div>
+      <div class="pkpi"><div class="pkpi-val" style="color:${color}">${fmt(cpl)}</div><div class="pkpi-lbl">CPL</div></div>
+    </div>
+  </div>`;
+
+  // ── Distribución mensual ──────────────────────────────────────────────────
+  if (mesRows.length) {
+    html += `
+    <div class="sec"><span class="sec-title">Distribución Mensual de Inversión</span><div class="sec-line"></div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Inversión por Mes</div>
+        <div class="chart-box" style="height:220px"><canvas id="cMes_${panelKey}"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pregrado vs Posgrado por Mes</div>
+        <div class="chart-box" style="height:220px"><canvas id="cMesNivel_${panelKey}"></canvas></div>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="margin-bottom:16px">
+      <table class="tbl" id="tblMes_${panelKey}"></table>
+    </div>`;
+  }
+
+  // ── Mix de medios del periodo ─────────────────────────────────────────────
+  html += `
+  <div class="sec"><span class="sec-title">Mix de Medios</span><span class="sec-badge">${periodo}</span><div class="sec-line"></div></div>
+  <div class="medio-grid" id="medioChips_${panelKey}"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Inversión por Medio y Nivel</div>
+    <div class="chart-box" style="height:220px"><canvas id="cMedNiv_${panelKey}"></canvas></div>
+  </div>`;
+
+  // ── Tabla programas ───────────────────────────────────────────────────────
+  html += `
+  <div class="sec"><span class="sec-title">Inversión por Programa</span><div class="sec-line"></div></div>
+  <div class="tbl-wrap"><table class="tbl" id="tblProg_${panelKey}"></table></div>`;
+
+  contentEl.innerHTML = html;
+
+  // Renderizar charts y tablas después de insertar el HTML
+  setTimeout(() => {
+    // ── Chart mensual total ──
+    if (mesRows.length) {
+      const meses = mesRows.map(r => r.Mes);
+      const totales = mesRows.map(r => Number(r.Total)||0);
+      destroyChart('cMes_'+panelKey);
+      charts['cMes_'+panelKey] = new Chart(document.getElementById('cMes_'+panelKey), {
+        type: 'bar',
+        data: {
+          labels: meses,
+          datasets: [{
+            label: 'Total', data: totales,
+            backgroundColor: color + '99', borderColor: color, borderWidth: 2, borderRadius: 5
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } } },
+          scales: { x: { grid: {display:false}, ticks:{font:{size:9}} }, y: { grid:{color:'#F0EDE6'}, ticks:{font:{size:9}, callback: v=>fmt(v)} } }
+        }
+      });
+
+      // ── Chart Pregrado vs Posgrado ──
+      const preVals = mesRows.map(r => Number(r.Pregrado)||0);
+      const posVals = mesRows.map(r => Number(r.Posgrados)||0);
+      destroyChart('cMesNivel_'+panelKey);
+      charts['cMesNivel_'+panelKey] = new Chart(document.getElementById('cMesNivel_'+panelKey), {
+        type: 'bar',
+        data: {
+          labels: meses,
+          datasets: [
+            { label: 'Pregrado', data: preVals, backgroundColor: '#1A4F8C99', borderColor: '#1A4F8C', borderWidth:2, borderRadius:4, stack:'s' },
+            { label: 'Posgrado', data: posVals, backgroundColor: '#1E7B4C99', borderColor: '#1E7B4C', borderWidth:2, borderRadius:4, stack:'s' },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels:{font:{size:10}} }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
+          scales: { x: { grid:{display:false}, ticks:{font:{size:9}} }, y: { grid:{color:'#F0EDE6'}, stacked:true, ticks:{font:{size:9}, callback:v=>fmt(v)} } }
+        }
+      });
+
+      // ── Tabla mensual ──
+      const tM = document.getElementById('tblMes_'+panelKey);
+      let mHtml = '<thead><tr><th>Mes</th><th class="right">%</th><th class="right">Pregrado</th><th class="right">Posgrados</th><th class="right">Inv. Formal</th><th class="right">Branding</th><th class="right">Total</th></tr></thead><tbody>';
+      mesRows.forEach(r => {
+        mHtml += `<tr>
+          <td><strong>${r.Mes}</strong></td>
+          <td class="right">${(Number(r['%']||r.Porcentaje||0)*100).toFixed(1)}%</td>
+          <td class="right">${fmt(r.Pregrado)}</td>
+          <td class="right">${fmt(r.Posgrados)}</td>
+          <td class="right">${fmt(r.InversionFormal)}</td>
+          <td class="right">${fmt(r.Branding)}</td>
+          <td class="right"><strong>${fmt(r.Total)}</strong></td>
+        </tr>`;
+      });
+      const totM = { pre:sum(mesRows,'Pregrado'), pos:sum(mesRows,'Posgrados'), inv:sum(mesRows,'InversionFormal'), brd:sum(mesRows,'Branding'), tot:sum(mesRows,'Total') };
+      mHtml += `<tr class="tbl-total"><td>TOTAL</td><td class="right">100%</td><td class="right">${fmt(totM.pre)}</td><td class="right">${fmt(totM.pos)}</td><td class="right">${fmt(totM.inv)}</td><td class="right">${fmt(totM.brd)}</td><td class="right">${fmt(totM.tot)}</td></tr>`;
+      mHtml += '</tbody>';
+      tM.innerHTML = mHtml;
+    }
+
+    // ── Medio chips del periodo ──
+    const totalMedP = {};
+    medRows.forEach(r => { const m=r.Medio; const v=Number(r.Presupuesto)||0; if(m&&m!=='Medio') totalMedP[m]=(totalMedP[m]||0)+v; });
+    const gtP = Object.values(totalMedP).reduce((a,b)=>a+b,0);
+    const chips2 = document.getElementById('medioChips_'+panelKey);
+    if (chips2) {
+      chips2.innerHTML = '';
+      ['Facebook','Google','Programatica','Tiktok'].forEach(m => {
+        const val = totalMedP[m]||0;
+        const pct = gtP > 0 ? (val/gtP*100).toFixed(1) : '0';
+        const cfg = MEDIO_CONFIG[m]||{color:'#888',icon:'📊'};
+        chips2.innerHTML += `
+          <div class="medio-chip">
+            <div class="medio-icon">${cfg.icon}</div>
+            <div class="medio-name">${m==='Programatica'?'Programática':m}</div>
+            <div class="medio-val">${fmt(val)}</div>
+            <div class="medio-pct">${pct}% del total</div>
+            <div class="medio-bar-h" style="background:linear-gradient(90deg,${cfg.color} ${pct}%,#EEE ${pct}%)"></div>
+          </div>`;
+      });
+    }
+
+    // ── Chart medios por nivel ──
+    const niveles = ['Pregrado','Posgrado','Branding'];
+    const medOrder = ['Facebook','Google','Programatica','Tiktok'];
+    const datasets = niveles.map((niv,i) => {
+      const colors = ['#1A4F8C','#1E7B4C','#C8A951'];
+      const vals = medOrder.map(m => {
+        return sum(medRows.filter(r => r.Medio===m && r.Modalidad===niv), 'Presupuesto');
+      });
+      return { label: niv, data: vals, backgroundColor: colors[i]+'BB', borderColor: colors[i], borderWidth: 2, borderRadius: 4 };
+    });
+    destroyChart('cMedNiv_'+panelKey);
+    charts['cMedNiv_'+panelKey] = new Chart(document.getElementById('cMedNiv_'+panelKey), {
+      type: 'bar',
+      data: { labels: medOrder.map(m=>m==='Programatica'?'Programática':m), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels:{font:{size:10}} }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}` } } },
+        scales: { x:{grid:{display:false},ticks:{font:{size:10}}}, y:{grid:{color:'#F0EDE6'},ticks:{font:{size:10},callback:v=>fmt(v)}} }
+      }
+    });
+
+    // ── Tabla programas ──
+    const tP = document.getElementById('tblProg_'+panelKey);
+    if (tP) {
+      const rows = progRows.filter(r => r.Programa && r.Modalidad && !r.Programa.startsWith('Campaña general') && !r.Programa.startsWith('Campaña Branding'));
+      let pHtml = '<thead><tr><th>Programa</th><th>Nivel</th><th class="right">% Canal</th><th class="right">Presupuesto</th><th class="right">CPL</th><th class="right">Leads Est.</th><th class="right">% Conv.</th><th class="right">Matrículas Est.</th><th class="right">Meta</th><th class="right">% Cumpl.</th></tr></thead><tbody>';
+      const maxP = Math.max(...rows.map(r=>Number(r.Presupuesto)||0),1);
+      rows.sort((a,b)=>(Number(b.Presupuesto)||0)-(Number(a.Presupuesto)||0)).forEach(r => {
+        const pct = ((Number(r.Presupuesto)||0)/maxP*100).toFixed(0);
+        const bdg = r.Modalidad==='Pregrado'?'bdg-pre':'bdg-pos';
+        const cumpl = Number(r['% Cumplimiento']||r.Cumplimiento)||0;
+        const cumplColor = cumpl>=2?'green':cumpl>=1.5?'':'red';
+        pHtml += `<tr>
+          <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis" title="${r.Programa}">${r.Programa.length>35?r.Programa.substring(0,33)+'…':r.Programa}</td>
+          <td><span class="bdg ${bdg}">${r.Modalidad}</span></td>
+          <td class="right">${fmtPct(r['% Programa']||r.PorcentajePrograma)}</td>
+          <td class="right">
+            <div class="pbar-wrap">
+              <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${color}"></div></div>
+              <span style="min-width:48px">${fmt(r.Presupuesto)}</span>
+            </div></td>
+          <td class="right">${fmt(r.CPL)}</td>
+          <td class="right">${fmtN(r.Leads)}</td>
+          <td class="right">${fmtPct(r['% Conv']||r.Conv)}</td>
+          <td class="right">${fmtN(r.Matriculas||r.Matrículas)}</td>
+          <td class="right">${fmtN(r['Matriculas meta']||r.MatriculasMeta)}</td>
+          <td class="right"><span style="color:${cumplColor==='green'?'var(--green)':cumplColor==='red'?'var(--red)':'var(--gold-dim)'};font-weight:600">${r['% Cumplimiento']?(Number(r['% Cumplimiento'])*100).toFixed(0)+'%':'—'}</span></td>
+        </tr>`;
+      });
+      // Totales
+      const totP = {
+        inv: sum(rows,'Presupuesto'),
+        leads: sum(rows,'Leads'),
+        mats: sum(rows,'Matriculas'),
+        meta: sum(rows,'Matriculas meta'),
+      };
+      pHtml += `<tr class="tbl-total"><td colspan="3">TOTAL</td><td class="right">${fmt(totP.inv)}</td><td class="right">—</td><td class="right">${fmtN(totP.leads)}</td><td class="right">—</td><td class="right">${fmtN(totP.mats)}</td><td class="right">${fmtN(totP.meta)}</td><td class="right">—</td></tr>`;
+      pHtml += '</tbody>';
+      tP.innerHTML = pHtml;
+    }
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const ov = document.getElementById('loading-overlay');
+    ov.classList.add('fade');
+    setTimeout(() => ov.style.display='none', 500);
+    loadAll();
+  }, 2600);
+});
+</script>
+</body>
+</html>
