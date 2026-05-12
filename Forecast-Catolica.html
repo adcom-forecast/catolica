@@ -212,7 +212,6 @@ function parseCSV(text){
   if(lines.length < 2) return [];
   const headers = lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim());
   return lines.slice(1).map(line=>{
-    // Handle quoted fields with commas inside
     const cols = [];
     let cur = '', inQ = false;
     for(let i=0;i<line.length;i++){
@@ -225,12 +224,60 @@ function parseCSV(text){
     const row = {};
     headers.forEach((h,i)=>{
       const v = (cols[i]||'').replace(/^"|"$/g,'').trim();
-      // Try numeric conversion
-      const n = v.replace(/[$,%\s]/g,'').replace(/\./g,'').replace(',','.');
-      row[h] = isNaN(n)||n==='' ? v : Number(n);
+      const n = v.replace(/[$\s]/g,'').replace(/\./g,'').replace(',','.');
+      row[h] = isNaN(n)||n===''||n==='-' ? v : Number(n);
     });
     return row;
-  });
+  }).filter(r=>Object.values(r).some(v=>v!==''&&v!==0));
+}
+
+// Convierte fila cruda de "Anual por Programa" al formato que usa el dashboard
+function mapPrograma(r){
+  const pct = r['% Programa']||r['% programa']||0;
+  const pctConv = r['% Conv']||r['% conv']||0;
+  return {
+    _periodo:        String(r['Periodo']||r['periodo']||'').trim(),
+    Programa:        String(r['Programa']||'').trim(),
+    Modalidad:       String(r['Modalidad']||'').trim(),
+    PctPrograma:     typeof pct==='number' ? pct/100 : parseFloat(String(pct).replace('%',''))/100||0,
+    Presupuesto:     Number(r['Presupuesto'])||0,
+    CPL:             Number(r['CPL'])||0,
+    Leads:           Number(r['Leads'])||0,
+    PctConv:         typeof pctConv==='number' ? pctConv/100 : parseFloat(String(pctConv).replace('%',''))/100||0,
+    Matriculas:      Number(r['Matriculas'])||0,
+    MatriculasMeta:  Number(r['Matriculas meta']||r['MatriculasMeta'])||0,
+    PctCumplimiento: Number(r['% Cumplimiento']||r['PctCumplimiento'])||0,
+  };
+}
+
+// Convierte fila cruda de "Anual por medio"
+function mapMedio(r){
+  const pct = r['% Canal']||r['% canal']||0;
+  return {
+    _periodo:   String(r['Periodo']||r['periodo']||'').trim(),
+    Programa:   String(r['Programa']||'').trim(),
+    Modalidad:  String(r['Modalidad']||'').trim(),
+    Medio:      String(r['Medio']||'').trim(),
+    PctCanal:   typeof pct==='number' ? pct/100 : parseFloat(String(pct).replace('%',''))/100||0,
+    Presupuesto:Number(r['Presupuesto'])||0,
+  };
+}
+
+// Convierte fila cruda de "_mensual"
+function mapMensual(r){
+  const pct     = r['%']||r['Pct']||0;
+  const pctBrd  = r['%Branding']||r['PctBranding']||0;
+  return {
+    _periodo:       String(r['Periodo']||r['periodo']||'').trim(),
+    Mes:            String(r['Mes']||'').trim(),
+    Pct:            typeof pct==='number' ? pct/100 : parseFloat(String(pct).replace('%',''))/100||0,
+    Pregrado:       Number(r['Pregrado'])||0,
+    Posgrados:      Number(r['Posgrados'])||0,
+    InversionFormal:Number(r['InversionFormal']||r['Inversion Formal'])||0,
+    PctBranding:    typeof pctBrd==='number' ? pctBrd/100 : parseFloat(String(pctBrd).replace('%',''))/100||0,
+    Branding:       Number(r['Branding'])||0,
+    Total:          Number(r['Total'])||0,
+  };
 }
 
 // ═══ FETCH SHEETS ═══
@@ -238,33 +285,32 @@ function tryFetchSheets(){
   const dot=document.getElementById('syncDot');
   const btn=document.getElementById('syncBtn');
   dot.classList.add('spin'); btn.disabled=true;
-  
+
   const base = `https://docs.google.com/spreadsheets/d/${SSID}/export?format=csv&gid=`;
-  
+
   Promise.all([
     fetch(base+GID.programa).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
     fetch(base+GID.medio).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
     fetch(base+GID.mensual).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
   ])
   .then(([csvProg, csvMedio, csvMensual])=>{
-    const newProg    = parseCSV(csvProg);
-    const newMedio   = parseCSV(csvMedio);
-    const newMensual = parseCSV(csvMensual);
-    
-    if(!newProg.length) throw new Error('Pestaña Programa vacía o sin datos.');
-    
-    // Update global DATA
-    DATA.programa = newProg;
-    DATA.medio    = newMedio;
-    DATA.mensual  = newMensual;
-    
-    // Re-render everything
+    const rawProg    = parseCSV(csvProg);
+    const rawMedio   = parseCSV(csvMedio);
+    const rawMensual = parseCSV(csvMensual);
+
+    if(!rawProg.length) throw new Error('Pestaña Programa vacía.');
+
+    DATA.programa = rawProg.map(mapPrograma).filter(r=>r._periodo&&r.Programa);
+    DATA.medio    = rawMedio.map(mapMedio).filter(r=>r._periodo&&r.Programa);
+    DATA.mensual  = rawMensual.map(mapMensual).filter(r=>r._periodo&&r.Mes);
+
+    // Re-render
     rendered = {};
     Object.values(charts).forEach(c=>{ try{c.destroy();}catch(e){} });
     charts = {};
-    
+
     updateHeroKPIs(activeFilter);
-    
+
     if(activeTab==='general'){ renderGeneral(); rendered['general']=true; }
     else {
       const pid = activeFilter;
@@ -273,11 +319,11 @@ function tryFetchSheets(){
       renderPeriodo(pid, kid);
       rendered[kid]=true;
     }
-    
+
     document.getElementById('lastUpd').textContent='Act. '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
   })
   .catch(e=>{
-    alert('⚠️ No se pudo leer el Sheets: '+e.message+'\n\nVerifica que esté publicado como "Cualquier persona con el enlace → Lector".');
+    alert('⚠️ Error al leer Sheets: '+e.message);
   })
   .finally(()=>{ dot.classList.remove('spin'); btn.disabled=false; });
 }
