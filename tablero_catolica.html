@@ -2,235 +2,212 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Dashboard Católica — ADCOM</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-:root {
-  --black:#0A0A0A; --white:#FFFFFF; --yellow:#FFC000;
-  --gray-50:#F8F8F8; --gray-100:#F0F0F0; --gray-200:#E0E0E0;
-  --gray-400:#9E9E9E; --gray-600:#555555;
-  --r-sm:8px; --r-md:16px; --r-lg:24px; --r-xl:32px;
-  --sidebar:240px;
+:root{
+  --black:#0A0A0A;--white:#FFFFFF;--yellow:#FFC000;
+  --gray-50:#F8F8F8;--gray-100:#F0F0F0;--gray-200:#E0E0E0;
+  --gray-400:#9E9E9E;--gray-600:#555555;
+  --r-sm:8px;--r-md:16px;--sidebar:220px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Poppins',sans-serif;background:var(--gray-50);color:var(--black);display:flex;min-height:100vh}
-
-/* SIDEBAR */
+body{font-family:'Poppins',sans-serif;background:var(--gray-50);color:var(--black);display:flex;min-height:100vh;font-size:13px}
 .sidebar{width:var(--sidebar);min-height:100vh;background:var(--black);position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
-.sidebar-logo{padding:28px 20px 20px;border-bottom:1px solid #222}
+.sidebar-logo{padding:24px 18px 18px;border-bottom:1px solid #1e1e1e}
 .logo-adcom{font-size:22px;font-weight:900;color:var(--white);letter-spacing:-.5px}
 .logo-adcom span{color:var(--yellow)}
-.logo-cliente{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
-.sidebar-nav{padding:20px 0;flex:1}
-.nav-label{font-size:10px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.1em;padding:8px 20px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:all .2s;color:var(--gray-400);font-size:13px;font-weight:500;border-left:3px solid transparent}
-.nav-item:hover{color:var(--white);background:#111}
+.logo-cliente{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
+.sidebar-nav{padding:16px 0;flex:1}
+.nav-label{font-size:9px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:.12em;padding:6px 18px 3px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 18px;cursor:pointer;color:#666;font-size:12px;font-weight:500;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{color:#ccc;background:#111}
 .nav-item.active{color:var(--white);border-left-color:var(--yellow);background:#111}
-.nav-item svg{width:16px;height:16px;flex-shrink:0}
-.sidebar-filters{padding:16px;border-top:1px solid #222}
-.filter-label{font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.filter-select{width:100%;background:#111;border:1px solid #333;color:var(--white);font-family:'Poppins',sans-serif;font-size:12px;padding:8px 10px;border-radius:var(--r-sm);margin-bottom:8px;outline:none;cursor:pointer}
-.filter-select:focus{border-color:var(--yellow)}
-.filter-input{width:100%;background:#111;border:1px solid #333;color:var(--white);font-family:'Poppins',sans-serif;font-size:12px;padding:8px 10px;border-radius:var(--r-sm);margin-bottom:8px;outline:none}
-.filter-input::placeholder{color:#444}
-.filter-input:focus{border-color:var(--yellow)}
-.date-row{display:flex;gap:6px}
-.date-row input{flex:1;background:#111;border:1px solid #333;color:var(--white);font-family:'Poppins',sans-serif;font-size:11px;padding:7px 8px;border-radius:var(--r-sm);outline:none}
-.date-row input:focus{border-color:var(--yellow)}
-.btn-apply{width:100%;background:var(--yellow);color:var(--black);font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;padding:9px;border:none;border-radius:var(--r-sm);cursor:pointer;margin-top:4px;transition:opacity .2s}
-.btn-apply:hover{opacity:.85}
-.btn-refresh{width:100%;background:transparent;color:var(--gray-400);font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;padding:8px;border:1px solid #333;border-radius:var(--r-sm);cursor:pointer;margin-top:6px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.nav-item svg{width:14px;height:14px;flex-shrink:0}
+.sidebar-bottom{padding:14px;border-top:1px solid #1e1e1e}
+.btn-refresh{width:100%;background:transparent;color:#666;font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;padding:8px;border:1px solid #2a2a2a;border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
 .btn-refresh:hover{color:var(--white);border-color:#555}
-.last-update{font-size:10px;color:#444;text-align:center;margin-top:8px}
-
-/* MAIN */
+.last-update{font-size:9px;color:#333;text-align:center;margin-top:6px}
 .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column}
-.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-title{font-size:15px;font-weight:700}
-.topbar-sub{font-size:12px;color:var(--gray-600);margin-top:2px}
-.loading-bar{height:3px;background:var(--gray-200);position:relative;overflow:hidden}
-.loading-bar.active::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;background:var(--yellow);animation:loading 1s linear infinite}
-@keyframes loading{to{left:100%}}
-
-.content{padding:28px 32px}
-.section{margin-bottom:40px;opacity:0;transform:translateY(20px);transition:all .5s ease}
+.topbar{background:var(--white);border-bottom:2px solid var(--gray-200);padding:0 28px;position:sticky;top:0;z-index:50}
+.topbar-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px}
+.topbar-title{font-size:15px;font-weight:800}
+.topbar-badge{font-size:10px;font-weight:700;color:#666;background:var(--gray-50);padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200)}
+.topbar-filters{display:flex;align-items:center;gap:8px;padding:0 0 12px;flex-wrap:wrap}
+.topbar-filters label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
+.tf-group{display:flex;align-items:center;gap:6px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--r-sm);padding:4px 10px}
+.tf-select{background:transparent;border:none;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:var(--black);outline:none;cursor:pointer;padding:2px 0}
+.tf-input{background:transparent;border:none;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:var(--black);outline:none;width:90px}
+.tf-sep{color:#ccc;font-weight:300;font-size:16px}
+.period-tag{font-size:11px;font-weight:600;color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.btn-apply{background:var(--yellow);color:var(--black);font-family:'Poppins',sans-serif;font-size:11px;font-weight:800;padding:7px 18px;border:none;border-radius:var(--r-sm);cursor:pointer;letter-spacing:.02em}
+.btn-apply:hover{opacity:.85}
+.btn-reset{background:transparent;color:#999;font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;padding:7px 12px;border:1px solid var(--gray-200);border-radius:var(--r-sm);cursor:pointer}
+.btn-reset:hover{color:var(--black);border-color:#999}
+.loading-bar{height:3px;background:var(--gray-200);overflow:hidden}
+.loading-bar.active::after{content:'';display:block;height:100%;width:40%;background:var(--yellow);animation:ldbar 1s ease-in-out infinite}
+@keyframes ldbar{0%{margin-left:-40%}100%{margin-left:100%}}
+.content{padding:24px 28px}
+.section{margin-bottom:36px;opacity:0;transform:translateY(16px);transition:all .45s ease}
 .section.visible{opacity:1;transform:none}
-.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-600);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#aaa;margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .section-title::after{content:'';flex:1;height:1px;background:var(--gray-200)}
-
-/* KPI CARDS */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-.kpi-card{background:var(--white);border-radius:var(--r-md);padding:20px;border:1px solid var(--gray-200);position:relative;overflow:hidden}
-.kpi-card.accent{border-left:4px solid var(--yellow)}
-.kpi-label{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.kpi-value{font-size:26px;font-weight:800;line-height:1;margin-bottom:4px}
-.kpi-sub{font-size:11px;color:var(--gray-600)}
-.kpi-icon{position:absolute;right:16px;top:16px;width:32px;height:32px;background:var(--gray-50);border-radius:8px;display:flex;align-items:center;justify-content:center}
-
-/* MEDIO CARDS */
-.medio-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--white);border-radius:var(--r-md);padding:18px 20px;border:1px solid var(--gray-200)}
+.kpi-card.accent{border-top:3px solid var(--yellow)}
+.kpi-label{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.kpi-value{font-size:20px;font-weight:800;line-height:1.2;word-break:break-all}
+.kpi-sub{font-size:10px;color:#aaa;margin-top:4px}
+.medio-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .medio-card{background:var(--white);border-radius:var(--r-md);border:1px solid var(--gray-200);overflow:hidden}
-.medio-card-header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100)}
-.medio-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--white);flex-shrink:0}
-.icon-facebook{background:#1877F2}
-.icon-google{background:#EA4335}
-.icon-tiktok{background:#000}
-.icon-programatica{background:#6366F1}
-.medio-name{font-size:13px;font-weight:700;text-transform:capitalize}
-.medio-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.medio-metric{}
-.medio-metric-label{font-size:10px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em}
-.medio-metric-value{font-size:14px;font-weight:700;margin-top:2px}
-.medio-metric-value.yellow{color:#B8860B}
-.medio-footer{padding:10px 16px;background:var(--gray-50);border-top:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center}
-.medio-footer-label{font-size:10px;color:var(--gray-400);font-weight:600}
-.medio-footer-value{font-size:12px;font-weight:700}
-
-/* TABLA MES */
-.table-wrap{background:var(--white);border-radius:var(--r-md);border:1px solid var(--gray-200);overflow:hidden;margin-bottom:24px}
-.table-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)}
+.medio-card-header{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-100)}
+.medio-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:var(--white);flex-shrink:0}
+.icon-facebook{background:#1877F2}.icon-google{background:#EA4335}
+.icon-tiktok{background:#000}.icon-programatica{background:#6366F1}
+.medio-name{font-size:12px;font-weight:700}
+.medio-body{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.m-label{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em}
+.m-value{font-size:13px;font-weight:700;margin-top:1px;word-break:break-all}
+.m-value.yellow{color:#B8860B}
+.medio-footer{padding:9px 14px;background:var(--gray-50);border-top:1px solid var(--gray-100);display:flex;justify-content:space-between}
+.mf-label{font-size:9px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.mf-value{font-size:12px;font-weight:700;margin-top:2px;word-break:break-all}
+.table-wrap{background:var(--white);border-radius:var(--r-md);border:1px solid var(--gray-200);overflow:hidden}
+.table-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)}
 .table-title{font-size:13px;font-weight:700}
-.tab-group{display:flex;gap:4px;background:var(--gray-50);padding:3px;border-radius:var(--r-sm)}
-.tab-btn{font-size:11px;font-weight:600;padding:5px 12px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:var(--gray-600);font-family:'Poppins',sans-serif;transition:all .2s}
-.tab-btn.active{background:var(--white);color:var(--black);box-shadow:0 1px 3px rgba(0,0,0,.1)}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead tr{background:var(--gray-50)}
-th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);border-bottom:2px solid var(--gray-200);white-space:nowrap}
+.tab-group{display:flex;gap:3px;background:var(--gray-50);padding:3px;border-radius:var(--r-sm);border:1px solid var(--gray-200)}
+.tab-btn{font-size:11px;font-weight:700;padding:5px 12px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:#888;font-family:'Poppins',sans-serif;transition:all .15s}
+.tab-btn.active{background:var(--white);color:var(--black);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--gray-50);border-bottom:2px solid var(--gray-200)}
+th{padding:9px 12px;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888;white-space:nowrap}
 th.num{text-align:right}
-td{padding:9px 14px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
-td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+td{padding:8px 12px;border-bottom:1px solid var(--gray-100);font-size:12px}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
 td.bold{font-weight:700}
 tr:hover td{background:#FAFAFA}
-tr.total-row td{background:var(--black);color:var(--white);font-weight:700;border-bottom:none}
+tr.total-row td{background:var(--black);color:var(--white);font-weight:700;border-bottom:none;font-size:12px}
 tr.total-row td.yellow{color:var(--yellow)}
-
-/* PROGRAMAS */
-.prog-controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.prog-search{flex:1;min-width:200px;background:var(--white);border:1px solid var(--gray-200);font-family:'Poppins',sans-serif;font-size:12px;padding:9px 14px;border-radius:var(--r-md);outline:none}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.b-Posgrados{background:#EDE9FE;color:#5B21B6}
+.b-Pregrados{background:#FEF3C7;color:#92400E}
+.b-Branding{background:#F0FDF4;color:#166534}
+.b-General{background:#F1F5F9;color:#475569}
+.b-Especialización{background:#EDE9FE;color:#5B21B6}
+.b-Maestría{background:#FEF3C7;color:#92400E}
+.b-Doctorado{background:#FEE2E2;color:#991B1B}
+.b-Pregrado{background:#DBEAFE;color:#1E40AF}
+.b-Evento{background:#FEF9C3;color:#854D0E}
+.prog-controls{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.prog-search{flex:1;min-width:180px;background:var(--white);border:1px solid var(--gray-200);font-family:'Poppins',sans-serif;font-size:12px;padding:8px 12px;border-radius:var(--r-sm);outline:none}
 .prog-search:focus{border-color:var(--yellow)}
-.prog-filter{background:var(--white);border:1px solid var(--gray-200);font-family:'Poppins',sans-serif;font-size:12px;padding:9px 14px;border-radius:var(--r-md);outline:none;cursor:pointer}
-.prog-filter:focus{border-color:var(--yellow)}
-.badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
-.badge-posgrados{background:#EDE9FE;color:#5B21B6}
-.badge-pregrados{background:#FEF3C7;color:#92400E}
-.badge-branding{background:#F0FDF4;color:#166534}
-.badge-general{background:#F1F5F9;color:#475569}
-.badge-especializacion{background:#EDE9FE;color:#5B21B6}
-.badge-maestria{background:#FEF3C7;color:#92400E}
-.badge-doctorado{background:#FEE2E2;color:#991B1B}
-.badge-pregrado{background:#DBEAFE;color:#1E40AF}
-.sort-btn{cursor:pointer;user-select:none}
-.sort-btn:hover{color:var(--yellow)}
-.prog-count{font-size:11px;color:var(--gray-400);padding:8px 0}
-
-/* LOADER */
-#loader{position:fixed;inset:0;background:rgba(10,10,10,.9);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.loader-logo{font-size:28px;font-weight:900;color:var(--white)}
+.prog-filter{background:var(--white);border:1px solid var(--gray-200);font-family:'Poppins',sans-serif;font-size:12px;padding:8px 12px;border-radius:var(--r-sm);outline:none;cursor:pointer}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--black)}
+th.sort-active{color:var(--black)!important}
+.prog-count{font-size:10px;color:#aaa;padding:6px 0}
+#loader{position:fixed;inset:0;background:rgba(10,10,10,.95);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.loader-logo{font-size:30px;font-weight:900;color:var(--white)}
 .loader-logo span{color:var(--yellow)}
-.loader-text{font-size:13px;color:var(--gray-400)}
-.spinner{width:36px;height:36px;border:3px solid #333;border-top-color:var(--yellow);border-radius:50%;animation:spin .8s linear infinite}
+.loader-sub{font-size:12px;color:#555}
+.spinner{width:32px;height:32px;border:3px solid #222;border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.no-data{padding:32px;text-align:center;color:var(--gray-400);font-size:13px}
 </style>
 </head>
 <body>
-
 <div id="loader">
   <div class="spinner"></div>
   <div class="loader-logo">AD<span>COM</span></div>
-  <div class="loader-text">Cargando datos de Católica...</div>
+  <div class="loader-sub">Cargando datos de Universidad Católica...</div>
 </div>
-
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-adcom">AD<span>COM</span></div>
     <div class="logo-cliente">Universidad Católica</div>
   </div>
-
   <nav class="sidebar-nav">
-    <div class="nav-label">Navegación</div>
-    <div class="nav-item active" onclick="scrollTo('s1')">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+    <div class="nav-label">Secciones</div>
+    <div class="nav-item active" id="nav-s1" onclick="navTo('s1',this)">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>
       Resumen General
     </div>
-    <div class="nav-item" onclick="scrollTo('s2')">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12V4l4 4 4-4 4 4v8"/></svg>
+    <div class="nav-item" id="nav-s2" onclick="navTo('s2',this)">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 13h12M3 13V6m4 7V2m4 11V8"/></svg>
       Inversión Mes a Mes
     </div>
-    <div class="nav-item" onclick="scrollTo('s3')">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 14h14M3 14V7m4 7V3m4 11V9"/></svg>
+    <div class="nav-item" id="nav-s3" onclick="navTo('s3',this)">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 4h12M1 8h8M1 12h5"/></svg>
       Por Programa
     </div>
   </nav>
-
-  <div class="sidebar-filters">
-    <div class="filter-label">Filtros</div>
-    <div class="date-row">
-      <input type="month" id="f-desde" title="Desde">
-      <input type="month" id="f-hasta" title="Hasta">
-    </div>
-    <select class="filter-select" id="f-medio">
-      <option value="">Todos los medios</option>
-      <option value="facebook">Facebook</option>
-      <option value="google">Google</option>
-      <option value="tiktok">TikTok</option>
-      <option value="programatica">Programática</option>
-    </select>
-    <select class="filter-select" id="f-modalidad">
-      <option value="">Todas las modalidades</option>
-      <option value="Pregrados">Pregrados</option>
-      <option value="Posgrados">Posgrados</option>
-      <option value="Branding">Branding</option>
-    </select>
-    <select class="filter-select" id="f-tipo">
-      <option value="">Todos los tipos</option>
-      <option value="Especialización">Especialización</option>
-      <option value="Maestría">Maestría</option>
-      <option value="Doctorado">Doctorado</option>
-      <option value="Pregrados">Pregrados</option>
-    </select>
-    <button class="btn-apply" onclick="applyFilters()">Aplicar filtros</button>
-    <button class="btn-refresh" onclick="loadData()">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6A4 4 0 1 1 6 2M10 2v4H6"/></svg>
+  <div class="sidebar-bottom">
+    <button class="btn-refresh" onclick="refreshData()">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6A4 4 0 1 1 6 2M10 2v4H6"/></svg>
       Actualizar datos
     </button>
     <div class="last-update" id="last-update">—</div>
   </div>
 </aside>
-
-<!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <div>
-      <div class="topbar-title">Dashboard de Pauta — Universidad Católica de Colombia</div>
-      <div class="topbar-sub" id="topbar-range">Cargando datos...</div>
+    <div class="topbar-top">
+      <div>
+        <div class="topbar-title">Dashboard de Pauta — Universidad Católica de Colombia</div>
+        <div style="margin-top:5px"><span class="period-tag" id="period-tag">Cargando...</span></div>
+      </div>
+      <span class="topbar-badge">PAUTA + CRM</span>
     </div>
-    <div style="font-size:11px;font-weight:700;color:var(--gray-400);background:var(--gray-50);padding:6px 14px;border-radius:20px;border:1px solid var(--gray-200)">
-      PAUTA + CRM
+    <div class="topbar-filters">
+      <div class="tf-group">
+        <label>Período</label>
+        <input class="tf-input" type="month" id="f-desde">
+        <span class="tf-sep">→</span>
+        <input class="tf-input" type="month" id="f-hasta">
+      </div>
+      <div class="tf-group">
+        <label>Canal</label>
+        <select class="tf-select" id="f-medio">
+          <option value="">Todos</option>
+          <option value="facebook">Facebook</option>
+          <option value="google">Google</option>
+          <option value="tiktok">TikTok</option>
+          <option value="programatica">Programática</option>
+        </select>
+      </div>
+      <div class="tf-group">
+        <label>Modalidad</label>
+        <select class="tf-select" id="f-modalidad">
+          <option value="">Todas</option>
+          <option value="Pregrados">Pregrados</option>
+          <option value="Posgrados">Posgrados</option>
+          <option value="Branding">Branding</option>
+        </select>
+      </div>
+      <div class="tf-group">
+        <label>Tipo</label>
+        <select class="tf-select" id="f-tipo">
+          <option value="">Todos</option>
+          <option value="Especialización">Especialización</option>
+          <option value="Maestría">Maestría</option>
+          <option value="Doctorado">Doctorado</option>
+          <option value="Pregrados">Pregrados</option>
+        </select>
+      </div>
+      <button class="btn-apply" onclick="applyFilters()">Aplicar</button>
+      <button class="btn-reset" onclick="resetFilters()">Limpiar</button>
     </div>
   </div>
   <div class="loading-bar" id="loading-bar"></div>
-
   <div class="content">
-
-    <!-- S1: RESUMEN GENERAL -->
-    <div class="section" id="s1">
+    <div class="section visible" id="s1">
       <div class="section-title">Resumen General</div>
-
-      <!-- KPIs globales -->
       <div class="kpi-grid" id="kpi-grid"></div>
-
-      <!-- Cards por medio -->
-      <div class="section-title" style="font-size:11px">Performance por Canal</div>
+      <div class="section-title" style="margin-top:8px">Performance por Canal</div>
       <div class="medio-grid" id="medio-grid"></div>
     </div>
-
-    <!-- S2: MES A MES -->
     <div class="section" id="s2">
       <div class="section-title">Inversión Mes a Mes</div>
       <div class="table-wrap">
@@ -241,22 +218,20 @@ tr.total-row td.yellow{color:var(--yellow)}
             <button class="tab-btn" onclick="setMesTab('leads',this)">Leads Pauta</button>
           </div>
         </div>
-        <div id="mes-table"></div>
+        <div class="table-scroll" id="mes-table"></div>
       </div>
     </div>
-
-    <!-- S3: POR PROGRAMA -->
     <div class="section" id="s3">
       <div class="section-title">Detalle por Programa</div>
       <div class="prog-controls">
-        <input class="prog-search" type="text" id="prog-search" placeholder="🔍  Buscar programa..." oninput="filterPrograms()">
-        <select class="prog-filter" id="pf-modalidad" onchange="filterPrograms()">
+        <input class="prog-search" type="text" id="prog-search" placeholder="🔍 Buscar programa..." oninput="renderProgTable()">
+        <select class="prog-filter" id="pf-modalidad" onchange="renderProgTable()">
           <option value="">Todas las modalidades</option>
           <option value="Pregrados">Pregrados</option>
           <option value="Posgrados">Posgrados</option>
           <option value="Branding">Branding</option>
         </select>
-        <select class="prog-filter" id="pf-tipo" onchange="filterPrograms()">
+        <select class="prog-filter" id="pf-tipo" onchange="renderProgTable()">
           <option value="">Todos los tipos</option>
           <option value="Especialización">Especialización</option>
           <option value="Maestría">Maestría</option>
@@ -265,232 +240,206 @@ tr.total-row td.yellow{color:var(--yellow)}
         </select>
       </div>
       <div class="prog-count" id="prog-count"></div>
-      <div class="table-wrap">
-        <div id="prog-table"></div>
-      </div>
+      <div class="table-wrap"><div class="table-scroll" id="prog-table"></div></div>
     </div>
-
   </div>
 </main>
-
 <script>
-// ── DATA EMBEBIDA (snapshot) ──────────────────────────────────────────────────
 const SNAPSHOT = {"urls": {"resumen_general": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=1551290449&single=true&output=csv", "matriculas": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=955481695&single=true&output=csv", "leads": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=17439818&single=true&output=csv"}, "kpis": {"inv_total": 1214709708.32781, "leads_pauta": 55844.33105, "leads_crm": 7479, "matriculas": 7479}, "cards_medio": [{"medio": "facebook", "inv": 677377764.0, "leads_pauta": 27974.0, "cpl_pauta": 24214.547937370415, "leads_crm": 5153, "matriculas": 5153, "cpl_crm": 131453.0882980788, "conv_pct": 100.0}, {"medio": "google", "inv": 447285722.72401, "leads_pauta": 16545.33105, "cpl_pauta": 27033.9542540619, "leads_crm": 2325, "matriculas": 2325, "cpl_crm": 192380.9560103269, "conv_pct": 100.0}, {"medio": "tiktok", "inv": 79703718.63, "leads_pauta": 11317.0, "cpl_pauta": 7042.831017937616, "leads_crm": 0, "matriculas": 0, "cpl_crm": 0, "conv_pct": 0}, {"medio": "programatica", "inv": 10342502.9738, "leads_pauta": 8.0, "cpl_pauta": 1292812.871725, "leads_crm": 1, "matriculas": 1, "cpl_crm": 10342502.9738, "conv_pct": 100.0}], "mes_data": [{"mes": "2025-01", "facebook": 86321218.0, "google": 28861811.26661, "tiktok": 13794523.15, "programatica": 0.0, "total": 128977552.41661}, {"mes": "2025-02", "facebook": 45871852.0, "google": 21414949.28959, "tiktok": 11894790.24, "programatica": 0.0, "total": 79181591.52959}, {"mes": "2025-03", "facebook": 6927410.0, "google": 16496019.26879, "tiktok": 2664804.84, "programatica": 0.0, "total": 26088234.10879}, {"mes": "2025-04", "facebook": 5418206.0, "google": 7252033.64214, "tiktok": 1887384.96, "programatica": 0.0, "total": 14557624.602140002}, {"mes": "2025-05", "facebook": 14608360.0, "google": 29274404.61605, "tiktok": 9454258.49, "programatica": 0.0, "total": 53337023.10605001}, {"mes": "2025-06", "facebook": 51046607.0, "google": 64878789.94722, "tiktok": 10855978.91, "programatica": 0.0, "total": 126781375.85722}, {"mes": "2025-07", "facebook": 60935619.0, "google": 27436423.90047, "tiktok": 8066806.32, "programatica": 0.0, "total": 96438849.22047001}, {"mes": "2025-08", "facebook": 10822584.0, "google": 7308133.74469, "tiktok": 620959.55, "programatica": 0.0, "total": 18751677.29469}, {"mes": "2025-09", "facebook": 9010897.0, "google": 5686630.69111, "tiktok": 599583.99, "programatica": 0.0, "total": 15297111.68111}, {"mes": "2025-10", "facebook": 32876245.0, "google": 27359429.812739998, "tiktok": 6022203.63, "programatica": 0.0, "total": 66257878.44274}, {"mes": "2025-11", "facebook": 78674240.0, "google": 31139577.21751, "tiktok": 10459924.11, "programatica": 0.0, "total": 120273741.32751}, {"mes": "2025-12", "facebook": 70020091.0, "google": 25373464.22093, "tiktok": 2369291.63, "programatica": 0.0, "total": 97762846.85092999}, {"mes": "2026-01", "facebook": 97782204.0, "google": 56865798.12398, "tiktok": 1013208.8099999999, "programatica": 0.0, "total": 155661210.93398}, {"mes": "2026-02", "facebook": 33580824.0, "google": 20067315.97818, "tiktok": 0.0, "programatica": 0.0, "total": 53648139.97818}, {"mes": "2026-03", "facebook": 12292571.0, "google": 7770847.67436, "tiktok": 0.0, "programatica": 0.0, "total": 20063418.67436}, {"mes": "2026-04", "facebook": 22374628.0, "google": 24738975.88206, "tiktok": 0.0, "programatica": 4327421.506, "total": 51441025.388059996}, {"mes": "2026-05", "facebook": 38814208.0, "google": 45361117.44758, "tiktok": 0.0, "programatica": 6015081.4678, "total": 90190406.91538002}], "prog_data": [{"Programa": "Administracion de Empresas e Inteligencia de Negocios", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 15247756.0, "inv_google": 24700783.87433, "inv_programatica": 0.0, "inv_tiktok": 6796379.97, "inv_total": 46744919.84433, "leads_pauta": 1489.87903, "leads_crm": 173.0, "crm_fb": 77.0, "crm_go": 96.0, "matriculas": 173.0, "cpl_pauta": 31374.976694805882, "cpl_crm": 270201.84881115606, "conv_pct": 100.0}, {"Programa": "Arquitectura", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 19762860.0, "inv_google": 23850358.01855, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 43613218.01855, "leads_pauta": 1883.86356, "leads_crm": 242.0, "crm_fb": 133.0, "crm_go": 109.0, "matriculas": 242.0, "cpl_pauta": 23150.94306434273, "cpl_crm": 180219.909167562, "conv_pct": 100.0}, {"Programa": "Bootcamp Ingenieria de datos e IA", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 69471.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 69471.0, "leads_pauta": 0.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 0.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Cena VIP", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 648863.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 648863.0, "leads_pauta": 155.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 4186.212903225806, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Cena VIP General", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 463315.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 463315.0, "leads_pauta": 0.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 0.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Cena VIP Programas", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 1647893.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 1647893.0, "leads_pauta": 0.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 0.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "De una a la U", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 589672.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 589672.0, "leads_pauta": 1.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 589672.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Derecho", "Modalidad": "Branding", "Tipo programa": "Pregrados", "inv_facebook": 0.0, "inv_google": 8149252.06774, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 47072208.01145, "leads_pauta": 2000.44109, "leads_crm": 277.0, "crm_fb": 164.0, "crm_go": 113.0, "matriculas": 277.0, "cpl_pauta": 23530.914380213017, "cpl_crm": 169935.76899440432, "conv_pct": 100.0}, {"Programa": "Derecho", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 17246430.0, "inv_google": 18007579.51371, "inv_programatica": 0.0, "inv_tiktok": 3668946.43, "inv_total": 47072208.01145, "leads_pauta": 2000.44109, "leads_crm": 277.0, "crm_fb": 164.0, "crm_go": 113.0, "matriculas": 277.0, "cpl_pauta": 23530.914380213017, "cpl_crm": 169935.76899440432, "conv_pct": 100.0}, {"Programa": "Doctorado en Derecho", "Modalidad": "Posgrados", "Tipo programa": "Doctorado", "inv_facebook": 20773619.0, "inv_google": 7108515.95567, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 27882134.95567, "leads_pauta": 1030.97185, "leads_crm": 192.0, "crm_fb": 139.0, "crm_go": 53.0, "matriculas": 192.0, "cpl_pauta": 27044.516254900656, "cpl_crm": 145219.45289411457, "conv_pct": 100.0}, {"Programa": "Doctorado en Psicología", "Modalidad": "Posgrados", "Tipo programa": "Doctorado", "inv_facebook": 21585091.0, "inv_google": 7966130.9733, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 29551221.9733, "leads_pauta": 746.66281, "leads_crm": 101.0, "crm_fb": 65.0, "crm_go": 36.0, "matriculas": 101.0, "cpl_pauta": 39577.73385458959, "cpl_crm": 292586.35617128713, "conv_pct": 100.0}, {"Programa": "Economía", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 18872582.0, "inv_google": 18956844.87596, "inv_programatica": 0.0, "inv_tiktok": 5822423.91, "inv_total": 43651850.78596, "leads_pauta": 1261.09421, "leads_crm": 133.0, "crm_fb": 67.0, "crm_go": 66.0, "matriculas": 133.0, "cpl_pauta": 34614.26627750515, "cpl_crm": 328209.40440571425, "conv_pct": 100.0}, {"Programa": "Especializacion en Compliance y Derecho de los Negocios", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 9795735.0, "inv_google": 6799855.1058600005, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 16595590.10586, "leads_pauta": 483.12007, "leads_crm": 210.0, "crm_fb": 104.0, "crm_go": 106.0, "matriculas": 210.0, "cpl_pauta": 34350.86045144016, "cpl_crm": 79026.61955171429, "conv_pct": 100.0}, {"Programa": "Especializacion en Inteligencia Artificial y Derecho Digital", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 5103770.0, "inv_google": 9579280.88096, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 14683050.88096, "leads_pauta": 1410.70829, "leads_crm": 511.0, "crm_fb": 296.0, "crm_go": 215.0, "matriculas": 511.0, "cpl_pauta": 10408.282835681075, "cpl_crm": 28733.954757260275, "conv_pct": 100.0}, {"Programa": "Especialización en Administración Financiera", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 21433949.0, "inv_google": 4269887.31098, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 25703836.31098, "leads_pauta": 853.7404, "leads_crm": 166.0, "crm_fb": 131.0, "crm_go": 35.0, "matriculas": 166.0, "cpl_pauta": 30107.321043937944, "cpl_crm": 154842.38741554218, "conv_pct": 100.0}, {"Programa": "Especialización en Alta Gerencia Estratégica", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 29141311.0, "inv_google": 26356413.59275, "inv_programatica": 0.0, "inv_tiktok": 143471.29, "inv_total": 55641195.88275, "leads_pauta": 2755.32353, "leads_crm": 401.0, "crm_fb": 322.0, "crm_go": 79.0, "matriculas": 401.0, "cpl_pauta": 20194.069871261177, "cpl_crm": 138756.0994582294, "conv_pct": 100.0}, {"Programa": "Especialización en Analítica de Datos", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 26569485.0, "inv_google": 28708357.0207, "inv_programatica": 0.0, "inv_tiktok": 2242725.0100000002, "inv_total": 57520567.0307, "leads_pauta": 3301.86695, "leads_crm": 545.0, "crm_fb": 414.0, "crm_go": 131.0, "matriculas": 545.0, "cpl_pauta": 17420.61927440777, "cpl_crm": 105542.32482697247, "conv_pct": 100.0}, {"Programa": "Especialización en Contrato Estatal de Infraestructura Pública", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 16276189.0, "inv_google": 5176045.4110199995, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 21452234.41102, "leads_pauta": 673.7373, "leads_crm": 114.0, "crm_fb": 101.0, "crm_go": 13.0, "matriculas": 114.0, "cpl_pauta": 31840.65126128537, "cpl_crm": 188177.49483350877, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho Constitucional y Administrativo", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 20122483.0, "inv_google": 10596122.45317, "inv_programatica": 0.0, "inv_tiktok": 788695.91, "inv_total": 31507301.36317, "leads_pauta": 1523.86738, "leads_crm": 263.0, "crm_fb": 201.0, "crm_go": 62.0, "matriculas": 263.0, "cpl_pauta": 20675.88149512722, "cpl_crm": 119799.62495501901, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho Penal y Ciencias Forenses", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 16354398.0, "inv_google": 6815286.81487, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 23169684.81487, "leads_pauta": 625.22077, "leads_crm": 129.0, "crm_fb": 72.0, "crm_go": 57.0, "matriculas": 129.0, "cpl_pauta": 37058.40548910427, "cpl_crm": 179609.9598051938, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho Probatorio", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 17236456.0, "inv_google": 7202442.72194, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 24438898.72194, "leads_pauta": 1131.33366, "leads_crm": 186.0, "crm_fb": 154.0, "crm_go": 32.0, "matriculas": 186.0, "cpl_pauta": 21601.84884973722, "cpl_crm": 131391.92861258064, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho Procesal y Litigio Estratégico", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 14803965.0, "inv_google": 10356503.35186, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 25160468.35186, "leads_pauta": 805.32559, "leads_crm": 188.0, "crm_fb": 149.0, "crm_go": 39.0, "matriculas": 188.0, "cpl_pauta": 31242.603816749448, "cpl_crm": 133832.27846734042, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho Tributario y Aduanero", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 16255591.0, "inv_google": 5314695.37466, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 21570286.37466, "leads_pauta": 982.56575, "leads_crm": 216.0, "crm_fb": 166.0, "crm_go": 50.0, "matriculas": 216.0, "cpl_pauta": 21953.0208280311, "cpl_crm": 99862.43691972223, "conv_pct": 100.0}, {"Programa": "Especialización en Derecho del Trabajo y Seguridad Social", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 19931434.0, "inv_google": 4543788.33658, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 24475222.33658, "leads_pauta": 844.70061, "leads_crm": 153.0, "crm_fb": 106.0, "crm_go": 47.0, "matriculas": 153.0, "cpl_pauta": 28975.026236313483, "cpl_crm": 159968.77344169936, "conv_pct": 100.0}, {"Programa": "Especialización en Formulación, Evaluación Social y Económica de Proyectos", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 25108590.0, "inv_google": 2083320.65916, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 27191910.65916, "leads_pauta": 688.63961, "leads_crm": 49.0, "crm_fb": 37.0, "crm_go": 12.0, "matriculas": 49.0, "cpl_pauta": 39486.41679086685, "cpl_crm": 554936.9522277551, "conv_pct": 100.0}, {"Programa": "Especialización en Gerencia de Obras", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 16652015.0, "inv_google": 4132241.86192, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 20784256.86192, "leads_pauta": 818.34675, "leads_crm": 153.0, "crm_fb": 115.0, "crm_go": 38.0, "matriculas": 153.0, "cpl_pauta": 25397.86082356898, "cpl_crm": 135844.8160909804, "conv_pct": 100.0}, {"Programa": "Especialización en Gobierno y Gestión del Desarrollo Regional y Municipal", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 18624492.0, "inv_google": 6965113.24696, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 25589605.24696, "leads_pauta": 702.00027, "leads_crm": 176.0, "crm_fb": 97.0, "crm_go": 79.0, "matriculas": 176.0, "cpl_pauta": 36452.41510656399, "cpl_crm": 145395.48435772725, "conv_pct": 100.0}, {"Programa": "Especialización en Ingeniería de Pavimentos", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 17477681.0, "inv_google": 8359297.20959, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 25836978.20959, "leads_pauta": 467.85798, "leads_crm": 113.0, "crm_fb": 82.0, "crm_go": 31.0, "matriculas": 113.0, "cpl_pauta": 55223.976749504196, "cpl_crm": 228645.8248636283, "conv_pct": 100.0}, {"Programa": "Especialización en Psicología Clinica", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 16679320.0, "inv_google": 14397360.57573, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 31076680.57573, "leads_pauta": 1716.23003, "leads_crm": 419.0, "crm_fb": 319.0, "crm_go": 100.0, "matriculas": 419.0, "cpl_pauta": 18107.526399436094, "cpl_crm": 74168.6887248926, "conv_pct": 100.0}, {"Programa": "Especialización en Recursos Hídricos", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 14751173.0, "inv_google": 7274764.45085, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 22025937.45085, "leads_pauta": 499.24064, "leads_crm": 90.0, "crm_fb": 52.0, "crm_go": 38.0, "matriculas": 90.0, "cpl_pauta": 44118.87912580594, "cpl_crm": 244732.63834277776, "conv_pct": 100.0}, {"Programa": "Especialización en Seguridad de la Información", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 14652560.0, "inv_google": 9899506.6213, "inv_programatica": 0.0, "inv_tiktok": 973749.58, "inv_total": 25525816.2013, "leads_pauta": 688.61785, "leads_crm": 82.0, "crm_fb": 39.0, "crm_go": 43.0, "matriculas": 82.0, "cpl_pauta": 37068.18840275488, "cpl_crm": 311290.44147926825, "conv_pct": 100.0}, {"Programa": "Especialización en Sistema Penal Acusatorio", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 14059962.0, "inv_google": 3892357.4667, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 17952319.4667, "leads_pauta": 746.00838, "leads_crm": 181.0, "crm_fb": 161.0, "crm_go": 20.0, "matriculas": 181.0, "cpl_pauta": 24064.501080671507, "cpl_crm": 99184.08545138121, "conv_pct": 100.0}, {"Programa": "Especialización en psicología Educativa", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 15715590.0, "inv_google": 1663319.96357, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 17378909.96357, "leads_pauta": 647.49728, "leads_crm": 100.0, "crm_fb": 100.0, "crm_go": 0.0, "matriculas": 100.0, "cpl_pauta": 26840.128137017036, "cpl_crm": 173789.0996357, "conv_pct": 100.0}, {"Programa": "Especialización en psicología Jurídica y Criminológica", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 15153676.0, "inv_google": 7566782.2348, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 22720458.2348, "leads_pauta": 688.8789, "leads_crm": 116.0, "crm_fb": 83.0, "crm_go": 33.0, "matriculas": 116.0, "cpl_pauta": 32981.78857677307, "cpl_crm": 195866.01926551724, "conv_pct": 100.0}, {"Programa": "Especialización en psicología de las Organizaciones", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 14237761.0, "inv_google": 7781665.7504, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 22019426.7504, "leads_pauta": 477.44837, "leads_crm": 96.0, "crm_fb": 43.0, "crm_go": 53.0, "matriculas": 96.0, "cpl_pauta": 46118.96936709617, "cpl_crm": 229369.02865, "conv_pct": 100.0}, {"Programa": "Especializaciónes en Derecho", "Modalidad": "Posgrados", "Tipo programa": "Especialización", "inv_facebook": 0.0, "inv_google": 3031120.79662, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 3031120.79662, "leads_pauta": 258.868, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 11709.13668981875, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Feria del libro", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 199959.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 199959.0, "leads_pauta": 0.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 0.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Haz Match", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 1921415.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 1013208.8099999999, "inv_total": 2934623.81, "leads_pauta": 60.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 48910.39683333333, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Ingeniería Civil", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 20662614.0, "inv_google": 14746414.29342, "inv_programatica": 0.0, "inv_tiktok": 6007776.35, "inv_total": 41416804.64342, "leads_pauta": 1411.60508, "leads_crm": 262.0, "crm_fb": 205.0, "crm_go": 57.0, "matriculas": 262.0, "cpl_pauta": 29340.22073894775, "cpl_crm": 158079.4070359542, "conv_pct": 100.0}, {"Programa": "Ingeniería Industrial", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 21434611.0, "inv_google": 21619968.84818, "inv_programatica": 0.0, "inv_tiktok": 5242484.69, "inv_total": 48297064.53818, "leads_pauta": 1763.28336, "leads_crm": 205.0, "crm_fb": 126.0, "crm_go": 79.0, "matriculas": 205.0, "cpl_pauta": 27390.415876311567, "cpl_crm": 235595.43677160976, "conv_pct": 100.0}, {"Programa": "Ingeniería de Datos e Inteligencia Artificial", "Modalidad": "Branding", "Tipo programa": "Pregrados", "inv_facebook": 0.0, "inv_google": 0.0, "inv_programatica": 10342502.9738, "inv_tiktok": 0.0, "inv_total": 14973861.3697, "leads_pauta": 338.99281, "leads_crm": 305.0, "crm_fb": 184.0, "crm_go": 120.0, "matriculas": 305.0, "cpl_pauta": 44171.61936177938, "cpl_crm": 49094.62744163934, "conv_pct": 100.0}, {"Programa": "Ingeniería de Datos e Inteligencia Artificial", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 2544413.0, "inv_google": 2086945.3959, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 14973861.3697, "leads_pauta": 338.99281, "leads_crm": 305.0, "crm_fb": 184.0, "crm_go": 120.0, "matriculas": 305.0, "cpl_pauta": 44171.61936177938, "cpl_crm": 49094.62744163934, "conv_pct": 100.0}, {"Programa": "Ingeniería de Sistemas y Computación", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 19407715.0, "inv_google": 22161943.97478, "inv_programatica": 0.0, "inv_tiktok": 5602354.99, "inv_total": 47172013.96478, "leads_pauta": 1676.96426, "leads_crm": 183.0, "crm_fb": 115.0, "crm_go": 68.0, "matriculas": 183.0, "cpl_pauta": 28129.40924857874, "cpl_crm": 257770.56811355194, "conv_pct": 100.0}, {"Programa": "Maestría en Derecho y Ciencias Políticas", "Modalidad": "Posgrados", "Tipo programa": "Maestría", "inv_facebook": 15144027.0, "inv_google": 7466479.32721, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 22610506.32721, "leads_pauta": 1109.02095, "leads_crm": 304.0, "crm_fb": 196.0, "crm_go": 108.0, "matriculas": 304.0, "cpl_pauta": 20387.80811779074, "cpl_crm": 74376.6655500329, "conv_pct": 100.0}, {"Programa": "Maestría en Diseño Sostenible", "Modalidad": "Posgrados", "Tipo programa": "Maestría", "inv_facebook": 16856429.0, "inv_google": 9949057.40271, "inv_programatica": 0.0, "inv_tiktok": 274960.41, "inv_total": 27080446.81271, "leads_pauta": 1082.23268, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 25022.758333919464, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Psicología", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 18641343.0, "inv_google": 19511749.66256, "inv_programatica": 0.0, "inv_tiktok": 3417322.7600000002, "inv_total": 41570415.42256, "leads_pauta": 1797.13852, "leads_crm": 445.0, "crm_fb": 338.0, "crm_go": 107.0, "matriculas": 445.0, "cpl_pauta": 23131.44755394815, "cpl_crm": 93416.66387092134, "conv_pct": 100.0}, {"Programa": "Quiz Vocacional", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 6864125.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 6864125.0, "leads_pauta": 410.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 16741.768292682926, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Salud Mental", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 441923.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 441923.0, "leads_pauta": 215.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 2055.4558139534884, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Webinar IA", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 693404.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 693404.0, "leads_pauta": 2.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 346702.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Webinar Psicología", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 658394.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 658394.0, "leads_pauta": 0.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 0.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "Webinar Seguridad y el Impacto Geopolítico", "Modalidad": "Branding", "Tipo programa": "Evento", "inv_facebook": 529263.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 0.0, "inv_total": 529263.0, "leads_pauta": 1.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 529263.0, "cpl_crm": 0.0, "conv_pct": 0.0}, {"Programa": "arquitectura", "Modalidad": "Pregrados", "Tipo programa": "Pregrados", "inv_facebook": 0.0, "inv_google": 0.0, "inv_programatica": 0.0, "inv_tiktok": 3448838.51, "inv_total": 3448838.51, "leads_pauta": 60.0, "leads_crm": 0.0, "crm_fb": 0.0, "crm_go": 0.0, "matriculas": 0.0, "cpl_pauta": 57480.64183333333, "cpl_crm": 0.0, "conv_pct": 0.0}], "filtros": {"modalidades": ["Branding", "Posgrados", "Pregrados"], "tipos": ["Doctorado", "Especialización", "Evento", "Maestría", "Pregrados"], "programas": ["Administracion de Empresas e Inteligencia de Negocios", "Arquitectura", "Bootcamp Ingenieria de datos e IA", "Cena VIP", "Cena VIP General", "Cena VIP Programas", "De una a la U", "Derecho", "Doctorado en Derecho", "Doctorado en Psicología", "Economía", "Especializacion en Compliance y Derecho de los Negocios", "Especializacion en Inteligencia Artificial y Derecho Digital", "Especialización en Administración Financiera", "Especialización en Alta Gerencia Estratégica", "Especialización en Analítica de Datos", "Especialización en Contrato Estatal de Infraestructura Pública", "Especialización en Derecho Constitucional y Administrativo", "Especialización en Derecho Penal y Ciencias Forenses", "Especialización en Derecho Probatorio", "Especialización en Derecho Procesal y Litigio Estratégico", "Especialización en Derecho Tributario y Aduanero", "Especialización en Derecho del Trabajo y Seguridad Social", "Especialización en Formulación, Evaluación Social y Económica de Proyectos", "Especialización en Gerencia de Obras", "Especialización en Gobierno y Gestión del Desarrollo Regional y Municipal", "Especialización en Ingeniería de Pavimentos", "Especialización en Psicología Clinica", "Especialización en Recursos Hídricos", "Especialización en Seguridad de la Información", "Especialización en Sistema Penal Acusatorio", "Especialización en psicología Educativa", "Especialización en psicología Jurídica y Criminológica", "Especialización en psicología de las Organizaciones", "Especializaciónes en Derecho", "Feria del libro", "Haz Match", "Ingeniería Civil", "Ingeniería Industrial", "Ingeniería de Datos e Inteligencia Artificial", "Ingeniería de Sistemas y Computación", "Maestría en Derecho y Ciencias Políticas", "Maestría en Diseño Sostenible", "Psicología", "Quiz Vocacional", "Salud Mental", "Webinar IA", "Webinar Psicología", "Webinar Seguridad y el Impacto Geopolítico", "arquitectura"]}};
+const URL_RG    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=1551290449&single=true&output=csv";
+const URL_LEADS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=17439818&single=true&output=csv";
+const URL_MAT   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=955481695&single=true&output=csv";
 
-// ── URLs CSV LIVE ─────────────────────────────────────────────────────────────
-const URLS = {
-  rg:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=1551290449&single=true&output=csv",
-  leads: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=17439818&single=true&output=csv",
-  mat:   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmojuVEx-wdQgXFviBjcHM28noub3A-9e9Vf3FzhxvfBZdg21vKna6LUuh3QX1ckfDNPEmqlFRKbtk/pub?gid=955481695&single=true&output=csv"
-};
+let RAW_RG=[], RAW_LEADS=[], RAW_MAT=[];
+let mesTab='inv', progSortCol='inv_total', progSortDir=-1;
+const $=id=>document.getElementById(id);
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let state = {
-  rg:[],leads:[],mat:[],
-  mesTab:'inv',
-  progSort:{col:'inv_total',dir:-1},
-  filters:{desde:'',hasta:'',medio:'',modalidad:'',tipo:''}
-};
-
-// ── FORMAT ────────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const fmt = n => {
-  if(!n||isNaN(n)) return '—';
-  if(n>=1e9) return '$'+( n/1e9).toFixed(1)+'B';
-  if(n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
-  if(n>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+function fmtCOP(n){
+  if(!n||isNaN(n)||n===0) return '—';
   return '$'+Math.round(n).toLocaleString('es-CO');
-};
-const fmtN = n => !n||isNaN(n)?'—':Math.round(n).toLocaleString('es-CO');
-const fmtP = n => !n||isNaN(n)?'—':n.toFixed(1)+'%';
+}
+function fmtN(n){
+  if(!n||isNaN(n)||n===0) return '—';
+  return Math.round(n).toLocaleString('es-CO');
+}
+function fmtP(n){
+  if(!n||isNaN(n)) return '—';
+  return n.toFixed(1)+'%';
+}
 
-// ── LOAD DATA ─────────────────────────────────────────────────────────────────
-function loadData(){
+function refreshData(){
   showLoading(true);
   let done=0;
-  const check=()=>{ if(++done===3){ processData(); showLoading(false); } };
-
-  // Intentar cargar live; si falla usar snapshot
-  parseCsv(URLS.rg, rows=>{
-    if(rows.length>1){ state.rg=rows; check(); }
-    else{ useSnapshot(); }
-  }, ()=>{ useSnapshot(); check(); });
-
-  parseCsv(URLS.leads, rows=>{ state.leads=rows.length>1?rows:SNAPSHOT.prog_data; check(); },
-    ()=>{ check(); });
-  parseCsv(URLS.mat,   rows=>{ state.mat=rows.length>1?rows:[];   check(); },
-    ()=>{ check(); });
+  const check=()=>{if(++done===3){processAndRender();showLoading(false);}};
+  Papa.parse(URL_RG,{download:true,header:true,skipEmptyLines:true,
+    complete:r=>{if(r.data.length>1)RAW_RG=r.data;check();},error:()=>check()});
+  Papa.parse(URL_LEADS,{download:true,header:true,skipEmptyLines:true,
+    complete:r=>{if(r.data.length>1)RAW_LEADS=r.data;check();},error:()=>check()});
+  Papa.parse(URL_MAT,{download:true,header:true,skipEmptyLines:true,
+    complete:r=>{if(r.data.length>1)RAW_MAT=r.data;check();},error:()=>check()});
 }
 
-function useSnapshot(){
-  // Usar data embebida
-  state.rg    = null; // señal para usar snapshot
-  state.cards = SNAPSHOT.cards_medio;
-  state.mes   = SNAPSHOT.mes_data;
-  state.progs = SNAPSHOT.prog_data;
-  state.kpis  = SNAPSHOT.kpis;
-  renderAll();
-  showLoading(false);
-}
+function processAndRender(){
+  const fDesde=$('f-desde')?.value||'';
+  const fHasta=$('f-hasta')?.value||'';
+  const fMedio=$('f-medio')?.value||'';
 
-function parseCsv(url, onSuccess, onError){
-  Papa.parse(url, {
-    download:true, header:true, skipEmptyLines:true,
-    complete: r => onSuccess(r.data),
-    error: onError
-  });
-}
+  if(!RAW_RG.length){renderFromSnapshot();return;}
 
-// ── PROCESS DATA ──────────────────────────────────────────────────────────────
-function processData(){
-  const rg = state.rg;
-  if(!rg||!rg.length){ renderAll(); return; }
+  const rgRows=RAW_RG.map(r=>({
+    mes:(r['Campaña ID']||'').substring(0,7),
+    medio:(r['Medio']||'').toLowerCase().trim(),
+    modal:r['Modalidad']||'',
+    tipo:r['Tipo programa']||'',
+    prog:r['Programa']||'',
+    inv:parseFloat(r['Ad Set Name'])||0,
+    leadsP:parseFloat(r['Ad Name'])||0
+  }));
 
-  // Parse RG
-  const rows = rg.map(r=>{
-    const mes = (r['Campaña ID']||'').substring(0,7);
-    return {
-      mes, medio:(r['Medio']||'').toLowerCase(),
-      modalidad:r['Modalidad']||'', tipo:r['Tipo programa']||'',
-      programa:r['Programa']||'',
-      inv: parseFloat(r['Ad Set Name'])||0,
-      leads_p: parseFloat(r['Ad Name'])||0
-    };
-  });
-
-  // Apply date filter
-  const {desde,hasta} = state.filters;
-  const filtered = rows.filter(r=>{
-    if(desde && r.mes < desde) return false;
-    if(hasta && r.mes > hasta) return false;
+  const filtered=rgRows.filter(r=>{
+    if(fDesde&&r.mes<fDesde) return false;
+    if(fHasta&&r.mes>fHasta) return false;
+    if(fMedio&&r.medio!==fMedio) return false;
     return true;
   });
 
-  // KPIs globales
-  const inv_total   = filtered.reduce((a,r)=>a+r.inv,0);
-  const leads_pauta = filtered.reduce((a,r)=>a+r.leads_p,0);
-  const leads_crm   = state.leads.length;
-  const matriculas  = state.mat.length;
-  state.kpis = { inv_total, leads_pauta, leads_crm, matriculas,
-    cpl_pauta: leads_pauta?inv_total/leads_pauta:0,
-    cpl_crm:   leads_crm?inv_total/leads_crm:0,
-    conv_pct:  leads_crm?matriculas/leads_crm*100:0 };
+  const filtLeads=RAW_LEADS.filter(r=>!fMedio||(r['Medio']||'').toLowerCase()===fMedio);
+  const filtMat=RAW_MAT.filter(r=>!fMedio||(r['Medio']||'').toLowerCase()===fMedio);
 
-  // Cards por medio
-  const medios = ['facebook','google','tiktok','programatica'];
-  state.cards = medios.map(m=>{
-    const rows_m  = filtered.filter(r=>r.medio===m);
-    const inv     = rows_m.reduce((a,r)=>a+r.inv,0);
-    const lp      = rows_m.reduce((a,r)=>a+r.leads_p,0);
-    const lc      = state.leads.filter(r=>(r['Medio']||'').toLowerCase()===m).length;
-    const mt      = state.mat.filter(r=>(r['Medio']||'').toLowerCase()===m).length;
-    return { medio:m, inv, leads_pauta:lp, cpl_pauta:lp?inv/lp:0,
-              leads_crm:lc, matriculas:mt, cpl_crm:lc?inv/lc:0,
-              conv_pct:lc?mt/lc*100:0 };
+  const inv_total=filtered.reduce((a,r)=>a+r.inv,0);
+  const leads_pauta=filtered.reduce((a,r)=>a+r.leadsP,0);
+  const leads_crm=filtLeads.length;
+  const matriculas=filtMat.length;
+
+  const MEDIOS=['facebook','google','tiktok','programatica'];
+  const cards=MEDIOS.map(m=>{
+    const rowsM=filtered.filter(r=>r.medio===m);
+    const inv=rowsM.reduce((a,r)=>a+r.inv,0);
+    const lp=rowsM.reduce((a,r)=>a+r.leadsP,0);
+    const lc=filtLeads.filter(r=>(r['Medio']||'').toLowerCase()===m).length;
+    const mt=filtMat.filter(r=>(r['Medio']||'').toLowerCase()===m).length;
+    return {medio:m,inv,leads_pauta:lp,leads_crm:lc,matriculas:mt,
+            cpl_pauta:lp?inv/lp:0,cpl_crm:lc?inv/lc:0,conv_pct:lc?mt/lc*100:0};
   });
 
-  // Mes a mes
   const mesMap={};
   filtered.forEach(r=>{
-    if(!mesMap[r.mes]) mesMap[r.mes]={};
-    if(!mesMap[r.mes][r.medio]) mesMap[r.mes][r.medio]={inv:0,leads:0};
-    mesMap[r.mes][r.medio].inv   += r.inv;
-    mesMap[r.mes][r.medio].leads += r.leads_p;
+    if(!mesMap[r.mes])mesMap[r.mes]={};
+    if(!mesMap[r.mes][r.medio])mesMap[r.mes][r.medio]={inv:0,leads:0};
+    mesMap[r.mes][r.medio].inv+=r.inv;
+    mesMap[r.mes][r.medio].leads+=r.leadsP;
   });
-  state.mes = Object.keys(mesMap).sort().map(mes=>{
-    const row={mes};
-    let tot_inv=0, tot_leads=0;
-    medios.forEach(m=>{
-      row['inv_'+m]    = mesMap[mes][m]?.inv   || 0;
-      row['leads_'+m]  = mesMap[mes][m]?.leads || 0;
-      tot_inv   += row['inv_'+m];
-      tot_leads += row['leads_'+m];
+  const mesData=Object.keys(mesMap).sort().map(mes=>{
+    const row={mes};let totInv=0,totLeads=0;
+    MEDIOS.forEach(m=>{
+      row['inv_'+m]=mesMap[mes][m]?.inv||0;
+      row['leads_'+m]=mesMap[mes][m]?.leads||0;
+      totInv+=row['inv_'+m];totLeads+=row['leads_'+m];
     });
-    row.inv_total=tot_inv; row.leads_total=tot_leads;
-    return row;
+    row.inv_total=totInv;row.leads_total=totLeads;return row;
   });
 
-  // Por programa
   const progMap={};
   filtered.forEach(r=>{
-    if(!r.programa) return;
-    if(!progMap[r.programa]) progMap[r.programa]={
-      Programa:r.programa, Modalidad:r.modalidad, 'Tipo programa':r.tipo,
-      inv_total:0, inv_facebook:0, inv_google:0, inv_tiktok:0, inv_programatica:0,
-      leads_pauta:0
+    if(!r.prog||r.prog.startsWith('Campaña'))return;
+    if(!progMap[r.prog])progMap[r.prog]={
+      Programa:r.prog,Modalidad:r.modal,Tipo:r.tipo,
+      inv_total:0,inv_facebook:0,inv_google:0,inv_tiktok:0,inv_programatica:0,leads_pauta:0
     };
-    const p=progMap[r.programa];
-    p.inv_total+=r.inv; p['inv_'+r.medio]=(p['inv_'+r.medio]||0)+r.inv;
-    p.leads_pauta+=r.leads_p;
+    const p=progMap[r.prog];
+    p.inv_total+=r.inv;p['inv_'+r.medio]=(p['inv_'+r.medio]||0)+r.inv;
+    p.leads_pauta+=r.leadsP;
   });
-  const filtModalidad = $('f-modalidad')?.value||'';
-  const filtTipo      = $('f-tipo')?.value||'';
-  const filtMedio     = $('f-medio')?.value||'';
+  const progData=Object.values(progMap).map(p=>{
+    const lc_all=filtLeads.filter(r=>r['Programa']===p.Programa);
+    const mt_all=filtMat.filter(r=>r['Programa']===p.Programa);
+    const lc_fb=lc_all.filter(r=>(r['Medio']||'').toLowerCase()==='facebook').length;
+    const lc_go=lc_all.filter(r=>(r['Medio']||'').toLowerCase()==='google').length;
+    const lc=lc_all.length,mt=mt_all.length;
+    return {...p,leads_crm:lc,matriculas:mt,crm_facebook:lc_fb,crm_google:lc_go,
+      cpl_pauta:p.leads_pauta?p.inv_total/p.leads_pauta:0,
+      cpl_crm:lc?p.inv_total/lc:0,conv_pct:lc?mt/lc*100:0};
+  });
 
-  state.progs = Object.values(progMap)
-    .filter(p=> !p.Programa.startsWith('Campaña'))
-    .filter(p=> !filtModalidad || p.Modalidad===filtModalidad)
-    .filter(p=> !filtTipo      || p['Tipo programa']===filtTipo)
-    .map(p=>{
-      const lc_all = state.leads.filter(r=>r.Programa===p.Programa);
-      const mt_all = state.mat.filter(r=>r.Programa===p.Programa);
-      const lc  = filtMedio ? lc_all.filter(r=>(r.Medio||'').toLowerCase()===filtMedio).length : lc_all.length;
-      const mt  = filtMedio ? mt_all.filter(r=>(r.Medio||'').toLowerCase()===filtMedio).length : mt_all.length;
-      const lc_fb = lc_all.filter(r=>(r.Medio||'').toLowerCase()==='facebook').length;
-      const lc_go = lc_all.filter(r=>(r.Medio||'').toLowerCase()==='google').length;
-      return {...p,
-        leads_crm:lc, matriculas:mt, crm_facebook:lc_fb, crm_google:lc_go,
-        cpl_pauta: p.leads_pauta?p.inv_total/p.leads_pauta:0,
-        cpl_crm:   lc?p.inv_total/lc:0,
-        conv_pct:  lc?mt/lc*100:0
-      };
-    });
+  if(mesData.length){
+    $('period-tag').textContent='📅 Período: '+mesData[0].mes+' → '+mesData[mesData.length-1].mes;
+  }
+  $('last-update').textContent='Act: '+new Date().toLocaleTimeString('es-CO');
 
-  renderAll();
-}
-
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function renderAll(){
-  renderKPIs();
-  renderMedioCards();
+  renderKPIs({inv_total,leads_pauta,leads_crm,matriculas});
+  renderMedioCards(cards);
+  window._mesData=mesData;
+  window._progData=progData;
   renderMesTable();
   renderProgTable();
-  updateTopbar();
   revealSections();
 }
 
-function renderKPIs(){
-  const k = state.kpis||{};
-  const cards = [
-    {label:'Inversión Total',    value:fmt(k.inv_total),    sub:'Pauta digital total',    accent:true},
-    {label:'Leads Pauta',        value:fmtN(k.leads_pauta), sub:'Generados por ads'},
-    {label:'CPL Pauta',          value:fmt(k.cpl_pauta),    sub:'Costo por lead pauta'},
-    {label:'Leads CRM',          value:fmtN(k.leads_crm),   sub:'Registrados en CRM',     accent:true},
-    {label:'Matrículas',         value:fmtN(k.matriculas),  sub:'Total matrículas'},
-    {label:'CPL CRM',            value:fmt(k.cpl_crm),      sub:'Costo por lead CRM'},
-    {label:'Tasa de Conversión', value:fmtP(k.conv_pct),    sub:'Leads CRM → Matrícula'},
-    {label:'Ratio Leads',        value: k.leads_crm&&k.leads_pauta? (k.leads_crm/k.leads_pauta*100).toFixed(1)+'%':'—',
-                                   sub:'CRM / Pauta'},
+function renderFromSnapshot(){
+  const fDesde=$('f-desde')?.value||'2026-01';
+  const fHasta=$('f-hasta')?.value||'2026-12';
+  const mes=SNAPSHOT.mes_data.filter(r=>r.mes&&(!fDesde||r.mes>=fDesde)&&(!fHasta||r.mes<=fHasta));
+  window._mesData=mes;
+  window._progData=SNAPSHOT.prog_data;
+
+  // Recalcular KPIs del snapshot filtrado por fecha
+  const MEDIOS=['facebook','google','tiktok','programatica'];
+  let inv_total=0,leads_pauta=0;
+  mes.forEach(r=>{
+    MEDIOS.forEach(m=>{inv_total+=(r['inv_'+m]||0);leads_pauta+=(r['leads_'+m]||0);});
+  });
+  const k=SNAPSHOT.kpis;
+  renderKPIs({inv_total,leads_pauta,leads_crm:k.leads_crm,matriculas:k.matriculas});
+
+  const cards=SNAPSHOT.cards_medio.map(c=>{
+    // Para snapshot no podemos filtrar por fecha, mostramos totales
+    return c;
+  });
+  renderMedioCards(cards);
+
+  if(mes.length){
+    $('period-tag').textContent='📅 Período: '+mes[0].mes+' → '+mes[mes.length-1].mes;
+  }
+  $('last-update').textContent='Snapshot local';
+  renderMesTable();
+  renderProgTable();
+  revealSections();
+}
+
+function renderKPIs(k){
+  const cpl_p=k.leads_pauta?k.inv_total/k.leads_pauta:0;
+  const cpl_c=k.leads_crm?k.inv_total/k.leads_crm:0;
+  const conv=k.leads_crm?k.matriculas/k.leads_crm*100:0;
+  const ratio=k.leads_pauta?k.leads_crm/k.leads_pauta*100:0;
+  const cards=[
+    {label:'Inversión Total',value:fmtCOP(k.inv_total),sub:'Pauta digital total',accent:true},
+    {label:'Leads Pauta',value:fmtN(k.leads_pauta),sub:'Generados por ads'},
+    {label:'CPL Pauta',value:fmtCOP(cpl_p),sub:'Costo por lead (pauta)'},
+    {label:'Leads CRM',value:fmtN(k.leads_crm),sub:'Registrados en CRM',accent:true},
+    {label:'Matrículas',value:fmtN(k.matriculas),sub:'Total matrículas CRM'},
+    {label:'CPL CRM',value:fmtCOP(cpl_c),sub:'Inversión / Leads CRM'},
+    {label:'Tasa de Conversión',value:fmtP(conv),sub:'Leads CRM → Matrícula'},
+    {label:'Ratio CRM / Pauta',value:fmtP(ratio),sub:'Cobertura del CRM'},
   ];
-  $('kpi-grid').innerHTML = cards.map(c=>`
-    <div class="kpi-card${c.accent?' accent':''}">
+  $('kpi-grid').innerHTML=cards.map(c=>
+    `<div class="kpi-card${c.accent?' accent':''}">
       <div class="kpi-label">${c.label}</div>
       <div class="kpi-value">${c.value}</div>
       <div class="kpi-sub">${c.sub}</div>
-    </div>`).join('');
+    </div>`
+  ).join('');
 }
 
-const MEDIO_META = {
-  facebook:    {icon:'FB', cls:'icon-facebook',    label:'Facebook / Meta'},
-  google:      {icon:'G',  cls:'icon-google',      label:'Google Ads'},
-  tiktok:      {icon:'TT', cls:'icon-tiktok',      label:'TikTok Ads'},
-  programatica:{icon:'PG', cls:'icon-programatica',label:'Programática'},
+const MEDIO_META={
+  facebook:{icon:'FB',cls:'icon-facebook',label:'Facebook / Meta'},
+  google:{icon:'G',cls:'icon-google',label:'Google Ads'},
+  tiktok:{icon:'TT',cls:'icon-tiktok',label:'TikTok Ads'},
+  programatica:{icon:'PG',cls:'icon-programatica',label:'Programática'},
 };
 
-function renderMedioCards(){
-  const cards = state.cards||[];
-  $('medio-grid').innerHTML = cards.map(c=>{
-    const m = MEDIO_META[c.medio]||{icon:'?',cls:'',label:c.medio};
+function renderMedioCards(cards){
+  $('medio-grid').innerHTML=cards.map(c=>{
+    const m=MEDIO_META[c.medio]||{icon:'?',cls:'',label:c.medio};
     return `
     <div class="medio-card">
       <div class="medio-card-header">
@@ -498,67 +447,46 @@ function renderMedioCards(){
         <div class="medio-name">${m.label}</div>
       </div>
       <div class="medio-body">
-        <div class="medio-metric">
-          <div class="medio-metric-label">Inversión</div>
-          <div class="medio-metric-value">${fmt(c.inv)}</div>
-        </div>
-        <div class="medio-metric">
-          <div class="medio-metric-label">Leads Pauta</div>
-          <div class="medio-metric-value">${fmtN(c.leads_pauta)}</div>
-        </div>
-        <div class="medio-metric">
-          <div class="medio-metric-label">CPL Pauta</div>
-          <div class="medio-metric-value yellow">${fmt(c.cpl_pauta)}</div>
-        </div>
-        <div class="medio-metric">
-          <div class="medio-metric-label">Leads CRM</div>
-          <div class="medio-metric-value">${fmtN(c.leads_crm)}</div>
-        </div>
+        <div><div class="m-label">Inversión</div><div class="m-value">${fmtCOP(c.inv)}</div></div>
+        <div><div class="m-label">Leads Pauta</div><div class="m-value">${fmtN(c.leads_pauta)}</div></div>
+        <div><div class="m-label">CPL Pauta</div><div class="m-value yellow">${fmtCOP(c.cpl_pauta)}</div></div>
+        <div><div class="m-label">Leads CRM</div><div class="m-value">${fmtN(c.leads_crm)}</div></div>
       </div>
       <div class="medio-footer">
-        <div>
-          <div class="medio-footer-label">Matrículas</div>
-          <div class="medio-footer-value">${fmtN(c.matriculas)}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="medio-footer-label">CPL CRM</div>
-          <div class="medio-footer-value">${fmt(c.cpl_crm)}</div>
-        </div>
+        <div><div class="mf-label">Matrículas</div><div class="mf-value">${fmtN(c.matriculas)}</div></div>
+        <div style="text-align:right"><div class="mf-label">CPL CRM</div><div class="mf-value">${fmtCOP(c.cpl_crm)}</div></div>
       </div>
     </div>`;
   }).join('');
 }
 
-function setMesTab(tab, btn){
-  state.mesTab=tab;
+function setMesTab(tab,btn){
+  mesTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderMesTable();
 }
 
 function renderMesTable(){
-  const rows = state.mes||[];
-  const isInv = state.mesTab==='inv';
-  const pre   = isInv?'inv_':'leads_';
-  const medios= ['facebook','google','tiktok','programatica'];
-  const totals= {fb:0,go:0,tt:0,pg:0,tot:0};
-  const mKeys = ['facebook','google','tiktok','programatica'];
-
-  let tbody = rows.map(r=>{
-    const vals = mKeys.map(m=>`<td class="num">${isInv?fmt(r[pre+m]):fmtN(r[pre+m])}</td>`).join('');
-    const tot  = r[pre+'total']||mKeys.reduce((a,m)=>a+(r[pre+m]||0),0);
-    mKeys.forEach((m,i)=>{ const keys=['fb','go','tt','pg']; totals[keys[i]]+=(r[pre+m]||0); });
-    totals.tot+=tot;
-    return `<tr><td class="bold">${r.mes}</td>${vals}<td class="num bold">${isInv?fmt(tot):fmtN(tot)}</td></tr>`;
+  const rows=window._mesData||[];
+  const isInv=mesTab==='inv';
+  const pre=isInv?'inv_':'leads_';
+  const MEDIOS=['facebook','google','tiktok','programatica'];
+  const tots={facebook:0,google:0,tiktok:0,programatica:0,total:0};
+  const tbody=rows.map(r=>{
+    const vals=MEDIOS.map(m=>{
+      tots[m]+=(r[pre+m]||0);
+      return `<td class="num">${isInv?fmtCOP(r[pre+m]||0):fmtN(r[pre+m]||0)}</td>`;
+    }).join('');
+    const tot=MEDIOS.reduce((a,m)=>a+(r[pre+m]||0),0);
+    tots.total+=tot;
+    return `<tr><td class="bold">${r.mes}</td>${vals}<td class="num bold">${isInv?fmtCOP(tot):fmtN(tot)}</td></tr>`;
   }).join('');
-
-  const totRow = `<tr class="total-row">
-    <td>Total</td>
-    ${['fb','go','tt','pg'].map(k=>`<td class="num yellow">${isInv?fmt(totals[k]):fmtN(totals[k])}</td>`).join('')}
-    <td class="num yellow">${isInv?fmt(totals.tot):fmtN(totals.tot)}</td>
+  const totRow=`<tr class="total-row"><td>TOTAL</td>
+    ${MEDIOS.map(m=>`<td class="num yellow">${isInv?fmtCOP(tots[m]):fmtN(tots[m])}</td>`).join('')}
+    <td class="num yellow">${isInv?fmtCOP(tots.total):fmtN(tots.total)}</td>
   </tr>`;
-
-  $('mes-table').innerHTML = `<table>
+  $('mes-table').innerHTML=`<table>
     <thead><tr>
       <th>Mes</th>
       <th class="num">Facebook</th><th class="num">Google</th>
@@ -569,156 +497,141 @@ function renderMesTable(){
   </table>`;
 }
 
-let progSortCol='inv_total', progSortDir=-1;
 function sortProgs(col){
-  if(progSortCol===col) progSortDir*=-1; else {progSortCol=col;progSortDir=-1;}
-  renderProgTable();
-}
-
-function filterPrograms(){
+  if(progSortCol===col)progSortDir*=-1;else{progSortCol=col;progSortDir=-1;}
   renderProgTable();
 }
 
 function renderProgTable(){
-  const search = ($('prog-search')?.value||'').toLowerCase();
-  const mod    = $('pf-modalidad')?.value||'';
-  const tipo   = $('pf-tipo')?.value||'';
-
-  let rows = (state.progs||[])
-    .filter(p=> !search || p.Programa.toLowerCase().includes(search))
-    .filter(p=> !mod    || p.Modalidad===mod)
-    .filter(p=> !tipo   || p['Tipo programa']===tipo);
-
+  const search=($('prog-search')?.value||'').toLowerCase();
+  const mod=$('pf-modalidad')?.value||'';
+  const tipo=$('pf-tipo')?.value||'';
+  let rows=(window._progData||[])
+    .filter(p=>!search||p.Programa.toLowerCase().includes(search))
+    .filter(p=>!mod||p.Modalidad===mod)
+    .filter(p=>!tipo||p.Tipo===tipo||p['Tipo programa']===tipo);
   rows.sort((a,b)=>{
-    const av=a[progSortCol]||0, bv=b[progSortCol]||0;
-    return typeof av==='string'?av.localeCompare(bv)*progSortDir:(bv-av)*-progSortDir;
+    const av=a[progSortCol]||0,bv=b[progSortCol]||0;
+    return typeof av==='string'?av.localeCompare(bv)*progSortDir:(av-bv)*progSortDir;
   });
-
-  $('prog-count').textContent = `${rows.length} programa${rows.length!==1?'s':''}`;
-
-  const badgeMod = m=>{
-    const map={'Posgrados':'posgrados','Pregrados':'pregrados','Branding':'branding','General':'general'};
-    return `<span class="badge badge-${map[m]||'general'}">${m}</span>`;
+  $('prog-count').textContent=rows.length+' programa'+(rows.length!==1?'s':'');
+  const sortTh=(col,label)=>{
+    const active=progSortCol===col;
+    const arrow=active?(progSortDir>0?' ↑':' ↓'):'';
+    return `<th class="num sortable${active?' sort-active':''}" onclick="sortProgs('${col}')">${label}${arrow}</th>`;
   };
-  const badgeTipo = t=>{
-    const map={'Especialización':'especializacion','Maestría':'maestria','Doctorado':'doctorado','Pregrados':'pregrado','Profesional Universitario':'pregrado'};
-    return `<span class="badge badge-${map[t]||'general'}">${t}</span>`;
-  };
-
-  const th = (col,label) => `<th class="num sort-btn" onclick="sortProgs('${col}')">${label} ${progSortCol===col?(progSortDir<0?'↓':'↑'):''}</th>`;
-
-  const tbody = rows.map(p=>`
+  const badge=(val)=>`<span class="badge b-${val}">${val}</span>`;
+  const tbody=rows.map(p=>`
     <tr>
-      <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${p.Programa}">${p.Programa}</td>
-      <td>${badgeMod(p.Modalidad)}</td>
-      <td>${badgeTipo(p['Tipo programa'])}</td>
-      <td class="num">${fmt(p.inv_total)}</td>
-      <td class="num" style="font-size:11px;color:var(--gray-600)">${fmt(p.inv_facebook)}</td>
-      <td class="num" style="font-size:11px;color:var(--gray-600)">${fmt(p.inv_google)}</td>
-      <td class="num" style="font-size:11px;color:var(--gray-600)">${fmt(p.inv_tiktok)}</td>
+      <td style="min-width:180px;font-weight:600" title="${p.Programa}">${p.Programa}</td>
+      <td>${badge(p.Modalidad||'—')}</td>
+      <td>${badge(p.Tipo||p['Tipo programa']||'—')}</td>
+      <td class="num bold">${fmtCOP(p.inv_total)}</td>
+      <td class="num" style="color:#1877F2">${fmtCOP(p.inv_facebook)}</td>
+      <td class="num" style="color:#EA4335">${fmtCOP(p.inv_google)}</td>
+      <td class="num" style="color:#888">${fmtCOP(p.inv_tiktok)}</td>
       <td class="num">${fmtN(p.leads_pauta)}</td>
-      <td class="num">${fmt(p.cpl_pauta)}</td>
-      <td class="num">${fmtN(p.leads_crm)}</td>
-      <td class="num" style="font-size:11px;color:var(--gray-600)">${fmtN(p.crm_facebook)}</td>
-      <td class="num" style="font-size:11px;color:var(--gray-600)">${fmtN(p.crm_google)}</td>
-      <td class="num">${fmt(p.cpl_crm)}</td>
-      <td class="num">${fmtN(p.matriculas)}</td>
-      <td class="num" style="font-weight:700;color:${p.conv_pct>5?'#166534':p.conv_pct>2?'#92400E':'var(--gray-600)'}">
-        ${fmtP(p.conv_pct)}
-      </td>
+      <td class="num" style="color:#B8860B;font-weight:700">${fmtCOP(p.cpl_pauta)}</td>
+      <td class="num bold">${fmtN(p.leads_crm)}</td>
+      <td class="num" style="color:#1877F2">${fmtN(p.crm_facebook)}</td>
+      <td class="num" style="color:#EA4335">${fmtN(p.crm_google)}</td>
+      <td class="num" style="color:#B8860B;font-weight:700">${fmtCOP(p.cpl_crm)}</td>
+      <td class="num bold">${fmtN(p.matriculas)}</td>
+      <td class="num" style="font-weight:700;color:${p.conv_pct>5?'#166534':p.conv_pct>2?'#92400E':'#888'}">${fmtP(p.conv_pct)}</td>
     </tr>`).join('');
-
-  const totInv     = rows.reduce((a,r)=>a+(r.inv_total||0),0);
-  const totLP      = rows.reduce((a,r)=>a+(r.leads_pauta||0),0);
-  const totLC      = rows.reduce((a,r)=>a+(r.leads_crm||0),0);
-  const totMat     = rows.reduce((a,r)=>a+(r.matriculas||0),0);
-
-  const totRow = `<tr class="total-row">
-    <td colspan="3">TOTAL</td>
-    <td class="num yellow">${fmt(totInv)}</td>
+  const totInv=rows.reduce((a,r)=>a+(r.inv_total||0),0);
+  const totLP=rows.reduce((a,r)=>a+(r.leads_pauta||0),0);
+  const totLC=rows.reduce((a,r)=>a+(r.leads_crm||0),0);
+  const totMat=rows.reduce((a,r)=>a+(r.matriculas||0),0);
+  const totRow=`<tr class="total-row">
+    <td colspan="3">TOTAL (${rows.length} programas)</td>
+    <td class="num yellow">${fmtCOP(totInv)}</td>
     <td class="num"></td><td class="num"></td><td class="num"></td>
     <td class="num yellow">${fmtN(totLP)}</td>
-    <td class="num yellow">${fmt(totInv/totLP||0)}</td>
+    <td class="num yellow">${fmtCOP(totLP?totInv/totLP:0)}</td>
     <td class="num yellow">${fmtN(totLC)}</td>
     <td class="num"></td><td class="num"></td>
-    <td class="num yellow">${fmt(totInv/totLC||0)}</td>
+    <td class="num yellow">${fmtCOP(totLC?totInv/totLC:0)}</td>
     <td class="num yellow">${fmtN(totMat)}</td>
     <td class="num yellow">${fmtP(totLC?totMat/totLC*100:0)}</td>
   </tr>`;
-
-  $('prog-table').innerHTML = `<div style="overflow-x:auto"><table>
+  $('prog-table').innerHTML=`<table>
     <thead><tr>
       <th>Programa</th><th>Modalidad</th><th>Tipo</th>
-      ${th('inv_total','Inv. Total')}
-      <th class="num" style="font-size:10px;color:#1877F2">FB</th>
-      <th class="num" style="font-size:10px;color:#EA4335">GO</th>
-      <th class="num" style="font-size:10px;color:#000">TT</th>
-      ${th('leads_pauta','Leads Pauta')}
-      ${th('cpl_pauta','CPL Pauta')}
-      ${th('leads_crm','Leads CRM')}
-      <th class="num" style="font-size:10px;color:#1877F2">CRM FB</th>
-      <th class="num" style="font-size:10px;color:#EA4335">CRM GO</th>
-      ${th('cpl_crm','CPL CRM')}
-      ${th('matriculas','Matrículas')}
-      ${th('conv_pct','Conv%')}
+      ${sortTh('inv_total','Inv. Total')}
+      <th class="num" style="color:#1877F2">FB</th>
+      <th class="num" style="color:#EA4335">GO</th>
+      <th class="num">TT</th>
+      ${sortTh('leads_pauta','Leads Pauta')}
+      ${sortTh('cpl_pauta','CPL Pauta')}
+      ${sortTh('leads_crm','Leads CRM')}
+      <th class="num" style="color:#1877F2">CRM FB</th>
+      <th class="num" style="color:#EA4335">CRM GO</th>
+      ${sortTh('cpl_crm','CPL CRM')}
+      ${sortTh('matriculas','Matrículas')}
+      ${sortTh('conv_pct','Conv%')}
     </tr></thead>
     <tbody>${tbody}${totRow}</tbody>
-  </table></div>`;
-}
-
-function updateTopbar(){
-  const mes = state.mes||[];
-  if(mes.length){
-    const desde = mes[0].mes, hasta = mes[mes.length-1].mes;
-    $('topbar-range').textContent = `Período: ${desde} → ${hasta} · Datos en tiempo real desde Google Sheets`;
-  }
-  const now = new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'});
-  $('last-update').textContent = 'Actualizado: '+now;
+  </table>`;
 }
 
 function applyFilters(){
-  state.filters = {
-    desde: $('f-desde')?.value||'',
-    hasta: $('f-hasta')?.value||'',
-    medio: $('f-medio')?.value||'',
-    modalidad: $('f-modalidad')?.value||'',
-    tipo: $('f-tipo')?.value||''
-  };
-  if(state.rg) processData(); else renderAll();
+  if(RAW_RG.length) processAndRender();
+  else renderFromSnapshot();
+}
+
+function resetFilters(){
+  $('f-desde').value='2026-01';
+  $('f-hasta').value='2026-12';
+  $('f-medio').value='';
+  $('f-modalidad').value='';
+  $('f-tipo').value='';
+  $('pf-modalidad').value='';
+  $('pf-tipo').value='';
+  applyFilters();
+}
+
+function navTo(id,el){
+  const target=document.getElementById(id);
+  if(target){
+    const topbarH=document.querySelector('.topbar').offsetHeight;
+    const y=target.getBoundingClientRect().top+window.scrollY-topbarH-16;
+    window.scrollTo({top:y,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+window.addEventListener('scroll',()=>{
+  const ids=['s1','s2','s3'];
+  const topbarH=document.querySelector('.topbar')?.offsetHeight||100;
+  let current='s1';
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.getBoundingClientRect().top<=topbarH+50)current=id;
+  });
+  ids.forEach(id=>{
+    document.getElementById('nav-'+id)?.classList.toggle('active',id===current);
+  });
+});
+
+function revealSections(){
+  document.querySelectorAll('.section').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('visible'),i*120);
+  });
 }
 
 function showLoading(on){
   $('loading-bar').classList.toggle('active',on);
-  if(!on) $('loader').style.display='none';
+  if(!on)$('loader').style.display='none';
 }
 
-function revealSections(){
-  document.querySelectorAll('.section').forEach((el,i)=>{
-    setTimeout(()=>el.classList.add('visible'), i*150);
-  });
-}
-
-function scrollTo(id){
-  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', ()=>{
-  // Primero renderizar con snapshot, luego intentar live
-  state.cards = SNAPSHOT.cards_medio;
-  state.mes   = SNAPSHOT.mes_data;
-  state.progs = SNAPSHOT.prog_data;
-  state.kpis  = { ...SNAPSHOT.kpis,
-    cpl_pauta: SNAPSHOT.kpis.leads_pauta?SNAPSHOT.kpis.inv_total/SNAPSHOT.kpis.leads_pauta:0,
-    cpl_crm:   SNAPSHOT.kpis.leads_crm?SNAPSHOT.kpis.inv_total/SNAPSHOT.kpis.leads_crm:0,
-    conv_pct:  SNAPSHOT.kpis.leads_crm?SNAPSHOT.kpis.matriculas/SNAPSHOT.kpis.leads_crm*100:0
-  };
-  renderAll();
+window.addEventListener('DOMContentLoaded',()=>{
+  $('f-desde').value='2026-01';
+  $('f-hasta').value='2026-12';
+  renderFromSnapshot();
   showLoading(false);
-  // Luego intentar actualizar con datos live
-  loadData();
+  refreshData();
 });
 </script>
 </body>
