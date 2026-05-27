@@ -538,18 +538,21 @@ function renderModalKPIs(stats, metas){
     const meta = metas[modal];
     const cpl = s.leads_pauta?s.inv/s.leads_pauta:0;
     const pctInv = meta?.inv ? Math.min(s.inv/meta.inv*100,100) : null;
-    const pctLeads = meta?.leads ? Math.min(s.leads_pauta/meta.leads*100,100) : null;
-    const metaBar = (pct, label, fill) => pct!==null ? `
+    const pctLeads = (modal!=='Branding' && meta?.leads) ? Math.min(s.leads_pauta/meta.leads*100,100) : null;
+    const metaBar = (pct, label, fill, metaVal) => pct!==null ? `
       <div class="kpi-meta">
-        <div class="kpi-meta-row"><span>${label}</span><span>${pct.toFixed(0)}%</span></div>
+        <div class="kpi-meta-row"><span>${label}</span><span>${pct.toFixed(0)}%${metaVal?' · Meta: '+metaVal:''}</span></div>
         <div class="kpi-bar"><div class="kpi-bar-fill ${fill}" style="width:${pct}%"></div></div>
       </div>` : '';
+    const subLine = modal==='Branding'
+      ? (meta?.inv ? `Meta: ${fmtCOP(meta.inv)}` : 'Sin leads de campaña')
+      : `Leads: ${fmtNz(s.leads_pauta)} · CPL: ${fmtCOP(cpl)}`;
     return `<div class="kpi-card ${c.accent}">
       <div class="kpi-label">${c.label}</div>
       <div class="kpi-value">${fmtCOP(s.inv)}</div>
-      <div class="kpi-sub">Leads: ${fmtNz(s.leads_pauta)} · CPL: ${fmtCOP(cpl)}</div>
-      ${metaBar(pctInv,'vs Meta inversión',c.fill)}
-      ${metaBar(pctLeads,'vs Meta leads',c.fill)}
+      <div class="kpi-sub">${subLine}</div>
+      ${metaBar(pctInv,'vs Presupuesto meta',c.fill, fmtCOP(meta?.inv))}
+      ${metaBar(pctLeads,'vs Meta leads',c.fill, fmtNz(meta?.leads))}
     </div>`;
   }).join('');
   $('kpi-modal-grid').innerHTML=cards;
@@ -680,14 +683,17 @@ function renderAllProgTables(){
     const tMt=rows.reduce((a,r)=>a+(r.matriculas||0),0);
 
     const badge=v=>`<span class="badge b-${v||'General'}">${v||'—'}</span>`;
-    const tbody = rows.map(p=>`
-      <tr>
+    const isBranding = g.key==='Branding';
+
+    const tbody = rows.map(p=>{
+      const baseRow = `
         <td style="min-width:160px;font-weight:600" title="${p.Programa}">${p.Programa}</td>
         <td>${badge(p.Tipo)}</td>
         <td class="num bold">${fmtCOP(p.inv_total)}</td>
         <td class="num" style="color:#1877F2">${fmtCOP(p.inv_facebook)}</td>
         <td class="num" style="color:#EA4335">${fmtCOP(p.inv_google)}</td>
-        <td class="num" style="color:#6366F1">${fmtCOP(p.inv_programatica)}</td>
+        <td class="num" style="color:#6366F1">${fmtCOP(p.inv_programatica)}</td>`;
+      const extraRow = isBranding ? '' : `
         <td class="num">${fmtNz(p.leads_pauta)}</td>
         <td class="num" style="color:#B8860B;font-weight:700">${fmtCOP(p.cpl_pauta)}</td>
         <td class="num bold">${fmtNz(p.leads_crm)}</td>
@@ -695,21 +701,36 @@ function renderAllProgTables(){
         <td class="num" style="color:#EA4335">${fmtNz(p.crm_google)}</td>
         <td class="num" style="color:#B8860B;font-weight:700">${fmtCOP(p.cpl_crm)}</td>
         <td class="num bold">${fmtNz(p.matriculas)}</td>
-        <td class="num" style="font-weight:700;color:${p.conv_pct>5?'#166534':p.conv_pct>2?'#92400E':'#888'}">${fmtP(p.conv_pct)}</td>
-      </tr>`).join('');
+        <td class="num" style="font-weight:700;color:${p.conv_pct>5?'#166534':p.conv_pct>2?'#92400E':'#888'}">${fmtP(p.conv_pct)}</td>`;
+      return `<tr>${baseRow}${extraRow}</tr>`;
+    }).join('');
 
-    const totRow=`<tr class="total-row">
-      <td colspan="2">TOTAL (${rows.length})</td>
-      <td class="num yellow">${fmtCOP(tI)}</td>
-      <td class="num"></td><td class="num"></td><td class="num"></td>
-      <td class="num yellow">${fmtNz(tLP)}</td>
-      <td class="num yellow">${fmtCOP(tLP?tI/tLP:0)}</td>
-      <td class="num yellow">${fmtNz(tLC)}</td>
-      <td class="num"></td><td class="num"></td>
-      <td class="num yellow">${fmtCOP(tLC?tI/tLC:0)}</td>
-      <td class="num yellow">${fmtNz(tMt)}</td>
-      <td class="num yellow">${fmtP(tLC?tMt/tLC*100:0)}</td>
-    </tr>`;
+    const totRow = isBranding
+      ? `<tr class="total-row">
+          <td colspan="2">TOTAL (${rows.length})</td>
+          <td class="num yellow">${fmtCOP(tI)}</td>
+          <td class="num"></td><td class="num"></td><td class="num"></td>
+        </tr>`
+      : `<tr class="total-row">
+          <td colspan="2">TOTAL (${rows.length})</td>
+          <td class="num yellow">${fmtCOP(tI)}</td>
+          <td class="num"></td><td class="num"></td><td class="num"></td>
+          <td class="num yellow">${fmtNz(tLP)}</td>
+          <td class="num yellow">${fmtCOP(tLP?tI/tLP:0)}</td>
+          <td class="num yellow">${fmtNz(tLC)}</td>
+          <td class="num"></td><td class="num"></td>
+          <td class="num yellow">${fmtCOP(tLC?tI/tLC:0)}</td>
+          <td class="num yellow">${fmtNz(tMt)}</td>
+          <td class="num yellow">${fmtP(tLC?tMt/tLC*100:0)}</td>
+        </tr>`;
+
+    const extraHeaders = isBranding ? '' : `
+              <th class="num">Leads Pauta</th><th class="num">CPL Pauta</th>
+              <th class="num">Leads CRM</th>
+              <th class="num" style="color:#1877F2">CRM FB</th>
+              <th class="num" style="color:#EA4335">CRM GO</th>
+              <th class="num">CPL CRM</th>
+              <th class="num">Matrículas</th><th class="num">Conv%</th>`;
 
     return `<div class="prog-section">
       <div class="prog-section-title ${g.cls}">${g.label} — ${rows.length} programas · ${fmtCOP(tI)}</div>
@@ -722,12 +743,7 @@ function renderAllProgTables(){
               <th class="num" style="color:#1877F2">FB</th>
               <th class="num" style="color:#EA4335">GO</th>
               <th class="num" style="color:#6366F1">PROG</th>
-              <th class="num">Leads Pauta</th><th class="num">CPL Pauta</th>
-              <th class="num">Leads CRM</th>
-              <th class="num" style="color:#1877F2">CRM FB</th>
-              <th class="num" style="color:#EA4335">CRM GO</th>
-              <th class="num">CPL CRM</th>
-              <th class="num">Matrículas</th><th class="num">Conv%</th>
+              ${extraHeaders}
             </tr></thead>
             <tbody>${tbody}${totRow}</tbody>
           </table>
