@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UCatólica — Revisión Copys 2026-3 · Adcom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#1A1A1A;--yellow:#FFC000;--bg:#F5F5F5;--white:#fff;
+  --t2:#333;--t3:#999;--t4:#666;--border:#E0E0E0;
+  --meta:#1877F2;--meta-bg:#EBF3FD;--meta-brd:#C2D9F8;
+  --google:#EA4335;--google-bg:#FDECEA;--google-brd:#F5C6C2;
+  --ok:#2E7D32;--ok-bg:#E8F5E9;--ok-brd:#A5D6A7;
+  --no:#C62828;--no-bg:#FFEBEE;--no-brd:#EF9A9A;
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);min-height:100vh;color:var(--black)}
+
+/* HEADER */
+.hdr{background:var(--black);height:62px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#FFC000;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#1A1A1A}
+.hdr-title{font-size:14px;font-weight:700;color:#fff}
+.hdr-title span{color:var(--yellow)}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.pill{font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+.pill-y{background:rgba(255,192,0,.15);border:1px solid rgba(255,192,0,.35);color:var(--yellow)}
+.pill-w{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45)}
+
+/* FILTER BAR */
+.fbar{background:#fff;padding:11px 32px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;border-bottom:3px solid var(--yellow);position:sticky;top:62px;z-index:200;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.fgrp{display:flex;align-items:center;gap:7px}
+.flbl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.9px;white-space:nowrap}
+.fb{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--t3);font-size:11px;font-weight:500;cursor:pointer;transition:all .12s;font-family:'Poppins',sans-serif;white-space:nowrap}
+.fb:hover{border-color:#aaa;color:var(--t2)}
+.fb.an{background:var(--black);color:#fff;border-color:var(--black)}
+.fb.ap{background:#2D5BE3;color:#fff;border-color:#2D5BE3}
+.fb.apo{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.fb.am{background:var(--meta);color:#fff;border-color:var(--meta)}
+.fb.ag{background:var(--google);color:#fff;border-color:var(--google)}
+.fb.aok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-brd)}
+.fb.ano{background:var(--no-bg);color:var(--no);border-color:var(--no-brd)}
+.fb.ape{background:#FFF9C4;color:#856404;border-color:#F0D060}
+.sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.prog-wrap{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.prog-out{width:110px;height:5px;background:#eee;border-radius:3px;overflow:hidden}
+.prog-in{height:100%;background:var(--yellow);border-radius:3px;transition:width .35s}
+.prog-txt{font-size:10px;color:var(--t3);font-weight:600;white-space:nowrap}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:22px 20px 80px;display:flex;flex-direction:column;gap:14px}
+
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:16px;color:var(--t3)}
+.spinner{width:40px;height:40px;border:3px solid #eee;border-top-color:var(--yellow);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card-bot{height:3px}
+.ch{padding:13px 20px;display:flex;align-items:center;gap:11px}
+.ch-pre{background:#2D5BE3}
+.ch-pos{background:#7C3AED}
+.ch-mae{background:#0891B2}
+.ch-doc{background:#BE123C}
+.lvl-badge{font-size:9px;font-weight:700;letter-spacing:1px;color:#fff;padding:3px 8px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
+.prog-n{font-size:14px;font-weight:700;color:#fff}
+.prog-m{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+
+/* SECTIONS */
+.msec{border-top:1px solid var(--bg);padding:15px 20px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.mhdr-l{display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot-meta{background:var(--meta)}.dot-google{background:var(--google)}
+.mnm{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)}
+.sbdg{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.sbdg-p{background:#FFF9C4;color:#856404;border:1px solid #F0D060}
+.sbdg-a{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-brd)}
+.sbdg-r{background:var(--no-bg);color:var(--no);border:1px solid var(--no-brd)}
+
+/* COPY BOXES */
+.meta-g{display:grid;grid-template-columns:1fr 285px;gap:10px}
+.goog-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cbox{border-radius:8px;padding:12px 13px}
+.bm{background:var(--meta-bg);border:1px solid var(--meta-brd)}
+.bg{background:var(--google-bg);border:1px solid var(--google-brd)}
+.ctag{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:6px}
+.ctxt{font-size:12.5px;color:var(--t2);line-height:1.65;white-space:pre-wrap}
+.hl-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.hl{font-size:11px;background:#fff;border:1px solid var(--google-brd);border-radius:4px;padding:2px 7px;color:var(--t2)}
+.dl{margin-top:5px;display:flex;flex-direction:column;gap:4px}
+.di{font-size:12px;color:var(--t2);line-height:1.5;background:#fff;border-radius:5px;padding:6px 9px;border:1px solid var(--google-brd)}
+
+/* EMPTY */
+.empty-sec{padding:14px 20px;color:var(--t3);font-size:12px;font-style:italic;border-top:1px solid var(--bg)}
+
+/* REVIEW PANEL */
+.rpanel{margin-top:13px;background:var(--bg);border-radius:8px;padding:12px 13px;border:1px solid var(--border)}
+.rptitle{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:9px}
+.rrow{display:flex;align-items:flex-start;gap:9px;flex-wrap:wrap}
+.rbtns{display:flex;gap:7px;flex-shrink:0}
+.rbtn{padding:7px 15px;border-radius:6px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:5px}
+.rbtn-a:hover,.rbtn-a.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.rbtn-r:hover,.rbtn-r.on{background:var(--no-bg);border-color:var(--no);color:var(--no)}
+.cinput{flex:1;min-width:160px;padding:7px 11px;border-radius:6px;border:1.5px solid var(--border);font-family:'Poppins',sans-serif;font-size:12px;color:var(--t2);background:#fff;resize:none;height:36px;transition:border-color .12s;line-height:1.4}
+.cinput:focus{outline:none;border-color:var(--yellow)}
+.sbtn{padding:7px 16px;background:var(--black);color:#fff;border:none;border-radius:6px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:background .12s;white-space:nowrap;flex-shrink:0}
+.sbtn:hover{background:#333}
+.sbtn:disabled{background:#ccc;cursor:not-allowed}
+.sok{color:var(--ok);font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:999}
+.mbox{background:#fff;border-radius:14px;padding:36px 40px 0;max-width:400px;width:92%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.mlogo{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:var(--yellow);font-size:22px;font-weight:800;color:#1A1A1A}
+.mtitle{font-size:19px;font-weight:700;color:var(--black);margin-bottom:5px}
+.msub{font-size:12.5px;color:var(--t4);margin-bottom:22px;line-height:1.55}
+.minput{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);font-family:'Poppins',sans-serif;font-size:13px;color:var(--t2);margin-bottom:14px}
+.minput:focus{outline:none;border-color:var(--yellow)}
+.mbtn{width:100%;padding:11px;background:var(--black);color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.mbtn:hover{background:#333}
+.ybar{height:4px;background:var(--yellow);margin:20px -40px 0;border-radius:0 0 14px 14px}
+
+@media(max-width:760px){
+  .meta-g,.goog-g{grid-template-columns:1fr}
+  .fbar{padding:10px 14px;gap:10px}
+  .hdr{padding:0 14px}
+  .main{padding:14px 10px 60px}
+  .prog-wrap{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="modal">
+  <div class="mbox">
+    <div class="mlogo">UC</div>
+    <div class="mtitle">Revisión de Copys</div>
+    <div class="msub">Universidad Católica de Colombia 2026-3<br>Ingresa tu nombre para registrar tus aprobaciones y comentarios.</div>
+    <input class="minput" id="cni" placeholder="Tu nombre completo..." maxlength="60" onkeydown="if(event.key==='Enter')go()">
+    <button class="mbtn" onclick="go()">Empezar revisión →</button>
+    <div class="ybar"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="logo">UC</div>
+    <div class="hdr-title">UCatólica — <span>Revisión Copys 2026-3</span></div>
+  </div>
+  <div class="hdr-r">
+    <span class="pill pill-y" id="counter">Cargando...</span>
+    <span class="pill pill-w" id="clabel">Revisión cliente</span>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<div class="fbar">
+  <div class="fgrp">
+    <span class="flbl">Nivel:</span>
+    <button class="fb an" onclick="setF('nivel','all',this,'an')">Todos</button>
+    <button class="fb" onclick="setF('nivel','Pregrado',this,'ap')">Pregrado</button>
+    <button class="fb" onclick="setF('nivel','Posgrado',this,'apo')">Posgrado</button>
+  </div>
+  <div class="sep"></div>
+  <div class="fgrp">
+    <span class="flbl">Medio:</span>
+    <button class="fb an" onclick="setF('medio','all',this,'an')">Todos</button>
+    <button class="fb" onclick="setF('medio','meta',this,'am')">Meta</button>
+    <button class="fb" onclick="setF('medio','google',this,'ag')">Google</button>
+  </div>
+  <div class="sep"></div>
+  <div class="fgrp">
+    <span class="flbl">Estado:</span>
+    <button class="fb an" onclick="setF('estado','all',this,'an')">Todos</button>
+    <button class="fb" onclick="setF('estado','pendiente',this,'ape')">Pendientes</button>
+    <button class="fb" onclick="setF('estado','aprobado',this,'aok')">Aprobados</button>
+    <button class="fb" onclick="setF('estado','rechazado',this,'ano')">Rechazados</button>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-out"><div class="prog-in" id="pbar" style="width:0%"></div></div>
+    <span class="prog-txt" id="ptxt">0 / 0 enviados</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main" id="main">
+  <div class="loading">
+    <div class="spinner"></div>
+    <span>Cargando copys desde el Sheet...</span>
+  </div>
+</main>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────
+const SURL   = 'https://script.google.com/macros/s/AKfycbzQJkQiAsMod9z5xZACUf6eSUZy652l3_Y1hdOADYAAgs4kPFzsTs5s6434WHBYL-Qh/exec';
+const SHEET_ID = '1YrctfKSqa3u7082muXDYyYLoqtXBtMy7OSN2vUv9Uuc';
+const MEDIOS = ['meta','google'];
+const ML     = {meta:'Meta', google:'Google'};
+
+// ─── STATE ────────────────────────────────────────────────────
+let DATA        = [];
+let ST          = {};
+let TOTAL       = 0;
+let fNivel      = 'all', fMedio = 'all', fEstado = 'all', clientName = '';
+
+// Clasificación de nivel para color de card
+function nivelClass(nivel) {
+  const n = (nivel || '').toLowerCase();
+  if (n.includes('pregrado'))       return 'pre';
+  if (n.includes('especializ'))     return 'pos';
+  if (n.includes('maestr'))         return 'mae';
+  if (n.includes('doctorado'))      return 'doc';
+  return 'pos';
+}
+
+// Filtro de nivel para botones "Pregrado" / "Posgrado"
+function matchNivel(nivel, filtro) {
+  if (filtro === 'all') return true;
+  const n = (nivel || '').toLowerCase();
+  if (filtro === 'Pregrado') return n.includes('pregrado');
+  // Posgrado = todo lo que no es pregrado
+  return !n.includes('pregrado');
+}
+
+// ─── MODAL ────────────────────────────────────────────────────
+function go() {
+  const v = document.getElementById('cni').value.trim();
+  if (!v) { document.getElementById('cni').style.borderColor = '#EA4335'; return; }
+  clientName = v;
+  document.getElementById('clabel').textContent = v;
+  document.getElementById('modal').style.display = 'none';
+}
+
+// ─── LOAD DATA FROM SHEET via gviz/tq ─────────────────────────
+async function loadData() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+    const res  = await fetch(url);
+    const text = await res.text();
+    const rows = parseCSV(text);
+
+    if (!rows || rows.length < 2) {
+      showError('No se encontraron datos. Verifica que el Sheet sea público.');
+      return;
+    }
+
+    const headers = rows[0];
+    DATA = rows.slice(1)
+      .filter(r => r[1] && r[1].trim() !== '')   // col B = Programa
+      .map(r => {
+        const h = (k) => { const i = headers.indexOf(k); return i >= 0 ? (r[i]||'').trim() : ''; };
+        const hs = [];
+        for (let n=1; n<=15; n++) { const v = h('GOOGLE H'+n); if(v) hs.push(v); }
+        const ds = [];
+        for (let n=1; n<=4;  n++) { const v = h('GOOGLE D'+n); if(v) ds.push(v); }
+        return {
+          nivel:     h('Nivel'),
+          programa:  h('Programa'),
+          modalidad: h('Modalidad'),
+          meta_primary:  h('META \u2014 Primary Text (out-of-ad)') || h('META — Primary Text (out-of-ad)'),
+          meta_creative: h('META \u2014 Creative Ad (in-image, 60-100 chars)') || h('META — Creative Ad (in-image, 60-100 chars)'),
+          google_headlines: hs,
+          google_descs:     ds
+        };
+      });
+
+    TOTAL = DATA.length * 2;   // Meta + Google (sin TikTok)
+
+    DATA.forEach((_, i) => {
+      ST[i] = {};
+      MEDIOS.forEach(m => { ST[i][m] = { e: 'pendiente', c: '', sent: false }; });
+    });
+
+    buildCards();
+
+  } catch (err) {
+    showError('Error de conexión: ' + err.message);
+  }
+}
+
+// ─── CSV PARSER ───────────────────────────────────────────────
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cur = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') {
+      if (inQ && text[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      row.push(cur); cur = '';
+    } else if ((ch === '\n' || ch === '\r') && !inQ) {
+      if (ch === '\r' && text[i+1] === '\n') i++;
+      row.push(cur); cur = '';
+      if (row.some(c => c.trim())) rows.push(row);
+      row = [];
+    } else {
+      cur += ch;
+    }
+  }
+  if (cur || row.length) { row.push(cur); if (row.some(c=>c.trim())) rows.push(row); }
+  return rows;
+}
+
+function showError(msg) {
+  document.getElementById('main').innerHTML =
+    '<div style="padding:60px 20px;text-align:center;color:#999">' +
+    '<div style="font-size:32px;margin-bottom:12px">⚠️</div>' +
+    '<p style="font-size:13px">' + msg + '</p>' +
+    '<button onclick="loadData()" style="margin-top:16px;padding:8px 20px;background:#1A1A1A;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Poppins,sans-serif">Reintentar</button>' +
+    '</div>';
+  document.getElementById('counter').textContent = 'Error';
+}
+
+// ─── BUILD CARDS ──────────────────────────────────────────────
+function buildCards() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  let count = 0;
+
+  DATA.forEach((p, i) => {
+    // Filtro nivel
+    if (!matchNivel(p.nivel, fNivel)) return;
+
+    // Filtro estado (al menos un medio coincide)
+    if (fEstado !== 'all') {
+      const mediosToCheck = fMedio === 'all' ? MEDIOS : [fMedio];
+      const any = mediosToCheck.some(m => ST[i][m].e === fEstado);
+      if (!any) return;
+    }
+
+    count++;
+    const nc = nivelClass(p.nivel);
+    let secs = '';
+
+    MEDIOS.forEach(m => {
+      if (fMedio !== 'all' && fMedio !== m) return;
+      if (fEstado !== 'all' && ST[i][m].e !== fEstado) return;
+
+      const s   = ST[i][m];
+      const bc  = s.e === 'aprobado' ? 'sbdg-a' : s.e === 'rechazado' ? 'sbdg-r' : 'sbdg-p';
+      const bl  = s.e === 'aprobado' ? '✓ Aprobado' : s.e === 'rechazado' ? '✕ Rechazado' : '● Pendiente';
+      const dis = s.sent ? 'disabled' : '';
+      const okd = s.sent ? 'flex' : 'none';
+
+      let cnt = '';
+      if (m === 'meta') {
+        // Si no hay copy Meta, mostrar aviso
+        if (!p.meta_primary && !p.meta_creative) {
+          cnt = '<div class="empty-sec">Sin copy de Meta para este programa.</div>';
+          secs += `<div class="msec" id="s-${i}-${m}">${cnt}</div>`;
+          return;
+        }
+        const pc = p.meta_creative.length;
+        const ok = pc >= 60 && pc <= 100 ? '✅' : pc > 0 ? '⚠️' : '';
+        cnt = `<div class="meta-g">
+          <div class="cbox bm"><span class="ctag">Primary Text — out-of-ad</span><p class="ctxt">${esc(p.meta_primary)}</p></div>
+          <div class="cbox bm"><span class="ctag">Creative Ad — in-image (60-100 chars)</span><p class="ctxt">${esc(p.meta_creative)}</p><div style="font-size:10px;color:var(--t3);text-align:right;margin-top:5px">${pc} chars ${ok}</div></div>
+        </div>`;
+      } else if (m === 'google') {
+        if (!p.google_headlines.length && !p.google_descs.length) {
+          cnt = '<div class="empty-sec">Sin copy de Google para este programa.</div>';
+          secs += `<div class="msec" id="s-${i}-${m}">${cnt}</div>`;
+          return;
+        }
+        const chips = p.google_headlines.map(h => `<span class="hl">${esc(h)}</span>`).join('');
+        const descs = p.google_descs.map(d => `<div class="di">${esc(d)}</div>`).join('');
+        cnt = `<div class="goog-g">
+          <div class="cbox bg"><span class="ctag">Headlines RSA (${p.google_headlines.length})</span><div class="hl-wrap">${chips}</div></div>
+          <div class="cbox bg"><span class="ctag">Descriptions (${p.google_descs.length})</span><div class="dl">${descs}</div></div>
+        </div>`;
+      }
+
+      secs += `<div class="msec" id="s-${i}-${m}">
+        <div class="mhdr">
+          <div class="mhdr-l"><div class="dot dot-${m}"></div><span class="mnm">${ML[m]}</span></div>
+          <span class="sbdg ${bc}" id="bdg-${i}-${m}">${bl}</span>
+        </div>
+        ${cnt}
+        <div class="rpanel">
+          <div class="rptitle">Tu revisión</div>
+          <div class="rrow">
+            <div class="rbtns">
+              <button class="rbtn rbtn-a${s.e==='aprobado'?' on':''}" id="ba-${i}-${m}" onclick="setE(${i},'${m}','aprobado')">✓ Aprobar</button>
+              <button class="rbtn rbtn-r${s.e==='rechazado'?' on':''}" id="br-${i}-${m}" onclick="setE(${i},'${m}','rechazado')">✕ Rechazar</button>
+            </div>
+            <textarea class="cinput" id="ci-${i}-${m}" placeholder="Comentario o corrección (opcional)...">${s.c}</textarea>
+            <button class="sbtn" id="sb-${i}-${m}" onclick="send(${i},'${m}')" ${dis}>Enviar</button>
+            <span class="sok" id="ok-${i}-${m}" style="display:${okd}">✓ Enviado</span>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    if (!secs) return;
+
+    main.innerHTML += `<div class="card">
+      <div class="ch ch-${nc}">
+        <span class="lvl-badge">${esc(p.nivel)}</span>
+        <div><div class="prog-n">${esc(p.programa)}</div><div class="prog-m">${esc(p.modalidad)}</div></div>
+      </div>
+      ${secs}
+      <div class="card-bot"></div>
+    </div>`;
+  });
+
+  document.getElementById('counter').textContent = count + ' programas';
+  updP();
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function setE(i, m, e) {
+  ST[i][m].e = e;
+  const ba = document.getElementById('ba-'+i+'-'+m);
+  const br = document.getElementById('br-'+i+'-'+m);
+  if (ba) ba.className = 'rbtn rbtn-a' + (e==='aprobado'?' on':'');
+  if (br) br.className = 'rbtn rbtn-r' + (e==='rechazado'?' on':'');
+  const bdg = document.getElementById('bdg-'+i+'-'+m);
+  if (bdg) {
+    bdg.className = 'sbdg ' + (e==='aprobado'?'sbdg-a':e==='rechazado'?'sbdg-r':'sbdg-p');
+    bdg.textContent = e==='aprobado'?'✓ Aprobado':e==='rechazado'?'✕ Rechazado':'● Pendiente';
+  }
+  updP();
+}
+
+async function send(i, m) {
+  const p = DATA[i], s = ST[i][m];
+  const comment = document.getElementById('ci-'+i+'-'+m).value.trim();
+  s.c = comment;
+
+  if (s.e === 'pendiente') {
+    alert('Selecciona Aprobar o Rechazar antes de enviar.');
+    return;
+  }
+
+  const sb = document.getElementById('sb-'+i+'-'+m);
+  sb.disabled = true;
+  sb.textContent = 'Enviando...';
+
+  try {
+    await fetch(SURL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        programa:   p.programa,
+        modalidad:  p.modalidad,
+        nivel:      p.nivel,
+        medio:      ML[m],
+        estado:     s.e === 'aprobado' ? 'Aprobado' : 'Rechazado',
+        comentario: (clientName ? '['+clientName+'] ' : '') + comment
+      })
+    });
+    s.sent = true;
+    sb.style.display = 'none';
+    const ok = document.getElementById('ok-'+i+'-'+m);
+    if (ok) ok.style.display = 'flex';
+    updP();
+  } catch (err) {
+    sb.disabled = false;
+    sb.textContent = 'Enviar';
+    alert('Error al enviar. Verifica tu conexión.');
+  }
+}
+
+function updP() {
+  let done = 0;
+  DATA.forEach((_, i) => MEDIOS.forEach(m => { if (ST[i][m].sent) done++; }));
+  const pct = TOTAL > 0 ? Math.round(done / TOTAL * 100) : 0;
+  const b = document.getElementById('pbar'), t = document.getElementById('ptxt');
+  if (b) b.style.width = pct + '%';
+  if (t) t.textContent = done + ' / ' + TOTAL + ' enviados';
+}
+
+function setF(type, val, btn, cls) {
+  btn.closest('.fgrp').querySelectorAll('.fb').forEach(b => b.className = 'fb');
+  btn.classList.add(cls);
+  if      (type === 'nivel')  fNivel  = val;
+  else if (type === 'medio')  fMedio  = val;
+  else                         fEstado = val;
+  buildCards();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
