@@ -470,21 +470,23 @@ function processAndRender(){
   });
   window._mesModalData = mesModalMap;
 
-  // Por programa: separar en 3 grupos
+  // Por programa: clave compuesta programa+modalidad para no mezclar filas de distinta modalidad
   const progMap={};
   filtered.forEach(r=>{
     if(!r.prog) return;
-    if(!progMap[r.prog]) progMap[r.prog]={
+    const key = r.prog+'||'+(r.modal||'');
+    if(!progMap[key]) progMap[key]={
       Programa:r.prog, Modalidad:r.modal, Tipo:r.tipo,
       inv_total:0, inv_facebook:0, inv_google:0, inv_tiktok:0, inv_programatica:0, leads_pauta:0
     };
-    const p=progMap[r.prog];
+    const p=progMap[key];
     p.inv_total+=r.inv;
     if(MEDIOS.includes(r.medio)) p['inv_'+r.medio]=(p['inv_'+r.medio]||0)+r.inv;
     p.leads_pauta+=r.leadsP;
   });
 
   window._progData = Object.values(progMap).map(p=>{
+    // Leads y matrículas: filtrar también por modalidad cuando aplique
     const la = RAW_LEADS.filter(r=>String(r[4]||'').trim()===p.Programa);
     const ma = RAW_MAT.filter(r=>String(r[4]||'').trim()===p.Programa);
     const lc = la.length;
