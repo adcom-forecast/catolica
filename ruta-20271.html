@@ -132,21 +132,26 @@ h1,h2,h3{font-weight:800;line-height:1.15;letter-spacing:-.005em;color:var(--ink
 /* ---------- SPLIT (overview panel) ---------- */
 .msplit{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
 .msplit-list{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:14px;}
-.msplit-list li{display:flex;align-items:flex-start;gap:12px;font-size:16px;color:var(--ivory);line-height:1.5;}
-.msplit-list li::before{content:'—';color:var(--black);flex-shrink:0;font-weight:700;}
+.msplit-list li{position:relative;padding-left:28px;font-size:16px;color:var(--ivory);line-height:1.5;}
+.msplit-list li::before{content:'—';position:absolute;left:0;top:0;color:var(--black);font-weight:700;}
 @media(max-width:900px){.msplit{grid-template-columns:1fr;gap:40px;}}
 
 /* panel mockup: mini semaforo */
 .mpanel{background:var(--graphite);border-radius:var(--r-cards);padding:var(--gap-card);}
 .mpanel-title{font-size:13px;color:var(--ash);font-weight:500;margin-bottom:18px;display:flex;justify-content:space-between;}
-.mpanel-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(237,237,243,.06);}
+.mpanel-row{display:grid;grid-template-columns:9px minmax(150px,.8fr) minmax(280px,1.4fr);align-items:center;column-gap:14px;padding:13px 0;border-bottom:1px solid rgba(237,237,243,.06);}
 .mpanel-row:last-child{border-bottom:none;}
 .mpanel-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .mpanel-dot.rojo{background:var(--red);} .mpanel-dot.amarillo{background:#d9a520;} .mpanel-dot.verde{background:var(--green);}
-.mpanel-row .name{flex:1;font-size:14.5px;font-weight:500;color:var(--ivory);}
+.mpanel-row .name{font-size:14.5px;font-weight:500;color:var(--ivory);white-space:nowrap;}
 .mpanel-row .stat{font-size:13px;color:var(--ash);font-weight:400;}
 .mpanel-row.priority .name{color:var(--ink);font-weight:600;}
 .mpanel-row.priority .stat{color:var(--red);font-weight:600;}
+@media(max-width:640px){
+  .mpanel{padding:22px 18px;}
+  .mpanel-row{grid-template-columns:9px minmax(125px,.8fr) minmax(0,1.2fr);column-gap:10px;}
+  .mpanel-row .name,.mpanel-row .stat{font-size:12px;}
+}
 
 /* ---------- ACCORDION DIAGNOSTIC ---------- */
 .mdiag{display:flex;flex-direction:column;gap:10px;}
@@ -190,13 +195,19 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
 .mring-arrow .delta{font-size:13px;font-weight:600;color:var(--red);}
 
 .mfunnel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0;}
-.mfunnel-card{background:var(--obsidian);border-radius:10px;padding:14px;}
+.mfunnel-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px;}
 .mfunnel-card .ft{font-size:10.5px;font-weight:600;text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--ash);}
 .mfstep{color:var(--white);font-size:9.5px;font-weight:600;text-align:center;padding:6px 4px;border-radius:3px;line-height:1.3;margin:0 auto 3px;}
 .mfstep.bottleneck{outline:1.5px solid var(--red);outline-offset:1px;}
 .mfstep .p{opacity:.75;}
 .mfunnel-final{margin-top:8px;text-align:center;font-size:11.5px;font-weight:600;color:var(--ash);}
 .mfunnel-final b{color:var(--red);}
+.mfunnel-card .mfstep{color:var(--ink) !important;background:#f2f3fa !important;}
+.mfunnel-card .mfstep:nth-of-type(2){background:#f2f3fa !important;}
+.mfunnel-card .mfstep:nth-of-type(3){background:#e8eaf7 !important;}
+.mfunnel-card .mfstep:nth-of-type(4){background:#dde0f3 !important;}
+.mfunnel-card .mfstep:nth-of-type(5){background:#d1d5ee !important;}
+.mfunnel-card .mfstep:nth-of-type(6){background:var(--cobalt) !important;color:var(--white) !important;}
 @media(max-width:900px){.mfunnel-grid{grid-template-columns:1fr 1fr;}}
 
 /* ---------- CALLOUT ---------- */
@@ -235,6 +246,8 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
 .mdemo-head a{color:var(--cobalt);text-decoration:none;font-weight:600;font-size:12px;}
 .mdemo-iframe{width:100%;height:640px;border:none;display:block;background:var(--onyx);}
 .mdemo-note{text-align:center;font-size:12.5px;color:var(--slate);margin-top:20px;max-width:460px;margin-left:auto;margin-right:auto;line-height:1.6;}
+.mtiktok-link{display:flex;align-items:center;justify-content:center;min-height:180px;padding:32px;}
+.mtiktok-link .btn{background:var(--black);color:var(--white);}
 
 /* ---------- SEGMENTS (comunicacion) ---------- */
 .mseg-card{border-radius:var(--r-cards);overflow:hidden;margin-bottom:16px;border:1px solid var(--line);}
@@ -484,15 +497,11 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
       </div>
     </div>
     <div class="mdemo-wrap reveal" style="max-width:420px;">
-      <div class="mdemo-head"><span>Referencia &mdash; video TikTok</span><a href="https://vt.tiktok.com/ZS4NrgmYm/" target="_blank" rel="noopener">Abrir en TikTok ↗</a></div>
-      <div style="background:var(--onyx);padding:16px;display:flex;justify-content:center;">
-        <blockquote class="tiktok-embed" cite="https://vt.tiktok.com/ZS4NrgmYm/" data-video-id="" style="max-width:340px;min-width:280px;margin:0;">
-          <section><a target="_blank" href="https://vt.tiktok.com/ZS4NrgmYm/">Ver el video en TikTok</a></section>
-        </blockquote>
+      <div class="mdemo-head"><span>Referencia &mdash; video TikTok</span></div>
+      <div class="mtiktok-link">
+        <a class="btn" href="https://vt.tiktok.com/ZS4NrgmYm/" target="_blank" rel="noopener">Abrir video en TikTok ↗</a>
       </div>
     </div>
-    <script async src="https://www.tiktok.com/embed.js"></script>
-    <p class="mdemo-note">Si el embed no carga (por ejemplo al abrir el archivo local sin conexión), usa "Abrir en TikTok" como respaldo.</p>
   </div>
 </section>
 </div>
@@ -512,11 +521,11 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
     <p style="font-size:16px;font-weight:600;color:var(--ink);margin:32px 0 8px;">&iquest;Cómo funciona?</p>
     <p style="font-size:14px;color:var(--ash);line-height:1.65;">Evaluamos 6 columnas del proceso de captación, desde la marca y la propuesta de valor, pasando por los canales y la generación de leads, hasta el seguimiento comercial y la conversión final a matrícula. Cada columna se califica con un semáforo de acción según qué tan bien está funcionando, usando datos reales: dashboards de inversión, revisión del formulario, exports de CRM, y el funnel de admisiones.</p>
 
-    <div class="mpanel reveal" style="margin-top:24px;max-width:520px;">
+    <div class="mpanel reveal" style="margin:24px auto 0;max-width:820px;">
       <div class="mpanel-title"><span>Semáforo</span><span>Significado</span></div>
-      <div class="mpanel-row"><span class="mpanel-dot verde"></span><span class="name">🟢 Mantener</span><span class="stat">la columna funciona bien, seguimos igual</span></div>
-      <div class="mpanel-row"><span class="mpanel-dot amarillo"></span><span class="name">🟡 Fortalecer</span><span class="stat">hay margen de mejora, suma pero no es lo urgente</span></div>
-      <div class="mpanel-row priority"><span class="mpanel-dot rojo"></span><span class="name">🔴 Priorizar</span><span class="stat">es donde enfocamos el esfuerzo primero</span></div>
+      <div class="mpanel-row"><span class="mpanel-dot verde"></span><span class="name">Mantener</span><span class="stat">la columna funciona bien, seguimos igual</span></div>
+      <div class="mpanel-row"><span class="mpanel-dot amarillo"></span><span class="name">Fortalecer</span><span class="stat">hay margen de mejora, suma pero no es lo urgente</span></div>
+      <div class="mpanel-row priority"><span class="mpanel-dot rojo"></span><span class="name">Priorizar</span><span class="stat">es donde enfocamos el esfuerzo primero</span></div>
     </div>
     <p style="font-size:14px;color:var(--ash);line-height:1.65;margin-top:20px;">Esto nos permite ver, de un solo vistazo, cuál es la columna donde conviene concentrar el esfuerzo &mdash; no una intuición, sino un plan de acción con evidencia.</p>
 
@@ -577,7 +586,7 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
         <div class="mdiag-body"><div class="mdiag-inner">
           <table class="mtable">
             <tr><th>Universidad</th><th>Diferencial</th></tr>
-            <tr><td><a href="https://pregrados.lasalle.edu.co/teclab_whatsapp" target="_blank" rel="noopener" style="color:var(--cobalt);">La Salle (TecLab)</a></td><td class="claim">Duración exacta ("3 semestres"), requisito claro ("solo grado 9°"), certificación oficial</td></tr>
+            <tr><td>La Salle (TecLab)</td><td class="claim">Duración exacta ("3 semestres"), requisito claro ("solo grado 9°"), certificación oficial</td></tr>
             <tr><td>U. Central</td><td class="claim">Rompe objeciones directas + herramientas interactivas (Simulador de Descuentos, TutorIA)</td></tr>
             <tr><td>Santo Tomás</td><td class="claim">Ancla en precio + modalidad ("avanza sin pausar tu carrera")</td></tr>
             <tr><td><b>Católica</b></td><td class="claim">Mensaje aspiracional genérico ("Impulsa tu historia") — sin evidencia adjunta en la mayoría de piezas</td></tr>
@@ -593,7 +602,6 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
           <div class="mbar-row"><div class="mbar-label">Google</div><div class="mbar-track"><div class="mbar-fill" style="--w:1"></div></div><div class="mbar-val">$51.016</div></div>
           <div class="mbar-row"><div class="mbar-label">Facebook</div><div class="mbar-track"><div class="mbar-fill" style="--w:.47"></div></div><div class="mbar-val">$23.964</div></div>
           <p style="font-size:13px;">Google es el canal que mejor convierte del portafolio y por eso concentra la mayor parte de la inversión pese a tener el CPL más alto — es una decisión de eficiencia, no una ineficiencia.</p>
-          <div class="malert"><b>Programática:</b> $12,8M invertidos → 2 leads reales en el CRM (CPL real $6,4M). No debe leerse bajo la misma lógica que Google/Facebook — operó como canal de branding/tráfico, no de captación. Ya fue apagado; si se retoma, debe medirse con otro objetivo.</div>
         </div></div>
       </div>
 
@@ -700,7 +708,7 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
         <div class="mflow-card"><div class="rank">5</div><div class="t">"Prefiero que me llamen"</div><div class="d">Fallback discreto. Único que entra al flujo tradicional de seguimiento.</div></div>
       </div>
 
-      <div class="mref-box"><b>Precedente real en el mismo mercado:</b> Universidad de La Salle ya usa esta lógica — y la lleva más lejos, con WhatsApp como único CTA desde el anuncio mismo. <a href="https://pregrados.lasalle.edu.co/teclab_whatsapp" target="_blank" rel="noopener">Ver landing La Salle ↗</a></div>
+      <div class="mref-box"><b>Precedente real en el mismo mercado:</b> Universidad de La Salle ya usa esta lógica — y la lleva más lejos, con WhatsApp como único CTA desde el anuncio mismo.</div>
 
       <div class="mgrid-3">
         <div class="mwhy-card"><div class="n">01</div><div class="t">Nuevo dato en CRM</div><div class="d">Qué botón usó cada prospecto — permite priorizar al asesor según canal elegido.</div></div>
