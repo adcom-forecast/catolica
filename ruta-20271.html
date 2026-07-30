@@ -139,18 +139,19 @@ h1,h2,h3{font-weight:800;line-height:1.15;letter-spacing:-.005em;color:var(--ink
 /* panel mockup: mini semaforo */
 .mpanel{background:var(--graphite);border-radius:var(--r-cards);padding:var(--gap-card);}
 .mpanel-title{font-size:13px;color:var(--ash);font-weight:500;margin-bottom:18px;display:flex;justify-content:space-between;}
-.mpanel-row{display:grid;grid-template-columns:9px minmax(150px,.8fr) minmax(280px,1.4fr);align-items:center;column-gap:14px;padding:13px 0;border-bottom:1px solid rgba(237,237,243,.06);}
+.mpanel-row{display:grid;grid-template-columns:9px minmax(0,1fr) max-content;align-items:center;column-gap:14px;padding:13px 0;border-bottom:1px solid rgba(237,237,243,.06);}
 .mpanel-row:last-child{border-bottom:none;}
 .mpanel-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .mpanel-dot.rojo{background:var(--red);} .mpanel-dot.amarillo{background:#d9a520;} .mpanel-dot.verde{background:var(--green);}
 .mpanel-row .name{font-size:14.5px;font-weight:500;color:var(--ivory);white-space:nowrap;}
-.mpanel-row .stat{font-size:13px;color:var(--ash);font-weight:400;}
+.mpanel-row .stat{font-size:13px;color:var(--ash);font-weight:400;text-align:right;white-space:nowrap;}
 .mpanel-row.priority .name{color:var(--ink);font-weight:600;}
 .mpanel-row.priority .stat{color:var(--red);font-weight:600;}
 @media(max-width:640px){
   .mpanel{padding:22px 18px;}
-  .mpanel-row{grid-template-columns:9px minmax(125px,.8fr) minmax(0,1.2fr);column-gap:10px;}
+  .mpanel-row{grid-template-columns:9px minmax(0,1fr) auto;column-gap:10px;}
   .mpanel-row .name,.mpanel-row .stat{font-size:12px;}
+  .mpanel-row .stat{max-width:44vw;white-space:normal;}
 }
 
 /* ---------- ACCORDION DIAGNOSTIC ---------- */
@@ -586,7 +587,7 @@ table.mtable.mtable-center th:first-child,table.mtable.mtable-center td:first-ch
         <div class="mdiag-body"><div class="mdiag-inner">
           <table class="mtable">
             <tr><th>Universidad</th><th>Diferencial</th></tr>
-            <tr><td>La Salle (TecLab)</td><td class="claim">Duración exacta ("3 semestres"), requisito claro ("solo grado 9°"), certificación oficial</td></tr>
+            <tr><td>La Salle</td><td class="claim">Duración exacta ("3 semestres"), requisito claro ("solo grado 9°"), certificación oficial</td></tr>
             <tr><td>U. Central</td><td class="claim">Rompe objeciones directas + herramientas interactivas (Simulador de Descuentos, TutorIA)</td></tr>
             <tr><td>Santo Tomás</td><td class="claim">Ancla en precio + modalidad ("avanza sin pausar tu carrera")</td></tr>
             <tr><td><b>Católica</b></td><td class="claim">Mensaje aspiracional genérico ("Impulsa tu historia") — sin evidencia adjunta en la mayoría de piezas</td></tr>
