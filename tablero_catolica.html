@@ -6,7 +6,6 @@
 <title>Dashboard Católica — ADCOM</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABkAGQDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAUEBgcDAgH/xAA4EAACAQMDAgQEBAUEAwAAAAABAgMABBEFEiExBhNBUWEicYGRBxQjMqEVQlKxwdHwJGJy4fH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A2miiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiio+oahb6Xp8t7dOUhiALEKWPJAHABJ5IoJFFeW41O3t7KO7kEgjkxsATLMT0AA5JrMT/aBpKXnkLFeNG0bOt0Ihs4zgMCeQRgjt3oA9FY5vjlpYlnBtLwQQP5T3JiHlhsZXBBOQfXFaltcRXdrFcQNuilQSIcEZBGR19KAqiiqnxBqsuj2SXEdub2SR9gt4s5c8kkdOMc0Au8TeLNK8Krbf2k8im4LiIRxlySBk9B24615n/bHRlRXa3u0VwSpaIYY4OAw7E4OP3r578e/Etl4u1K31OGzmtLi3DxOjuHVlO04IwMHJPbpXkmtanHJp9rbWNq1rbRbnz57SSSSWZieSSSf3oA9P1j9pOl2Msq2tvPdmN2Utj92xHr15r0v4b8U6T4s092029WQKQJIY2VpIs/3AAkA+xr5Lk0u9e1nuBZzNDA5SSQRna3bAPr1FX3wftY7bVJNSmvmskFuwjxGSJJpMBFXBHopz6mgD7bRRRQBRRRQBRRRQBXif4oQadqmqadb67ZXGs6Tpk6SX9lYSokpJBKHk+jDjGPWvbVSdU0m01izNneozwllfaDg5U5U/mBQB868OeIfDP8A9Rfw4fDkNzqyT/ZLq/nj3K6uSMyE/MQCoyvPFeoeDfjJpOptZaIkV1LqxXyo1mTapZfmHJbKgDn6V48fhX4aMt/HFG6G0meFGKgFlUnv0PFQPC1xNoXxT0y7s5pFjg1KJFDkHZl9pGR1HNAHutFFFAFcOorXriigCiiigCiiigCiiigP/9k=">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
 :root{
   --black:#0A0A0A;--white:#FFFFFF;--yellow:#FFC000;
@@ -34,8 +33,15 @@ body{font-family:'Poppins',sans-serif;background:var(--gray-50);color:var(--blac
 .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden}
 .topbar{background:var(--white);border-bottom:2px solid var(--gray-200);padding:0 28px;position:sticky;top:0;z-index:50}
 .topbar-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px}
-.topbar-title{font-size:15px;font-weight:800}
+.topbar-top>div:first-child{min-width:0}
+.topbar-title{font-size:15px;font-weight:800;overflow-wrap:break-word}
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .topbar-badge{font-size:10px;font-weight:700;color:#666;background:var(--gray-50);padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200)}
+.btn-pdf{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--black);color:var(--white);font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;padding:8px 13px;border:1px solid var(--black);border-radius:var(--r-sm);cursor:pointer;white-space:nowrap;transition:transform .15s ease,background .15s ease}
+.btn-pdf:hover{background:#262626;transform:translateY(-1px)}
+.btn-pdf:focus-visible{outline:3px solid rgba(255,192,0,.45);outline-offset:2px}
+.btn-pdf svg{width:14px;height:14px;flex-shrink:0}
+.print-meta{display:none}
 .topbar-filters{display:flex;align-items:center;gap:8px;padding:0 0 12px;flex-wrap:wrap;overflow-x:auto}
 .topbar-filters label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
 .tf-group{display:flex;align-items:center;gap:6px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--r-sm);padding:4px 10px}
@@ -134,6 +140,88 @@ th.sort-active{color:var(--black)!important}
 .loader-sub{font-size:12px;color:#555}
 .spinner{width:32px;height:32px;border:3px solid #222;border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive dashboard standard: navigation, filters and data cards */
+@media(max-width:900px){
+  body{display:block;overflow-x:hidden}
+  .sidebar{position:relative;width:100%;min-height:auto;overflow:visible}
+  .sidebar-logo{padding:12px 18px}
+  .sidebar-nav{display:flex;padding:0;overflow-x:auto;scrollbar-width:thin}
+  .nav-label{display:none}
+  .nav-item{flex:0 0 auto;border-left:0;border-bottom:3px solid transparent;padding:11px 16px;white-space:nowrap}
+  .nav-item.active{border-left-color:transparent;border-bottom-color:var(--yellow)}
+  .sidebar-bottom{display:none}
+  .main{margin-left:0;width:100%}
+  .topbar{padding:0 18px}
+  .topbar-top{gap:16px}
+  .content{padding:20px 18px}
+}
+@media(max-width:640px){
+  .topbar-top{align-items:flex-start;flex-direction:column;padding-bottom:12px}
+  .topbar-top>div:first-child{width:100%}
+  .topbar-title{font-size:14px;line-height:1.35}
+  .topbar-actions{width:100%;justify-content:space-between}
+  .topbar-filters{align-items:stretch;gap:7px}
+  .tf-group{width:100%;min-height:40px}
+  .tf-group:first-child{display:grid;grid-template-columns:auto 1fr auto 1fr}
+  .tf-input{min-width:0;width:100%!important}
+  .btn-apply,.btn-reset{flex:1;min-height:40px}
+  .content{padding:18px 12px}
+  .kpi-grid,.medio-grid{grid-template-columns:1fr}
+  .kpi-card{padding:16px}
+  .table-header{padding:12px 14px}
+}
+
+/* PDF / print standard: browser-native output keeps text selectable and tables sharp */
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{width:100%;min-height:auto;background:#fff!important;overflow:visible!important}
+  body{display:block;font-family:'Poppins',Arial,sans-serif;font-size:8pt}
+  .sidebar,#loader,.loading-bar,.topbar-filters,.btn-pdf,.prog-controls{display:none!important}
+  .main{display:block;width:100%;margin:0!important;overflow:visible!important}
+  .topbar{position:static;padding:0 0 5mm;border-bottom:1.5pt solid var(--yellow);box-shadow:none}
+  .topbar-top{align-items:flex-start;padding:0 0 3mm;gap:8mm}
+  .topbar-title{font-size:15pt;line-height:1.25}
+  .topbar-actions{padding-top:1mm}
+  .topbar-badge{font-size:7pt;background:var(--gray-50)!important}
+  .period-tag{font-size:7.5pt;padding:1.2mm 3mm}
+  .print-meta{display:flex;align-items:center;flex-wrap:wrap;gap:2mm 5mm;color:var(--gray-600);font-size:7.5pt}
+  .print-meta-item{display:flex;gap:1.5mm}
+  .print-meta-label{font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#888}
+  .content{padding:6mm 0 0;overflow:visible!important}
+  .section,.section.visible{margin-bottom:7mm;opacity:1!important;transform:none!important;transition:none!important}
+  .section-title{margin-bottom:3mm;font-size:8pt;break-after:avoid;page-break-after:avoid}
+  .kpi-grid,.medio-grid{grid-template-columns:repeat(4,1fr)!important;gap:3mm;margin-bottom:5mm}
+  .kpi-card,.medio-card{border-radius:3mm;break-inside:avoid;page-break-inside:avoid}
+  .kpi-card{padding:4mm}
+  .kpi-label{font-size:6.5pt;margin-bottom:1.5mm}
+  .kpi-value{font-size:14pt;word-break:normal}
+  .kpi-sub,.kpi-meta-row{font-size:6.5pt}
+  .medio-card-header{padding:2.5mm 3mm}
+  .medio-body{padding:2.5mm 3mm;gap:2mm}
+  .medio-footer{padding:2mm 3mm}
+  .m-label,.mf-label{font-size:6pt}
+  .m-value,.mf-value{font-size:8pt;word-break:normal}
+  .table-wrap,.table-scroll{overflow:visible!important}
+  .table-wrap{border-radius:2mm;margin-bottom:4mm;break-inside:auto;page-break-inside:auto}
+  .table-header{padding:3mm 4mm}
+  .table-title{font-size:8.5pt}
+  table{width:100%;table-layout:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid;page-break-inside:avoid}
+  th{padding:1.8mm 1.2mm;font-size:5.8pt;letter-spacing:.025em;white-space:normal}
+  td{padding:1.6mm 1.2mm;font-size:6.5pt}
+  td.num{white-space:nowrap}
+  tr.total-row td,tr.mes-row td{font-size:6.5pt}
+  tr.modal-row.hidden{display:table-row!important}
+  tr.modal-row td:first-child{padding-left:4mm}
+  #s1,#s2{break-after:page;page-break-after:always}
+  .prog-section{margin-bottom:5mm;break-before:page;page-break-before:always}
+  .prog-section:first-child{break-before:auto;page-break-before:auto}
+  .prog-section-title{padding:2.5mm 4mm;font-size:8pt;break-after:avoid;page-break-after:avoid}
+  .prog-section td:first-child{min-width:0!important;max-width:38mm!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+}
 </style>
 </head>
 <body>
@@ -181,8 +269,15 @@ th.sort-active{color:var(--black)!important}
         <div class="topbar-title">Dashboard de Pauta — Universidad Católica de Colombia</div>
         <div style="margin-top:5px"><span class="period-tag" id="period-tag">Cargando...</span></div>
       </div>
-      <span class="topbar-badge">PAUTA + CRM</span>
+      <div class="topbar-actions">
+        <span class="topbar-badge">PAUTA + CRM</span>
+        <button class="btn-pdf" type="button" onclick="downloadPDF()" title="Abrir la vista para guardar este reporte como PDF" aria-label="Descargar reporte en PDF">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 1v9m0 0 3-3m-3 3L5 7M2 11.5v2.25c0 .69.56 1.25 1.25 1.25h9.5c.69 0 1.25-.56 1.25-1.25V11.5"/></svg>
+          Descargar PDF
+        </button>
+      </div>
     </div>
+    <div class="print-meta" id="print-meta" aria-hidden="true"></div>
     <div class="topbar-filters">
       <div class="tf-group">
         <label>Período</label>
@@ -248,6 +343,7 @@ const URL_MAT   = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO
 const URL_METAS = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs/gviz/tq?tqx=out:csv&gid=2109044138";
 
 let RAW_RG=[], RAW_LEADS=[], RAW_MAT=[], RAW_METAS=[];
+let REFRESH_TOKEN=0, JSONP_SEQUENCE=0;
 const $=id=>document.getElementById(id);
 const MEDIOS=['facebook','google','tiktok','programatica'];
 const MESES_ES=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -259,6 +355,7 @@ function fmtP(n){ if(n===null||n===undefined||isNaN(n)) return '⏳'; return n.t
 
 function parseInv(val){
   if(!val) return 0;
+  if(typeof val==='number') return Number.isFinite(val)?val:0;
   const clean = String(val).replace(/[$\s]/g,'').replace(/\./g,'').replace(',','.');
   return parseFloat(clean)||0;
 }
@@ -282,30 +379,82 @@ function fmtMes(mesStr){
 }
 
 // ── CARGA ─────────────────────────────────────────────────────────────────────
-function refreshData(){
+// Google Sheets no habilita CORS en sus CSV. JSONP permite cargar las mismas
+// hojas desde file:/// sin servidor local ni dependencias externas.
+function gvizRows(response){
+  if(response?.status!=='ok'||!response.table)throw new Error('Google Sheets devolvió una respuesta inválida');
+  const cols=response.table.cols||[];
+  return (response.table.rows||[]).map(row=>cols.map((col,index)=>{
+    const cell=row.c?.[index];
+    if(!cell||cell.v===null||cell.v===undefined)return '';
+    if(col.type==='date'){
+      if(cell.f)return cell.f;
+      const match=String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
+      if(match)return `${match[3]}/${Number(match[2])+1}/${match[1]}`;
+    }
+    return cell.v;
+  }));
+}
+
+function loadGoogleSheet(url){
+  return new Promise((resolve,reject)=>{
+    const callbackName=`__catolicaGviz_${Date.now()}_${++JSONP_SEQUENCE}`;
+    const script=document.createElement('script');
+    let settled=false;
+    const cleanup=()=>{
+      clearTimeout(timer);
+      script.remove();
+      delete window[callbackName];
+    };
+    const finish=(error,rows)=>{
+      if(settled)return;
+      settled=true;
+      cleanup();
+      error?reject(error):resolve(rows);
+    };
+    const timer=setTimeout(()=>finish(new Error('Tiempo de espera agotado al consultar Google Sheets')),20000);
+    window[callbackName]=response=>{
+      try{ finish(null,gvizRows(response)); }
+      catch(error){ finish(error); }
+    };
+    const source=new URL(url);
+    source.searchParams.set('tqx',`out:json;responseHandler:${callbackName}`);
+    source.searchParams.set('headers','1');
+    source.searchParams.set('_',Date.now());
+    script.src=source.toString();
+    script.async=true;
+    script.onerror=()=>finish(new Error('No fue posible conectar con Google Sheets'));
+    document.head.appendChild(script);
+  });
+}
+
+async function refreshData(){
+  const token=++REFRESH_TOKEN;
   showLoading(true);
   $('last-update').textContent='Cargando...';
-  let done=0, rendered=false;
-  const total=4;
-  const check=()=>{ if(++done===total){ clearTimeout(safetyTimer); if(!rendered){ rendered=true; processAndRender(); showLoading(false); } } };
-  const safetyTimer=setTimeout(()=>{ if(!rendered){ rendered=true; processAndRender(); showLoading(false); } },15000);
+  const results=await Promise.allSettled([
+    loadGoogleSheet(URL_RG),
+    loadGoogleSheet(URL_LEADS),
+    loadGoogleSheet(URL_MAT),
+    loadGoogleSheet(URL_METAS)
+  ]);
+  if(token!==REFRESH_TOKEN)return;
 
-  Papa.parse(URL_RG,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_RG=r.data; if(RAW_RG.length&&String(RAW_RG[0][0]).toLowerCase().includes('campaña'))RAW_RG.shift(); check(); },
-    error:()=>check()
-  });
-  Papa.parse(URL_LEADS,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_LEADS=r.data; if(RAW_LEADS.length&&String(RAW_LEADS[0][0]).toLowerCase().includes('fecha'))RAW_LEADS.shift(); check(); },
-    error:()=>check()
-  });
-  Papa.parse(URL_MAT,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_MAT=r.data; if(RAW_MAT.length&&String(RAW_MAT[0][0]).toLowerCase().includes('fecha'))RAW_MAT.shift(); check(); },
-    error:()=>check()
-  });
-  Papa.parse(URL_METAS,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_METAS=r.data; if(RAW_METAS.length&&String(RAW_METAS[0][0]).toLowerCase().includes('periodo'))RAW_METAS.shift(); check(); },
-    error:()=>check()
-  });
+  const current=[RAW_RG,RAW_LEADS,RAW_MAT,RAW_METAS];
+  const datasets=results.map((result,index)=>result.status==='fulfilled'?result.value:current[index]);
+  [RAW_RG,RAW_LEADS,RAW_MAT,RAW_METAS]=datasets;
+  const failures=results.filter(result=>result.status==='rejected');
+  failures.forEach(result=>console.error('[Dashboard Catolica]',result.reason));
+
+  if(RAW_RG.length){
+    processAndRender();
+    if(failures.length)$('last-update').textContent+=` · ${failures.length} fuente(s) sin actualizar`;
+  }else{
+    $('period-tag').textContent='Sin conexión con los datos';
+    $('last-update').textContent='Error de carga';
+    $('kpi-grid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:#777">⚠️ No fue posible cargar Google Sheets. Revisa tu conexión e intenta actualizar.</div>';
+  }
+  showLoading(false);
 }
 
 // ── PROCESAR ──────────────────────────────────────────────────────────────────
@@ -689,6 +838,43 @@ function resetFilters(){
   $('f-hasta').value=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
   $('f-medio').value=''; $('f-modalidad').value='';
   processAndRender();
+}
+function printDate(value){
+  if(!value)return 'Sin definir';
+  return new Date(value+'T00:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});
+}
+function selectedLabel(id,fallback){
+  const select=$(id);
+  return select?.selectedOptions?.[0]?.textContent||fallback;
+}
+function updatePrintMeta(){
+  const meta=$('print-meta');
+  const items=[
+    ['Período',`${printDate($('f-desde').value)} – ${printDate($('f-hasta').value)}`],
+    ['Canal',selectedLabel('f-medio','Todos')],
+    ['Modalidad',selectedLabel('f-modalidad','Todas')],
+    ['Generado',new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'})]
+  ];
+  meta.replaceChildren(...items.map(([label,value])=>{
+    const item=document.createElement('span');
+    item.className='print-meta-item';
+    const key=document.createElement('span');
+    key.className='print-meta-label';
+    key.textContent=label+':';
+    const text=document.createElement('span');
+    text.textContent=value;
+    item.append(key,text);
+    return item;
+  }));
+}
+function downloadPDF(){
+  processAndRender();
+  updatePrintMeta();
+  const previousTitle=document.title;
+  const stamp=new Date().toISOString().slice(0,10);
+  document.title=`Reporte_Catolica_${stamp}`;
+  window.print();
+  document.title=previousTitle;
 }
 function navTo(id,el){
   const t=document.getElementById(id);
