@@ -6,7 +6,6 @@
 <title>Dashboard Católica — ADCOM</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABkAGQDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAUEBgcDAgH/xAA4EAACAQMDAgQEBAUEAwAAAAABAgMABBEFEiExBhNBUWEicYGRBxQjMqEVQlKxwdHwJGJy4fH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A2miiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiio+oahb6Xp8t7dOUhiALEKWPJAHABJ5IoJFFeW41O3t7KO7kEgjkxsATLMT0AA5JrMT/aBpKXnkLFeNG0bOt0Ihs4zgMCeQRgjt3oA9FY5vjlpYlnBtLwQQP5T3JiHlhsZXBBOQfXFaltcRXdrFcQNuilQSIcEZBGR19KAqiiqnxBqsuj2SXEdub2SR9gt4s5c8kkdOMc0Au8TeLNK8Krbf2k8im4LiIRxlySBk9B24615n/bHRlRXa3u0VwSpaIYY4OAw7E4OP3r578e/Etl4u1K31OGzmtLi3DxOjuHVlO04IwMHJPbpXkmtanHJp9rbWNq1rbRbnz57SSSSWZieSSSf3oA9P1j9pOl2Msq2tvPdmN2Utj92xHr15r0v4b8U6T4s092029WQKQJIY2VpIs/3AAkA+xr5Lk0u9e1nuBZzNDA5SSQRna3bAPr1FX3wftY7bVJNSmvmskFuwjxGSJJpMBFXBHopz6mgD7bRRRQBRRRQBRRRQBXif4oQadqmqadb67ZXGs6Tpk6SX9lYSokpJBKHk+jDjGPWvbVSdU0m01izNneozwllfaDg5U5U/mBQB868OeIfDP8A9Rfw4fDkNzqyT/ZLq/nj3K6uSMyE/MQCoyvPFeoeDfjJpOptZaIkV1LqxXyo1mTapZfmHJbKgDn6V48fhX4aMt/HFG6G0meFGKgFlUnv0PFQPC1xNoXxT0y7s5pFjg1KJFDkHZl9pGR1HNAHutFFFAFcOorXriigCiiigCiiigCiiigP/9k=">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
 :root{
   --black:#0A0A0A;--white:#FFFFFF;--yellow:#FFC000;
@@ -140,7 +139,7 @@ th.sort-active{color:var(--black)!important}
 <div id="loader">
   <div class="spinner"></div>
   <div class="loader-logo"><img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCABkAGQDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAUEBgcDAgH/xAA4EAACAQMDAgQEBAUEAwAAAAABAgMABBEFEiExBhNBUWEicYGRBxQjMqEVQlKxwdHwJGJy4fH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A2miiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiiigCiio+oahb6Xp8t7dOUhiALEKWPJAHABJ5IoJFFeW41O3t7KO7kEgjkxsATLMT0AA5JrMT/aBpKXnkLFeNG0bOt0Ihs4zgMCeQRgjt3oA9FY5vjlpYlnBtLwQQP5T3JiHlhsZXBBOQfXFaltcRXdrFcQNuilQSIcEZBGR19KAqiiqnxBqsuj2SXEdub2SR9gt4s5c8kkdOMc0Au8TeLNK8Krbf2k8im4LiIRxlySBk9B24815n/bHRlRXa3u0VwSpaIYY4OAw7E4OP3r578e/Etl4u1K31OGzmtLi3DxOjuHVlO04IwMHJPbpXkmtanHJp9rbWNq1rbRbnz57SSSSWZieSSSf3oA9P1j9pOl2Msq2tvPdmN2Utj92xHr15r0v4b8U6T4s092029WQKQJIY2VpIs/3AAkA+xr5Lk0u9e1nuBZzNDA5SSQRna3bAPr1FX3wftY7bVJNSmvmskFuwjxGSJJpMBFXBHopz6mgD7bRRRQBRRRQBRRRQBXif4oQadqmqadb67ZXGs6Tpk6SX9lYSokpJBKHk+jDjGPWvbVSdU0m01izNneozwllfaDg5U5U/mBQB868OeIfDP8A9Rfw4fDkNzqyT/ZLq/nj3K6uSMyE/MQCoyvPFeoeDfjJpOptZaIkV1LqxXyo1mTapZfmHJbKgDn6V48fhX4aMt/HFG6G0meFGKgFlUnv0PFQPC1xNoXxT0y7s5pFjg1KJFDkHZl9pGR1HNAHutFFFAFcOorXriigCiiigCiiigCiiigP/9k=" alt="ADCOM"></div>
-  <div class="loader-sub">Cargando datos de Universidad Católica...</div>
+  <div class="loader-sub" id="loader-status">Cargando datos de Universidad Católica...</div>
 </div>
 
 <aside class="sidebar">
@@ -242,12 +241,9 @@ th.sort-active{color:var(--black)!important}
 </main>
 
 <script>
-const URL_RG    = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs/gviz/tq?tqx=out:csv&gid=1551290449";
-const URL_LEADS = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs/gviz/tq?tqx=out:csv&gid=17439818";
-const URL_MAT   = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs/gviz/tq?tqx=out:csv&gid=955481695";
-const URL_METAS = "https://docs.google.com/spreadsheets/d/1uIBe2IadpAWIpVbqUp0RO8THfEw8Mjlrl_1VvORw_rs/gviz/tq?tqx=out:csv&gid=2109044138";
-
 let RAW_RG=[], RAW_LEADS=[], RAW_MAT=[], RAW_METAS=[];
+let ACTIVE_LOAD_ID=0;
+const APPS_SCRIPT_WEB_APP_URL='https://script.google.com/a/macros/adcom.group/s/AKfycbxIeTja4p4i_hVQT4mt3PU27RPINNmutJEl5D2r-JYN-PhqrRUKNewvXoOwdcs1Cp4W/exec';
 const $=id=>document.getElementById(id);
 const MEDIOS=['facebook','google','tiktok','programatica'];
 const MESES_ES=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -285,27 +281,85 @@ function fmtMes(mesStr){
 function refreshData(){
   showLoading(true);
   $('last-update').textContent='Cargando...';
-  let done=0, rendered=false;
-  const total=4;
-  const check=()=>{ if(++done===total){ clearTimeout(safetyTimer); if(!rendered){ rendered=true; processAndRender(); showLoading(false); } } };
-  const safetyTimer=setTimeout(()=>{ if(!rendered){ rendered=true; processAndRender(); showLoading(false); } },15000);
+  $('loader-status').textContent='Conectando con la hoja privada...';
 
-  Papa.parse(URL_RG,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_RG=r.data; if(RAW_RG.length&&String(RAW_RG[0][0]).toLowerCase().includes('campaña'))RAW_RG.shift(); check(); },
-    error:()=>check()
+  if(typeof google==='undefined'||!google.script||!google.script.run){
+    if(location.protocol==='file:'||location.hostname==='adcom-forecast.github.io'){
+      $('last-update').textContent='Abriendo acceso privado...';
+      window.location.replace(APPS_SCRIPT_WEB_APP_URL);
+      return;
+    }
+    showDataError(new Error('Este tablero debe abrirse desde la URL desplegada por Google Apps Script.'));
+    return;
+  }
+
+  const loadId=++ACTIVE_LOAD_ID;
+  const datasets=['rg','leads','mat','metas'];
+  const payload={};
+  let completed=0;
+  let failed=false;
+  const timeoutId=setTimeout(()=>{
+    if(loadId!==ACTIVE_LOAD_ID||failed) return;
+    failed=true;
+    ACTIVE_LOAD_ID++;
+    showDataError(new Error('La consulta superó 60 segundos. Revisa “Ejecuciones” en Apps Script para identificar la pestaña que está fallando.'));
+  },60000);
+
+  datasets.forEach(dataset=>{
+    google.script.run
+      .withSuccessHandler(rows=>{
+        if(loadId!==ACTIVE_LOAD_ID||failed) return;
+        payload[dataset]=rows;
+        completed++;
+        $('last-update').textContent=`Cargando ${completed}/${datasets.length}...`;
+        $('loader-status').textContent=`Fuentes cargadas: ${completed}/${datasets.length}`;
+        if(completed===datasets.length){
+          clearTimeout(timeoutId);
+          loadDashboardData(payload);
+        }
+      })
+      .withFailureHandler(error=>{
+        if(loadId!==ACTIVE_LOAD_ID||failed) return;
+        failed=true;
+        ACTIVE_LOAD_ID++;
+        clearTimeout(timeoutId);
+        showDataError(new Error(`Falló la fuente “${dataset}”: ${error?.message||error||'Error desconocido'}`));
+      })
+      .getDashboardSheetData(dataset);
   });
-  Papa.parse(URL_LEADS,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_LEADS=r.data; if(RAW_LEADS.length&&String(RAW_LEADS[0][0]).toLowerCase().includes('fecha'))RAW_LEADS.shift(); check(); },
-    error:()=>check()
-  });
-  Papa.parse(URL_MAT,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_MAT=r.data; if(RAW_MAT.length&&String(RAW_MAT[0][0]).toLowerCase().includes('fecha'))RAW_MAT.shift(); check(); },
-    error:()=>check()
-  });
-  Papa.parse(URL_METAS,{download:true,header:false,skipEmptyLines:true,
-    complete:r=>{ RAW_METAS=r.data; if(RAW_METAS.length&&String(RAW_METAS[0][0]).toLowerCase().includes('periodo'))RAW_METAS.shift(); check(); },
-    error:()=>check()
-  });
+}
+
+function stripHeader(rows,headerText){
+  const clean=Array.isArray(rows)?rows.filter(r=>Array.isArray(r)&&r.some(v=>String(v||'').trim()!=='')):[];
+  if(clean.length&&String(clean[0][0]||'').toLowerCase().includes(headerText)) return clean.slice(1);
+  return clean;
+}
+
+function loadDashboardData(payload){
+  RAW_RG=stripHeader(payload?.rg,'campaña');
+  RAW_LEADS=stripHeader(payload?.leads,'fecha');
+  RAW_MAT=stripHeader(payload?.mat,'fecha');
+  RAW_METAS=stripHeader(payload?.metas,'periodo');
+  processAndRender();
+  showLoading(false);
+}
+
+function escapeHtml(value){
+  return String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+
+function showDataError(error){
+  console.error('Error al cargar datos desde Apps Script:',error);
+  RAW_RG=[]; RAW_LEADS=[]; RAW_MAT=[]; RAW_METAS=[];
+  const detail=escapeHtml(error?.message||error||'Error desconocido');
+  $('last-update').textContent='Error de carga';
+  $('kpi-grid').innerHTML=`<div style="grid-column:1/-1;padding:32px;text-align:center;color:#991b1b">
+    <strong>No fue posible consultar la hoja privada.</strong><br>
+    <span style="font-size:11px;color:#666">${detail}</span>
+  </div>`;
+  $('kpi-modal-grid').innerHTML='';
+  $('medio-grid').innerHTML='';
+  showLoading(false);
 }
 
 // ── PROCESAR ──────────────────────────────────────────────────────────────────
